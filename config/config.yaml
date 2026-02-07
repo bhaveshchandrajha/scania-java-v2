@@ -1,0 +1,36 @@
+pinecone_db:
+  region: "us-east-1"
+  rpg_coderag_index_name: "rpg-vectors"
+  index_name: "latest-pks-ast-inde"
+  # index_name: "farhat-latest-sample-ast"
+  # index_name: "sample-ast-test"
+  # index_name: "pks-ast-index"
+
+embedding_model:
+  amazon:
+    provider: "amazon"
+    model_id: "amazon.titan-embed-text-v1"
+    region_name: "us-east-1"
+
+retriever:
+  top_k: 5 
+
+llm:
+  anthropic:
+    provider: "anthropic"
+    model_id: "anthropic.claude-sonnet-4-5-20250929-v1:0"
+    region_name: "us-east-1"
+    temperature: 0
+    max_output_tokens: 16000 
+
+
+data:
+  data_dir: "pks-ast"
+
+neptune:
+  endpoint_reader: "db-neptune-1.cluster-ro-ct8wsskyexpw.eu-north-1.neptune.amazonaws.com"
+  endpoint_writer: "db-neptune-1.cluster-ct8wsskyexpw.eu-north-1.neptune.amazonaws.com"
+  port: 8182
+  region_name: "eu-north-1"
+
+  
