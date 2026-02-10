@@ -66,7 +66,7 @@ class BedrockClient:
             return self._embedding_cache[provider]
         
         try:
-            print("Loading embedding model [{provider}]...")
+            print(f"Loading embedding model [{provider}]...")
             model_cfg = self.config['embedding_model'][provider]
 
             embeddings = BedrockEmbeddings(

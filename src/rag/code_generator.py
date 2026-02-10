@@ -48,46 +48,6 @@ class CodeGenerator:
             + "\n\n".join(semantic_blocks)
         )
 
-    # -------------------------------------------------------------
-    # JAVA GENERATION
-    # -------------------------------------------------------------
-    # def generate_java(self, query: str, bundle: ContextBundle) -> str:
-    #     context = self._format_context_for_llm(bundle)
-
-    #     user_prompt = f"""
-    #     🚨 MIGRATION REQUEST
-
-    #     User Query:
-    #     {query}
-
-    #     ━━━━━━━━━━━━━━━
-    #     📌 Semantic Context
-    #     {context}
-
-    #     ━━━━━━━━━━━━━━━
-    #     🛠️ FINAL INSTRUCTIONS
-    #     Generate a **Spring Boot Service class** that:
-    #     - Converts RPG logic into Java methods
-    #     - Preserves business rules exactly
-    #     - Uses clean, modern Spring Boot style
-    #     """
-
-    #     final_prompt = f"""
-    #     <system>
-    #     {SAMPLE_CODE_GENERATION_SYSTEM_PROMPT}
-    #     </system>
-
-    #     <user>
-    #     {user_prompt}
-    #     </user>
-    #     """
-
-    #     try:
-    #         response = self.llm.generate(final_prompt, max_tokens=MAX_TOKEN_LIMIT)
-    #         return response.content if hasattr(response, "content") else response
-    #     except Exception as e:
-    #         return f"// Generation failed: {str(e)}"
-
     def generate_java(self, query: str, bundle: ContextBundle) -> str:
         enriched_context = self._format_context_for_llm(bundle)
 
@@ -123,7 +83,7 @@ class CodeGenerator:
     """
 
         try:
-            response = self.llm.invoke(final_prompt)
+            response = self.llm.invoke(final_prompt, max_tokens=MAX_TOKEN_LIMIT)
 
             # ✅ SAFE NORMALIZATION (IMPORTANT)
             if isinstance(response, str):
