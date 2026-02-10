@@ -1,7 +1,7 @@
 pinecone_db:
   region: "us-east-1"
   rpg_coderag_index_name: "rpg-vectors"
-  index_name: "latest-pks-ast-inde"
+  index_name: "latest-pks-ast-index"
   # index_name: "farhat-latest-sample-ast"
   # index_name: "sample-ast-test"
   # index_name: "pks-ast-index"

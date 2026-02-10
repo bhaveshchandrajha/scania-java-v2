@@ -1,0 +1,90 @@
+{
+  "query": "calculate compensation percentage",
+  "documents": [
+    {
+      "id": "HS1210-ast.json:n1304",
+      "content": "[Unknown] This code calculates a percentage value stored in GPS070 by taking a base amount (AHT250) and adjusting it relative to a complement percentage (100 minus AHT480), then scaling the result to a percentage. This appears to be a markup or gross-up calculation, commonly used in pricing or financial computations where you need to determine a value before a percentage reduction was applied, such as calculating a pre-discount price or a gross amount before a percentage deduction.",
+      "source": "semantic",
+      "score": 1.0,
+      "rank": 0,
+      "metadata": {
+        "ast_file": "HS1210-ast.json",
+        "code": "     C                   Eval      GPS070 = (AHT250 / (100 - AHT480)) * 100\n",
+        "end_line": 1964.0,
+        "kind": "Eval",
+        "node_id": "n1304",
+        "source_file_path": "/Users/atiwari/Downloads/PoC_HS1210/RPG_Codebase/HSSRC/QRPGLESRC/HS1210.SQLRPGLE",
+        "start_line": 1964.0,
+        "summary": "This code calculates a percentage value stored in GPS070 by taking a base amount (AHT250) and adjusting it relative to a complement percentage (100 minus AHT480), then scaling the result to a percentage. This appears to be a markup or gross-up calculation, commonly used in pricing or financial computations where you need to determine a value before a percentage reduction was applied, such as calculating a pre-discount price or a gross amount before a percentage deduction."
+      }
+    },
+    {
+      "id": "HS1212-ast.json:n772",
+      "content": "[Unknown] This code retrieves a message from a centralized message handling system (likely a Company-Wide Processing or Common Work Process message repository) using two parameters G73470 and G73480 as lookup keys. The retrieved message text is stored in the RPYTXT variable, which is typically used to provide user-facing response or status messages. This pattern suggests the system uses externalized message management for consistent communication across the application.",
+      "source": "semantic",
+      "score": 0.011721454189093903,
+      "rank": 0,
+      "metadata": {
+        "ast_file": "HS1212-ast.json",
+        "code": "              RPYTXT = getCwpMsg('':G73470:G73480);\n",
+        "end_line": 1446.0,
+        "kind": "Assign",
+        "node_id": "n772",
+        "source_file_path": "/Users/atiwari/Downloads/PoC_HS1210/RPG_Codebase/HSSRC/QRPGLESRC/HS1212.SQLRPGLE",
+        "start_line": 1446.0,
+        "summary": "This code retrieves a message from a centralized message handling system (likely a Company-Wide Processing or Common Work Process message repository) using two parameters G73470 and G73480 as lookup keys. The retrieved message text is stored in the RPYTXT variable, which is typically used to provide user-facing response or status messages. This pattern suggests the system uses externalized message management for consistent communication across the application."
+      }
+    },
+    {
+      "id": "HS1212-ast.json:n2457",
+      "content": "[Unknown] This comparison checks whether the value in field G73290 falls outside the valid range of 13 to 16, inclusive. From a business perspective, this likely validates that a code or category value is not within an acceptable set of values, potentially triggering error handling or alternative processing when the value is invalid or represents an exceptional condition.",
+      "source": "semantic",
+      "score": 0.011631171554239532,
+      "rank": 0,
+      "metadata": {
+        "ast_file": "HS1212-ast.json",
+        "code": "                 G73290 < 13 or G73290 > 16;\n",
+        "end_line": 3047.0,
+        "kind": "Compare",
+        "node_id": "n2457",
+        "source_file_path": "/Users/atiwari/Downloads/PoC_HS1210/RPG_Codebase/HSSRC/QRPGLESRC/HS1212.SQLRPGLE",
+        "start_line": 3047.0,
+        "summary": "This comparison checks whether the value in field G73290 falls outside the valid range of 13 to 16, inclusive. From a business perspective, this likely validates that a code or category value is not within an acceptable set of values, potentially triggering error handling or alternative processing when the value is invalid or represents an exceptional condition."
+      }
+    },
+    {
+      "id": "HS1210-ast.json:n1832",
+      "content": "[Unknown] This code fragment checks if the variable G73290 equals 11, which likely represents a specific status code or condition flag in the business process. When this condition is met, it activates indicator 42, which typically controls subsequent program flow, screen display behavior, or enables a particular business function. This pattern suggests a conditional trigger mechanism where a specific state (code 11) enables downstream processing or user interface elements.",
+      "source": "semantic",
+      "score": 0.009524908440698128,
+      "rank": 0,
+      "metadata": {
+        "ast_file": "HS1210-ast.json",
+        "code": "     C                   IF        G73290 = 11\n     C                   Eval      *In42 = *On\n     C                   EndIf\n",
+        "end_line": 2586.0,
+        "kind": "If",
+        "node_id": "n1832",
+        "source_file_path": "/Users/atiwari/Downloads/PoC_HS1210/RPG_Codebase/HSSRC/QRPGLESRC/HS1210.SQLRPGLE",
+        "start_line": 2584.0,
+        "summary": "This code fragment checks if the variable G73290 equals 11, which likely represents a specific status code or condition flag in the business process. When this condition is met, it activates indicator 42, which typically controls subsequent program flow, screen display behavior, or enables a particular business function. This pattern suggests a conditional trigger mechanism where a specific state (code 11) enables downstream processing or user interface elements."
+      }
+    },
+    {
+      "id": "HS1210-ast.json:n1309",
+      "content": "[Unknown] This EndIf statement marks the conclusion of a conditional logic block, terminating the decision-making structure that was evaluating some business condition earlier in the code. It signals that the program should resume normal sequential processing after completing the conditional branch handling. Without the surrounding context, the specific business rule being concluded cannot be determined, but this represents the closure of a logical decision point in the application flow.",
+      "source": "semantic",
+      "score": 0.007896654788650207,
+      "rank": 0,
+      "metadata": {
+        "ast_file": "HS1210-ast.json",
+        "code": "     C                   EndIf\n",
+        "end_line": 1968.0,
+        "kind": "EndIf",
+        "node_id": "n1309",
+        "source_file_path": "/Users/atiwari/Downloads/PoC_HS1210/RPG_Codebase/HSSRC/QRPGLESRC/HS1210.SQLRPGLE",
+        "start_line": 1968.0,
+        "summary": "This EndIf statement marks the conclusion of a conditional logic block, terminating the decision-making structure that was evaluating some business condition earlier in the code. It signals that the program should resume normal sequential processing after completing the conditional branch handling. Without the surrounding context, the specific business rule being concluded cannot be determined, but this represents the closure of a logical decision point in the application flow."
+      }
+    }
+  ]
+}

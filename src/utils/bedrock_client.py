@@ -26,6 +26,10 @@ class BedrockClient:
         return cls._instance
     
     def __init__(self):
+        if not hasattr(self, "_embedding_cache"):
+            self._embedding_cache = {}
+        if not hasattr(self, "_llm_cache"):
+            self._llm_cache = {}
         # prevent re-initialization 
         if getattr(self, "_initialized", False):
             return
