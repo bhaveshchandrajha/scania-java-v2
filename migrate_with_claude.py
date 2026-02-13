@@ -11,7 +11,13 @@ USAGE:
   export ANTHROPIC_API_KEY=sk-ant-...
   pip install anthropic
 
-  python migrate_with_claude.py context_package_n422.json > HS1210_n422_Migrated.java
+  python migrate_with_claude.py context_index/HS1210_n404.json
+  -> Writes generated Java to HS1210_n404.java (same base name as the JSON, in cwd).
+
+  python migrate_with_claude.py context_index/HS1210_n404.json --stream
+  -> Same; streams progress to stderr and writes HS1210_n404.java when done.
+
+  stdout still contains the full Java (for UI server / piping); the .java file is always written.
 
 NOTE:
 - The ANTHROPIC_API_KEY MUST be provided via environment variable.
@@ -21,6 +27,7 @@ NOTE:
 import argparse
 import json
 import os
+from pathlib import Path
 from textwrap import dedent
 
 import anthropic
@@ -60,7 +67,7 @@ def fix_unbalanced_braces(java_code: str) -> str:
     return stripped + "\n" + ("}\n" * missing) + java_code[len(stripped):]
 
 
-def check_code_truncation(java_code: str, max_tokens: int = 32768) -> bool:
+def check_code_truncation(java_code: str, max_tokens: int = 64000) -> bool:
     """
     Check if the generated code might be truncated.
     Returns True if code appears truncated (e.g., ends mid-statement, very close to token limit).
@@ -93,6 +100,7 @@ def build_prompt(context: dict) -> str:
     rpg_snippet = context.get("rpgSnippet", "")
     db_contracts = context.get("dbContracts", [])
     symbol_metadata = context.get("symbolMetadata", {})
+    display_files = context.get("displayFiles", [])
 
     node_id = ast_node.get("id")
     kind = ast_node.get("kind")
@@ -111,6 +119,31 @@ def build_prompt(context: dict) -> str:
             total_columns += len(col_names)
             column_checklist_lines.append(f"- {name}: " + ", ".join(col_names))
     column_checklist = "\n".join(column_checklist_lines) if column_checklist_lines else "(no columns in contracts)"
+
+    # Display files (DSPF) section for UI-aware code generation
+    if display_files:
+        display_lines = []
+        for df in display_files:
+            name = df.get("name") or df.get("symbolId") or "?"
+            file_id = df.get("fileId") or ""
+            display_lines.append(f"- **{name}** (symbolId: {df.get('symbolId', '')}, fileId: {file_id})")
+            if df.get("ddsSource"):
+                display_lines.append("  DDS source (screen layout):")
+                display_lines.append("  ```dds")
+                display_lines.append(df.get("ddsSource", "")[:8000])  # cap length
+                if len(df.get("ddsSource", "")) > 8000:
+                    display_lines.append("  ... (truncated)")
+                display_lines.append("  ```")
+        display_files_section = (
+            "## Display files (DSPF) – for UI building\n"
+            "The following display files are used by this unit. Use them to generate UI-related code "
+            "(e.g. screen DTOs, form fields, or comments describing screen layout) in the target Java.\n\n"
+            + "\n".join(display_lines)
+            + "\n\n"
+        )
+    else:
+        display_files_section = ""
+
     column_checklist_blurb = (
         f"⚠️ CRITICAL REQUIREMENT - 100% COLUMN MAPPING IS MANDATORY ⚠️\n\n"
         f"The following lists EVERY SINGLE COLUMN that MUST appear in your Java code. "
@@ -164,6 +197,12 @@ def build_prompt(context: dict) -> str:
 
         **FINAL REMINDER**: Before finishing your code, count all @Column annotations. The count MUST equal {total_columns}. If it doesn't, add the missing @Column fields!
 
+        **IMPORTANT FOR LARGE CONTEXTS**: If this context has many dbContracts ({len(db_contracts)} contracts, {total_columns} total columns), 
+        you MUST generate COMPLETE entities for ALL contracts, even if the code is very long. Do NOT truncate or skip entities.
+        Prioritize completeness: generate all {len(db_contracts)} entities with all {total_columns} columns, even if it means a very long output.
+
+        {display_files_section}
+
         ## Symbol metadata
         Additional symbols (variables, data structures, k-lists, etc.) referenced
         by this unit:
@@ -210,6 +249,10 @@ def build_prompt(context: dict) -> str:
            - Do not restate the prompt or explain; just provide compilable Java starting with package/import statements.
         6. **Syntax**: Your output must be valid, compilable Java. Every opening brace {{ must
            have a matching closing brace }}. Before finishing, verify: count of {{ equals count of }}.
+        7. **Display files (when present)**: If the context includes a "Display files (DSPF)" section,
+           use it to inform UI-related code: add comments or DTOs that reflect screen/form structure,
+           or document which service methods correspond to which display operations (EXFMT/READ), so the
+           target application can support UI building.
         """
     ).strip()
 
@@ -228,8 +271,8 @@ def main() -> None:
     parser.add_argument(
         "--max-tokens",
         type=int,
-        default=32768,  # Large migrations (e.g. 200+ columns) need room for full entities
-        help="Max tokens for the response (default: 32768)",
+        default=64000,  # Max for claude-sonnet-4-5 (limit 64000)
+        help="Max tokens for the response (default: 64000). Claude Sonnet 4.5 allows up to 64000.",
     )
     parser.add_argument(
         "--stream",
@@ -237,6 +280,9 @@ def main() -> None:
         help="Stream the response (shows progress)",
     )
     args = parser.parse_args()
+
+    # Output Java file: same base name as the context JSON, in current working directory
+    output_java = Path.cwd() / (Path(args.context_file).stem + ".java")
 
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
@@ -258,8 +304,20 @@ def main() -> None:
 
     # Log context size for debugging
     context_size_kb = len(json.dumps(context)) / 1024
+    db_contracts = context.get("dbContracts", [])
+    total_columns = sum(len(c.get("columns", [])) for c in db_contracts)
     print(f"// Context package size: {context_size_kb:.1f} KB", file=sys.stderr)
-    print(f"// This may take 30-60 seconds for large packages...", file=sys.stderr)
+    print(f"// DB Contracts: {len(db_contracts)}, Total columns: {total_columns}", file=sys.stderr)
+    
+    # Warn if context is very large and may need more tokens
+    if total_columns > 250:
+        estimated_output_tokens = total_columns * 50  # Rough estimate: ~50 tokens per column (entity field + getter/setter)
+        if estimated_output_tokens > args.max_tokens * 0.8:
+            print(f"// ⚠️  WARNING: Large context detected ({total_columns} columns).", file=sys.stderr)
+            print(f"//    Estimated output tokens: ~{estimated_output_tokens}. Current max_tokens: {args.max_tokens}", file=sys.stderr)
+            print(f"//    Consider increasing --max-tokens if migration is incomplete.", file=sys.stderr)
+    
+    print(f"// This may take 60-120 seconds for large packages...", file=sys.stderr)
 
     user_prompt = build_prompt(context)
     prompt_size_kb = len(user_prompt) / 1024
@@ -303,10 +361,14 @@ def main() -> None:
                 # Clean and fix braces for streamed output too
                 java_code_stream = clean_java_code(java_code_stream)
                 if check_code_truncation(java_code_stream, args.max_tokens):
-                    print("// Warning: Code may be truncated (near token limit). Consider increasing --max-tokens.", file=sys.stderr)
+                    print("// ⚠️  WARNING: Code may be truncated (near token limit).", file=sys.stderr)
+                    print(f"//    Consider increasing --max-tokens (current: {args.max_tokens}) or splitting the migration.", file=sys.stderr)
+                    print(f"//    Generated code length: {len(java_code_stream)} chars (~{len(java_code_stream)/4:.0f} tokens)", file=sys.stderr)
                 java_code_stream = fix_unbalanced_braces(java_code_stream)
                 if java_code_stream.count("{") != java_code_stream.count("}"):
                     print("// Warning: braces still unbalanced after auto-fix", file=sys.stderr)
+                output_java.write_text(java_code_stream, encoding="utf-8")
+                print(f"// Wrote {output_java}", file=sys.stderr)
         else:
             # Non-streaming mode: wait for complete response
             print("// Sending request to LLM (this may take 60-120 seconds for large prompts)...", file=sys.stderr)
@@ -334,11 +396,15 @@ def main() -> None:
             
             # Check for truncation
             if check_code_truncation(java_code, args.max_tokens):
-                print("// Warning: Code may be truncated (near token limit). Consider increasing --max-tokens.", file=sys.stderr)
+                print("// ⚠️  WARNING: Code may be truncated (near token limit).", file=sys.stderr)
+                print(f"//    Consider increasing --max-tokens (current: {args.max_tokens}) or splitting the migration.", file=sys.stderr)
+                print(f"//    Generated code length: {len(java_code)} chars (~{len(java_code)/4:.0f} tokens)", file=sys.stderr)
             
             java_code = fix_unbalanced_braces(java_code)
             if java_code.count("{") != java_code.count("}"):
                 print("// Warning: braces still unbalanced after auto-fix", file=sys.stderr)
+            output_java.write_text(java_code, encoding="utf-8")
+            print(f"// Wrote {output_java}", file=sys.stderr)
             print(java_code)
     except anthropic.RateLimitError as e:
         elapsed = time.time() - start_time

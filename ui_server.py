@@ -364,7 +364,7 @@ class MigrationHandler(SimpleHTTPRequestHandler):
 
             # Call migrate_with_claude.py as a subprocess and capture the Java output.
             ctx_size_kb = ctx_file.stat().st_size / 1024
-            ui_timeout = 600  # 10 minutes for large context + 32k output tokens
+            ui_timeout = 1200  # 20 minutes for very large context (e.g. n404) + 64k output tokens
             print(f"[Migration] Starting {unit_id}_{node_id} (context {ctx_size_kb:.0f} KB, timeout {ui_timeout}s)...", flush=True)
             sys.stderr.flush()
             try:
@@ -377,7 +377,7 @@ class MigrationHandler(SimpleHTTPRequestHandler):
                         "--model",
                         model,
                         "--max-tokens",
-                        "32768",
+                        "64000",
                     ],
                     cwd=str(ROOT_DIR),
                     env=os.environ.copy(),
@@ -554,7 +554,7 @@ class MigrationHandler(SimpleHTTPRequestHandler):
                     "--model",
                     model,
                     "--max-tokens",
-                    "32768",
+                    "64000",
                     "--stream",
                 ],
                 cwd=str(ROOT_DIR),

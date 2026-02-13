@@ -50,6 +50,16 @@ From the project root, with the JAR already built (`mvn clean package`):
 
 This **overwrites** `context_index/manifest.json` and all `context_index/<unitId>_<nodeId>.json` with the new ASTs’ nodes.
 
+### 3b. Optional: Enrich context with display files (DSPF) for UI building
+
+To add display file (DSPF) metadata to each context package so migrations can produce UI-aware Java (screen DTOs, form fields, EXFMT/READ comments):
+
+```bash
+python3 enrich_context_with_display_files.py --astDir JSON_ast/JSON --contextDir context_index
+```
+
+Optionally pass `--ddsDir <path-to-DDS-source>` to include DDS source in the context (screen layout). Then run migrations as usual; the prompt will include a "Display files (DSPF)" section when present.
+
 ### 4. Use the UI (no server restart needed)
 
 - If the UI server is already running, **refresh the browser** so it fetches the new `manifest` and node list.
@@ -63,6 +73,7 @@ This **overwrites** `context_index/manifest.json` and all `context_index/<unitId
 | 1 | Put `*-ast.json` in `--astDir` (e.g. `JSON_ast/JSON` or `JSON_ast/JSON_v2`). |
 | 2 | Ensure RPG source for those ASTs is under `--rpgDir`. |
 | 3 | Run `IndexAll` with your `--astDir` and `--rpgDir`; `--outputDir .` updates `context_index/`. |
+| 3b | (Optional) Run `enrich_context_with_display_files.py` to add DSPF info for UI-aware code gen. |
 | 4 | Refresh the UI (or start the server) and run migrations as usual. |
 
 # PKS AST Migration Pipeline

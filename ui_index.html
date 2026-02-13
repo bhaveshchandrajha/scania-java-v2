@@ -500,9 +500,9 @@
       detailStatus.textContent = `Calling LLM... (${elapsed}s elapsed)`;
     }, 1000);
     
-    // Abort after 10 minutes (large context + 32k output tokens)
+    // Abort after 20 minutes (very large context + 64k output tokens)
     const abortController = new AbortController();
-    timeoutId = setTimeout(() => abortController.abort(), 10 * 60 * 1000);
+    timeoutId = setTimeout(() => abortController.abort(), 20 * 60 * 1000);
     
     try {
       const res = await fetch(`/api/migrate?unitId=${encodeURIComponent(unitId)}&nodeId=${encodeURIComponent(nodeId)}`, {
@@ -551,7 +551,7 @@
       clearInterval(progressInterval);
       let errorMsg = e.message;
       if (e.name === 'AbortError') {
-        errorMsg = 'Request timed out after 10 minutes. The server may be stuck or the LLM is very slow. Run migration from the terminal: python3 migrate_with_claude.py context_index/' + unitId + '_' + nodeId + '.json --stream';
+        errorMsg = 'Request timed out after 20 minutes. The server may be stuck or the LLM is very slow. Run migration from the terminal: python3 migrate_with_claude.py context_index/' + unitId + '_' + nodeId + '.json --stream';
       } else if (e.message.includes('timeout') || e.message.includes('504')) {
         errorMsg = 'Migration timeout: The LLM request took too long. Try from terminal: python3 migrate_with_claude.py context_index/' + unitId + '_' + nodeId + '.json --stream';
       } else if (e.message.includes('429') || e.message.includes('rate limit')) {
