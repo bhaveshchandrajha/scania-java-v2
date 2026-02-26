@@ -1,0 +1,8 @@
+com/scania/warranty/service/ClaimCreationValidationServiceTest$ClaimCreationValidation.class
+com/scania/warranty/web/ClaimControllerIntegrationTest$Transmission.class
+com/scania/warranty/web/ClaimControllerIntegrationTest$ClaimCreation.class
+com/scania/warranty/web/ClaimControllerIntegrationTest$FailureAssignment.class
+com/scania/warranty/web/ClaimControllerIntegrationTest.class
+com/scania/warranty/service/ClaimCreationValidationServiceTest.class
+com/scania/warranty/web/ClaimControllerIntegrationTest$ClaimLifecycle.class
+com/scania/warranty/service/ClaimCreationValidationServiceTest$TransmissionValidation.class
