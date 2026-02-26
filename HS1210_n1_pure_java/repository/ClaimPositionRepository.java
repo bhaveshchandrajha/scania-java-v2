@@ -5,24 +5,28 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface ClaimPositionRepository extends JpaRepository<Object, Long> {
-
+    
     @Query(value = "SELECT LISTAGG(DIGITS(GPS030) CONCAT DIGITS(GPS150)) " +
-            "WITHIN GROUP(ORDER BY GPS150) AS List " +
-            "FROM HSGPSPF " +
-            "WHERE GPS000 = :dealerId AND GPS010 = :claimNo",
-            nativeQuery = true)
-    String findPositionListForClaim(@Param("dealerId") String dealerId,
-                                     @Param("claimNo") String claimNo);
-
+                   "WITHIN GROUP(ORDER BY GPS150) AS List " +
+                   "FROM HSGPSPF " +
+                   "WHERE GPS000 = :dealerId AND GPS010 = :claimNo", nativeQuery = true)
+    String findPositionListByDealerAndClaim(@Param("dealerId") String dealerId,
+                                           @Param("claimNo") String claimNo);
+    
     @Modifying
+    @Transactional
     @Query(value = "UPDATE HSGPSPF SET GPS150 = :posN " +
-            "WHERE GPS000 = :dealerId AND GPS010 = :claimNo AND GPS030 = :line",
-            nativeQuery = true)
+                   "WHERE GPS000 = :dealerId AND GPS010 = :claimNo AND GPS030 = :line", 
+           nativeQuery = true)
     void updatePositionNumber(@Param("dealerId") String dealerId,
-                               @Param("claimNo") String claimNo,
-                               @Param("line") Integer line,
-                               @Param("posN") Integer posN);
+                             @Param("claimNo") String claimNo,
+                             @Param("line") Integer line,
+                             @Param("posN") Integer posN);
+    
+    @Query(value = "SELECT UPPER(:text)", nativeQuery = true)
+    String toUpperCase(@Param("text") String text);
 }

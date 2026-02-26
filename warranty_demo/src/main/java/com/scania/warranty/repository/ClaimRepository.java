@@ -17,7 +17,10 @@ public interface ClaimRepository extends JpaRepository<Claim, Long> {
     List<Claim> findByCompanyCodeOrderByClaimNumberDesc(String companyCode);
     
     Optional<Claim> findByCompanyCodeAndClaimNumber(String companyCode, String claimNumber);
-    
+
+    Optional<Claim> findByCompanyCodeAndInvoiceNumberAndInvoiceDateAndJobNumberAndWorkshopType(
+        String companyCode, String invoiceNumber, String invoiceDate, String jobNumber, String workshopType);
+
     List<Claim> findByCompanyCodeAndStatusCodeSde(String companyCode, Integer statusCode);
     
     @Query("SELECT c FROM Claim c WHERE c.companyCode = :companyCode " +

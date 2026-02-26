@@ -40,14 +40,16 @@ public class ClaimCreationService {
         }
         
         Invoice invoice = invoiceOpt.get();
-        
-        // Check if claim already exists
-        Optional<Claim> existingClaim = claimRepository.findByCompanyCodeAndClaimNumber(
-            companyCode, generateNextClaimNumber(companyCode)
+
+        // Idempotent: return existing claim for this invoice if present and not excluded
+        Optional<Claim> existingClaim = claimRepository.findByCompanyCodeAndInvoiceNumberAndInvoiceDateAndJobNumberAndWorkshopType(
+            companyCode, invoiceNumber, invoiceDate, jobNumber, workshopType
         );
-        
-        if (existingClaim.isPresent() && existingClaim.get().getStatusCodeSde() != ClaimStatus.EXCLUDED.getCode()) {
-            throw new IllegalStateException("Claim already exists for this invoice");
+        if (existingClaim.isPresent()) {
+            Claim c = existingClaim.get();
+            if (c.getStatusCodeSde() == null || !c.getStatusCodeSde().equals(ClaimStatus.EXCLUDED.getCode())) {
+                return c;
+            }
         }
 
         // Create new claim
@@ -76,9 +78,17 @@ public class ClaimCreationService {
     }
 
     private String generateNextClaimNumber(String companyCode) {
-        // Implementation to generate next claim number
-        // This would query the database for the highest claim number and increment
-        return "00000001"; // Placeholder
+        List<Claim> existing = claimRepository.findByCompanyCodeOrderByClaimNumberDesc(companyCode);
+        int max = 0;
+        for (Claim c : existing) {
+            String n = c.getClaimNumber();
+            if (n != null && n.matches("\\d{8}")) {
+                try {
+                    max = Math.max(max, Integer.parseInt(n));
+                } catch (NumberFormatException ignored) { }
+            }
+        }
+        return String.format("%08d", max + 1);
     }
 
     private String extractChassisNumber(String vehicleNumber) {

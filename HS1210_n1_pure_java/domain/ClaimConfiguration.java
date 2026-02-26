@@ -12,28 +12,28 @@ public class ClaimConfiguration {
     private String key;
 
     @Column(name = "Curr Perd YYWW", precision = 6, scale = 0, nullable = false)
-    private BigDecimal currPerdYyww;
+    private BigDecimal currentPeriodYyww;
 
     @Column(name = "SSS Claim Value", precision = 9, scale = 2, nullable = false)
     private BigDecimal sssClaimValue;
 
     @Column(name = "Curr Exch Rate", precision = 9, scale = 6, nullable = false)
-    private BigDecimal currExchRate;
+    private BigDecimal currentExchangeRate;
 
     @Column(name = "Curr Exch Rt Date", precision = 8, scale = 0, nullable = false)
-    private BigDecimal currExchRtDate;
+    private BigDecimal currentExchangeRateDate;
 
     @Column(name = "Prev Exch Rate", precision = 9, scale = 6, nullable = false)
-    private BigDecimal prevExchRate;
+    private BigDecimal previousExchangeRate;
 
     @Column(name = "Prev Exch Rt Date", precision = 8, scale = 0, nullable = false)
-    private BigDecimal prevExchRtDate;
+    private BigDecimal previousExchangeRateDate;
 
     @Column(name = "3rd Last Ex Rt", precision = 9, scale = 6, nullable = false)
-    private BigDecimal thirdLastExRt;
+    private BigDecimal thirdLastExchangeRate;
 
     @Column(name = "3rd L Exch Rt Date", precision = 8, scale = 0, nullable = false)
-    private BigDecimal thirdLExchRtDate;
+    private BigDecimal thirdLastExchangeRateDate;
 
     @Column(name = "SSS Mat Recv Upl Fct", precision = 5, scale = 4, nullable = false)
     private BigDecimal sssMatRecvUplFct;
@@ -87,7 +87,7 @@ public class ClaimConfiguration {
     private BigDecimal goodwillBmlLimit;
 
     @Column(name = "Max Age of Claim (mths)", precision = 9, scale = 2, nullable = false)
-    private BigDecimal maxAgeOfClaimMths;
+    private BigDecimal maxAgeOfClaimMonths;
 
     @Column(name = "G/A No", precision = 5, scale = 0, nullable = false)
     private BigDecimal gaNo;
@@ -141,12 +141,12 @@ public class ClaimConfiguration {
         this.key = key;
     }
 
-    public BigDecimal getCurrPerdYyww() {
-        return currPerdYyww;
+    public BigDecimal getCurrentPeriodYyww() {
+        return currentPeriodYyww;
     }
 
-    public void setCurrPerdYyww(BigDecimal currPerdYyww) {
-        this.currPerdYyww = currPerdYyww;
+    public void setCurrentPeriodYyww(BigDecimal currentPeriodYyww) {
+        this.currentPeriodYyww = currentPeriodYyww;
     }
 
     public BigDecimal getSssClaimValue() {
@@ -157,52 +157,52 @@ public class ClaimConfiguration {
         this.sssClaimValue = sssClaimValue;
     }
 
-    public BigDecimal getCurrExchRate() {
-        return currExchRate;
+    public BigDecimal getCurrentExchangeRate() {
+        return currentExchangeRate;
     }
 
-    public void setCurrExchRate(BigDecimal currExchRate) {
-        this.currExchRate = currExchRate;
+    public void setCurrentExchangeRate(BigDecimal currentExchangeRate) {
+        this.currentExchangeRate = currentExchangeRate;
     }
 
-    public BigDecimal getCurrExchRtDate() {
-        return currExchRtDate;
+    public BigDecimal getCurrentExchangeRateDate() {
+        return currentExchangeRateDate;
     }
 
-    public void setCurrExchRtDate(BigDecimal currExchRtDate) {
-        this.currExchRtDate = currExchRtDate;
+    public void setCurrentExchangeRateDate(BigDecimal currentExchangeRateDate) {
+        this.currentExchangeRateDate = currentExchangeRateDate;
     }
 
-    public BigDecimal getPrevExchRate() {
-        return prevExchRate;
+    public BigDecimal getPreviousExchangeRate() {
+        return previousExchangeRate;
     }
 
-    public void setPrevExchRate(BigDecimal prevExchRate) {
-        this.prevExchRate = prevExchRate;
+    public void setPreviousExchangeRate(BigDecimal previousExchangeRate) {
+        this.previousExchangeRate = previousExchangeRate;
     }
 
-    public BigDecimal getPrevExchRtDate() {
-        return prevExchRtDate;
+    public BigDecimal getPreviousExchangeRateDate() {
+        return previousExchangeRateDate;
     }
 
-    public void setPrevExchRtDate(BigDecimal prevExchRtDate) {
-        this.prevExchRtDate = prevExchRtDate;
+    public void setPreviousExchangeRateDate(BigDecimal previousExchangeRateDate) {
+        this.previousExchangeRateDate = previousExchangeRateDate;
     }
 
-    public BigDecimal getThirdLastExRt() {
-        return thirdLastExRt;
+    public BigDecimal getThirdLastExchangeRate() {
+        return thirdLastExchangeRate;
     }
 
-    public void setThirdLastExRt(BigDecimal thirdLastExRt) {
-        this.thirdLastExRt = thirdLastExRt;
+    public void setThirdLastExchangeRate(BigDecimal thirdLastExchangeRate) {
+        this.thirdLastExchangeRate = thirdLastExchangeRate;
     }
 
-    public BigDecimal getThirdLExchRtDate() {
-        return thirdLExchRtDate;
+    public BigDecimal getThirdLastExchangeRateDate() {
+        return thirdLastExchangeRateDate;
     }
 
-    public void setThirdLExchRtDate(BigDecimal thirdLExchRtDate) {
-        this.thirdLExchRtDate = thirdLExchRtDate;
+    public void setThirdLastExchangeRateDate(BigDecimal thirdLastExchangeRateDate) {
+        this.thirdLastExchangeRateDate = thirdLastExchangeRateDate;
     }
 
     public BigDecimal getSssMatRecvUplFct() {
@@ -341,12 +341,12 @@ public class ClaimConfiguration {
         this.goodwillBmlLimit = goodwillBmlLimit;
     }
 
-    public BigDecimal getMaxAgeOfClaimMths() {
-        return maxAgeOfClaimMths;
+    public BigDecimal getMaxAgeOfClaimMonths() {
+        return maxAgeOfClaimMonths;
     }
 
-    public void setMaxAgeOfClaimMths(BigDecimal maxAgeOfClaimMths) {
-        this.maxAgeOfClaimMths = maxAgeOfClaimMths;
+    public void setMaxAgeOfClaimMonths(BigDecimal maxAgeOfClaimMonths) {
+        this.maxAgeOfClaimMonths = maxAgeOfClaimMonths;
     }
 
     public BigDecimal getGaNo() {

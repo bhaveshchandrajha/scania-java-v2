@@ -36,52 +36,52 @@ public class SystemConfiguration {
     private BigDecimal thirdLastExchangeRateDate;
 
     @Column(name = "SSS Mat Recv Upl Fct", precision = 5, scale = 4, nullable = false)
-    private BigDecimal sssMatRecvUplFct;
+    private BigDecimal sssMaterialRecoveryUpliftFactor;
 
     @Column(name = "SSS Low Value Upl Fct", precision = 5, scale = 4, nullable = false)
-    private BigDecimal sssLowValueUplFct;
+    private BigDecimal sssLowValueUpliftFactor;
 
     @Column(name = "SSS Lab Recv Rt/Hr", precision = 8, scale = 2, nullable = false)
-    private BigDecimal sssLabRecvRtHr;
+    private BigDecimal sssLaborRecoveryRatePerHour;
 
     @Column(name = "SSS Lab Recv Rt/Hr 2", precision = 8, scale = 2, nullable = false)
-    private BigDecimal sssLabRecvRtHr2;
+    private BigDecimal sssLaborRecoveryRatePerHour2;
 
     @Column(name = "SSS Lab Recv Rt/Hr 3", precision = 8, scale = 2, nullable = false)
-    private BigDecimal sssLabRecvRtHr3;
+    private BigDecimal sssLaborRecoveryRatePerHour3;
 
     @Column(name = "Eff Per Start Date 1", precision = 8, scale = 0, nullable = false)
-    private BigDecimal effPerStartDate1;
+    private BigDecimal effectivePeriodStartDate1;
 
     @Column(name = "Eff Per Start Date 2", precision = 8, scale = 0, nullable = false)
-    private BigDecimal effPerStartDate2;
+    private BigDecimal effectivePeriodStartDate2;
 
     @Column(name = "Eff Per Start Date 3", precision = 8, scale = 0, nullable = false)
-    private BigDecimal effPerStartDate3;
+    private BigDecimal effectivePeriodStartDate3;
 
     @Column(name = "Eff Per End Date 1", precision = 8, scale = 0, nullable = false)
-    private BigDecimal effPerEndDate1;
+    private BigDecimal effectivePeriodEndDate1;
 
     @Column(name = "Eff Per End Date 2", precision = 8, scale = 0, nullable = false)
-    private BigDecimal effPerEndDate2;
+    private BigDecimal effectivePeriodEndDate2;
 
     @Column(name = "Eff Per End Date 3", precision = 8, scale = 0, nullable = false)
-    private BigDecimal effPerEndDate3;
+    private BigDecimal effectivePeriodEndDate3;
 
     @Column(name = "Foreign Trucks Comm %", precision = 5, scale = 2, nullable = false)
-    private BigDecimal foreignTrucksCommPercent;
+    private BigDecimal foreignTrucksCommissionPercent;
 
     @Column(name = "Effect Retail Date", precision = 8, scale = 0, nullable = false)
-    private BigDecimal effectRetailDate;
+    private BigDecimal effectiveRetailDate;
 
     @Column(name = "Effect Cost Date", precision = 8, scale = 0, nullable = false)
-    private BigDecimal effectCostDate;
+    private BigDecimal effectiveCostDate;
 
     @Column(name = "Uplift Percentage", precision = 4, scale = 2, nullable = false)
     private BigDecimal upliftPercentage;
 
     @Column(name = "Auth Option", precision = 4, scale = 2, nullable = false)
-    private BigDecimal authOption;
+    private BigDecimal authorizationOption;
 
     @Column(name = "Goodwill BML Limit", precision = 9, scale = 2, nullable = false)
     private BigDecimal goodwillBmlLimit;
@@ -90,16 +90,16 @@ public class SystemConfiguration {
     private BigDecimal maxAgeOfClaimMonths;
 
     @Column(name = "G/A No", precision = 5, scale = 0, nullable = false)
-    private BigDecimal gaNo;
+    private BigDecimal gaNumber;
 
     @Column(name = "SSS Supp. No.", length = 10, nullable = false)
-    private String sssSuppNo;
+    private String sssSupplierNumber;
 
     @Column(name = "Dmd codeForeign Veh. Uplift", length = 2, nullable = false)
-    private String dmdCodeForeignVehUplift;
+    private String demandCodeForeignVehicleUplift;
 
     @Column(name = "Dmd codeBus & Coach Uplift", length = 2, nullable = false)
-    private String dmdCodeBusCoachUplift;
+    private String demandCodeBusCoachUplift;
 
     @Column(name = "SSS Low Value Article Limit", precision = 3, scale = 0, nullable = false)
     private BigDecimal sssLowValueArticleLimit;
@@ -111,13 +111,13 @@ public class SystemConfiguration {
     private String partsOrderType;
 
     @Column(name = "Cust Order Type Code(Stock Order", length = 2, nullable = false)
-    private String custOrderTypeCodeStockOrder;
+    private String customerOrderTypeCodeStockOrder;
 
     @Column(name = "Cust Order Type Code(VOR)", length = 2, nullable = false)
-    private String custOrderTypeCodeVor;
+    private String customerOrderTypeCodeVor;
 
     @Column(name = "Sp Csts Batch line Value limit", precision = 11, scale = 2, nullable = false)
-    private BigDecimal spCstsBatchLineValueLimit;
+    private BigDecimal specialCostsBatchLineValueLimit;
 
     @Column(name = "Customer Company Code", length = 3, nullable = false)
     private String customerCompanyCode;
@@ -128,9 +128,11 @@ public class SystemConfiguration {
     @Column(name = "Check Agreement Code", length = 1, nullable = false)
     private String checkAgreementCode;
 
+    // Constructors
     public SystemConfiguration() {
     }
 
+    // Getters and Setters
     public String getKey() {
         return key;
     }
@@ -203,116 +205,116 @@ public class SystemConfiguration {
         this.thirdLastExchangeRateDate = thirdLastExchangeRateDate;
     }
 
-    public BigDecimal getSssMatRecvUplFct() {
-        return sssMatRecvUplFct;
+    public BigDecimal getSssMaterialRecoveryUpliftFactor() {
+        return sssMaterialRecoveryUpliftFactor;
     }
 
-    public void setSssMatRecvUplFct(BigDecimal sssMatRecvUplFct) {
-        this.sssMatRecvUplFct = sssMatRecvUplFct;
+    public void setSssMaterialRecoveryUpliftFactor(BigDecimal sssMaterialRecoveryUpliftFactor) {
+        this.sssMaterialRecoveryUpliftFactor = sssMaterialRecoveryUpliftFactor;
     }
 
-    public BigDecimal getSssLowValueUplFct() {
-        return sssLowValueUplFct;
+    public BigDecimal getSssLowValueUpliftFactor() {
+        return sssLowValueUpliftFactor;
     }
 
-    public void setSssLowValueUplFct(BigDecimal sssLowValueUplFct) {
-        this.sssLowValueUplFct = sssLowValueUplFct;
+    public void setSssLowValueUpliftFactor(BigDecimal sssLowValueUpliftFactor) {
+        this.sssLowValueUpliftFactor = sssLowValueUpliftFactor;
     }
 
-    public BigDecimal getSssLabRecvRtHr() {
-        return sssLabRecvRtHr;
+    public BigDecimal getSssLaborRecoveryRatePerHour() {
+        return sssLaborRecoveryRatePerHour;
     }
 
-    public void setSssLabRecvRtHr(BigDecimal sssLabRecvRtHr) {
-        this.sssLabRecvRtHr = sssLabRecvRtHr;
+    public void setSssLaborRecoveryRatePerHour(BigDecimal sssLaborRecoveryRatePerHour) {
+        this.sssLaborRecoveryRatePerHour = sssLaborRecoveryRatePerHour;
     }
 
-    public BigDecimal getSssLabRecvRtHr2() {
-        return sssLabRecvRtHr2;
+    public BigDecimal getSssLaborRecoveryRatePerHour2() {
+        return sssLaborRecoveryRatePerHour2;
     }
 
-    public void setSssLabRecvRtHr2(BigDecimal sssLabRecvRtHr2) {
-        this.sssLabRecvRtHr2 = sssLabRecvRtHr2;
+    public void setSssLaborRecoveryRatePerHour2(BigDecimal sssLaborRecoveryRatePerHour2) {
+        this.sssLaborRecoveryRatePerHour2 = sssLaborRecoveryRatePerHour2;
     }
 
-    public BigDecimal getSssLabRecvRtHr3() {
-        return sssLabRecvRtHr3;
+    public BigDecimal getSssLaborRecoveryRatePerHour3() {
+        return sssLaborRecoveryRatePerHour3;
     }
 
-    public void setSssLabRecvRtHr3(BigDecimal sssLabRecvRtHr3) {
-        this.sssLabRecvRtHr3 = sssLabRecvRtHr3;
+    public void setSssLaborRecoveryRatePerHour3(BigDecimal sssLaborRecoveryRatePerHour3) {
+        this.sssLaborRecoveryRatePerHour3 = sssLaborRecoveryRatePerHour3;
     }
 
-    public BigDecimal getEffPerStartDate1() {
-        return effPerStartDate1;
+    public BigDecimal getEffectivePeriodStartDate1() {
+        return effectivePeriodStartDate1;
     }
 
-    public void setEffPerStartDate1(BigDecimal effPerStartDate1) {
-        this.effPerStartDate1 = effPerStartDate1;
+    public void setEffectivePeriodStartDate1(BigDecimal effectivePeriodStartDate1) {
+        this.effectivePeriodStartDate1 = effectivePeriodStartDate1;
     }
 
-    public BigDecimal getEffPerStartDate2() {
-        return effPerStartDate2;
+    public BigDecimal getEffectivePeriodStartDate2() {
+        return effectivePeriodStartDate2;
     }
 
-    public void setEffPerStartDate2(BigDecimal effPerStartDate2) {
-        this.effPerStartDate2 = effPerStartDate2;
+    public void setEffectivePeriodStartDate2(BigDecimal effectivePeriodStartDate2) {
+        this.effectivePeriodStartDate2 = effectivePeriodStartDate2;
     }
 
-    public BigDecimal getEffPerStartDate3() {
-        return effPerStartDate3;
+    public BigDecimal getEffectivePeriodStartDate3() {
+        return effectivePeriodStartDate3;
     }
 
-    public void setEffPerStartDate3(BigDecimal effPerStartDate3) {
-        this.effPerStartDate3 = effPerStartDate3;
+    public void setEffectivePeriodStartDate3(BigDecimal effectivePeriodStartDate3) {
+        this.effectivePeriodStartDate3 = effectivePeriodStartDate3;
     }
 
-    public BigDecimal getEffPerEndDate1() {
-        return effPerEndDate1;
+    public BigDecimal getEffectivePeriodEndDate1() {
+        return effectivePeriodEndDate1;
     }
 
-    public void setEffPerEndDate1(BigDecimal effPerEndDate1) {
-        this.effPerEndDate1 = effPerEndDate1;
+    public void setEffectivePeriodEndDate1(BigDecimal effectivePeriodEndDate1) {
+        this.effectivePeriodEndDate1 = effectivePeriodEndDate1;
     }
 
-    public BigDecimal getEffPerEndDate2() {
-        return effPerEndDate2;
+    public BigDecimal getEffectivePeriodEndDate2() {
+        return effectivePeriodEndDate2;
     }
 
-    public void setEffPerEndDate2(BigDecimal effPerEndDate2) {
-        this.effPerEndDate2 = effPerEndDate2;
+    public void setEffectivePeriodEndDate2(BigDecimal effectivePeriodEndDate2) {
+        this.effectivePeriodEndDate2 = effectivePeriodEndDate2;
     }
 
-    public BigDecimal getEffPerEndDate3() {
-        return effPerEndDate3;
+    public BigDecimal getEffectivePeriodEndDate3() {
+        return effectivePeriodEndDate3;
     }
 
-    public void setEffPerEndDate3(BigDecimal effPerEndDate3) {
-        this.effPerEndDate3 = effPerEndDate3;
+    public void setEffectivePeriodEndDate3(BigDecimal effectivePeriodEndDate3) {
+        this.effectivePeriodEndDate3 = effectivePeriodEndDate3;
     }
 
-    public BigDecimal getForeignTrucksCommPercent() {
-        return foreignTrucksCommPercent;
+    public BigDecimal getForeignTrucksCommissionPercent() {
+        return foreignTrucksCommissionPercent;
     }
 
-    public void setForeignTrucksCommPercent(BigDecimal foreignTrucksCommPercent) {
-        this.foreignTrucksCommPercent = foreignTrucksCommPercent;
+    public void setForeignTrucksCommissionPercent(BigDecimal foreignTrucksCommissionPercent) {
+        this.foreignTrucksCommissionPercent = foreignTrucksCommissionPercent;
     }
 
-    public BigDecimal getEffectRetailDate() {
-        return effectRetailDate;
+    public BigDecimal getEffectiveRetailDate() {
+        return effectiveRetailDate;
     }
 
-    public void setEffectRetailDate(BigDecimal effectRetailDate) {
-        this.effectRetailDate = effectRetailDate;
+    public void setEffectiveRetailDate(BigDecimal effectiveRetailDate) {
+        this.effectiveRetailDate = effectiveRetailDate;
     }
 
-    public BigDecimal getEffectCostDate() {
-        return effectCostDate;
+    public BigDecimal getEffectiveCostDate() {
+        return effectiveCostDate;
     }
 
-    public void setEffectCostDate(BigDecimal effectCostDate) {
-        this.effectCostDate = effectCostDate;
+    public void setEffectiveCostDate(BigDecimal effectiveCostDate) {
+        this.effectiveCostDate = effectiveCostDate;
     }
 
     public BigDecimal getUpliftPercentage() {
@@ -323,12 +325,12 @@ public class SystemConfiguration {
         this.upliftPercentage = upliftPercentage;
     }
 
-    public BigDecimal getAuthOption() {
-        return authOption;
+    public BigDecimal getAuthorizationOption() {
+        return authorizationOption;
     }
 
-    public void setAuthOption(BigDecimal authOption) {
-        this.authOption = authOption;
+    public void setAuthorizationOption(BigDecimal authorizationOption) {
+        this.authorizationOption = authorizationOption;
     }
 
     public BigDecimal getGoodwillBmlLimit() {
@@ -347,36 +349,36 @@ public class SystemConfiguration {
         this.maxAgeOfClaimMonths = maxAgeOfClaimMonths;
     }
 
-    public BigDecimal getGaNo() {
-        return gaNo;
+    public BigDecimal getGaNumber() {
+        return gaNumber;
     }
 
-    public void setGaNo(BigDecimal gaNo) {
-        this.gaNo = gaNo;
+    public void setGaNumber(BigDecimal gaNumber) {
+        this.gaNumber = gaNumber;
     }
 
-    public String getSssSuppNo() {
-        return sssSuppNo;
+    public String getSssSupplierNumber() {
+        return sssSupplierNumber;
     }
 
-    public void setSssSuppNo(String sssSuppNo) {
-        this.sssSuppNo = sssSuppNo;
+    public void setSssSupplierNumber(String sssSupplierNumber) {
+        this.sssSupplierNumber = sssSupplierNumber;
     }
 
-    public String getDmdCodeForeignVehUplift() {
-        return dmdCodeForeignVehUplift;
+    public String getDemandCodeForeignVehicleUplift() {
+        return demandCodeForeignVehicleUplift;
     }
 
-    public void setDmdCodeForeignVehUplift(String dmdCodeForeignVehUplift) {
-        this.dmdCodeForeignVehUplift = dmdCodeForeignVehUplift;
+    public void setDemandCodeForeignVehicleUplift(String demandCodeForeignVehicleUplift) {
+        this.demandCodeForeignVehicleUplift = demandCodeForeignVehicleUplift;
     }
 
-    public String getDmdCodeBusCoachUplift() {
-        return dmdCodeBusCoachUplift;
+    public String getDemandCodeBusCoachUplift() {
+        return demandCodeBusCoachUplift;
     }
 
-    public void setDmdCodeBusCoachUplift(String dmdCodeBusCoachUplift) {
-        this.dmdCodeBusCoachUplift = dmdCodeBusCoachUplift;
+    public void setDemandCodeBusCoachUplift(String demandCodeBusCoachUplift) {
+        this.demandCodeBusCoachUplift = demandCodeBusCoachUplift;
     }
 
     public BigDecimal getSssLowValueArticleLimit() {
@@ -403,28 +405,28 @@ public class SystemConfiguration {
         this.partsOrderType = partsOrderType;
     }
 
-    public String getCustOrderTypeCodeStockOrder() {
-        return custOrderTypeCodeStockOrder;
+    public String getCustomerOrderTypeCodeStockOrder() {
+        return customerOrderTypeCodeStockOrder;
     }
 
-    public void setCustOrderTypeCodeStockOrder(String custOrderTypeCodeStockOrder) {
-        this.custOrderTypeCodeStockOrder = custOrderTypeCodeStockOrder;
+    public void setCustomerOrderTypeCodeStockOrder(String customerOrderTypeCodeStockOrder) {
+        this.customerOrderTypeCodeStockOrder = customerOrderTypeCodeStockOrder;
     }
 
-    public String getCustOrderTypeCodeVor() {
-        return custOrderTypeCodeVor;
+    public String getCustomerOrderTypeCodeVor() {
+        return customerOrderTypeCodeVor;
     }
 
-    public void setCustOrderTypeCodeVor(String custOrderTypeCodeVor) {
-        this.custOrderTypeCodeVor = custOrderTypeCodeVor;
+    public void setCustomerOrderTypeCodeVor(String customerOrderTypeCodeVor) {
+        this.customerOrderTypeCodeVor = customerOrderTypeCodeVor;
     }
 
-    public BigDecimal getSpCstsBatchLineValueLimit() {
-        return spCstsBatchLineValueLimit;
+    public BigDecimal getSpecialCostsBatchLineValueLimit() {
+        return specialCostsBatchLineValueLimit;
     }
 
-    public void setSpCstsBatchLineValueLimit(BigDecimal spCstsBatchLineValueLimit) {
-        this.spCstsBatchLineValueLimit = spCstsBatchLineValueLimit;
+    public void setSpecialCostsBatchLineValueLimit(BigDecimal specialCostsBatchLineValueLimit) {
+        this.specialCostsBatchLineValueLimit = specialCostsBatchLineValueLimit;
     }
 
     public String getCustomerCompanyCode() {

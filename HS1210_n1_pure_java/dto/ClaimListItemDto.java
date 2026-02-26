@@ -1,10 +1,13 @@
 package com.scania.warranty.dto;
 
+import java.time.LocalDate;
+
 public record ClaimListItemDto(
         String dealerId,
         String claimNumber,
         String invoiceNumber,
-        String invoiceDate,
+        LocalDate invoiceDate,
+        String orderNumber,
         String vehicleNumber,
         String customerNumber,
         String customerName,
@@ -12,7 +15,6 @@ public record ClaimListItemDto(
         String status,
         String statusDescription,
         Integer errorCount,
-        String color,
-        String sdeDate
+        String colorIndicator
 ) {
 }

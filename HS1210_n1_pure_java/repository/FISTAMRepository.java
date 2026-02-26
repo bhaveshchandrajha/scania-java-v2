@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface FISTAMRepository extends JpaRepository<FISTAM, String> {
 
-    Optional<FISTAM> findFirstByOrderByHdlnrAsc();
+    Optional<FISTAM> findFirstByOrderByDealerNumberAsc();
 }
