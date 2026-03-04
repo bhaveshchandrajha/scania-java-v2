@@ -1,43 +1,51 @@
+/**
+ * Domain entity or value object for the warranty claims model.
+ * <p>
+ * Generated from RPG: unit {@code HS1210}, node {@code n404}.
+ */
+
 package com.scania.warranty.domain;
 
 import jakarta.persistence.*;
 
+/**
+ * JPA entity for submission deadline release requests (HSG70F).
+ */
 @Entity
 @Table(name = "HSG70F")
 public class SubmissionDeadlineRelease {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "KZL", length = 3)
     private String companyCode;
-    
+
     @Column(name = "R.NR.", length = 5)
     private String invoiceNumber;
-    
+
     @Column(name = "R.DAT", length = 8)
     private String invoiceDate;
-    
+
     @Column(name = "FGNR.", length = 17)
-    private String vehicleNumber;
-    
+    private String chassisNumber;
+
     @Column(name = "REP.DAT.", length = 8)
     private String repairDate;
-    
+
     @Column(name = "STATUS", length = 1)
     private String status;
-    
+
     @Column(name = "CUS.NO.", precision = 5, scale = 0)
     private Integer customerNumber;
-    
+
     @Column(name = "D.C.NO.", precision = 8, scale = 0)
     private Integer dealerClaimNumber;
-    
+
     @Column(name = "D.C.FN.", length = 5)
     private String dealerClaimFailureNumber;
 
-    // Constructors
     public SubmissionDeadlineRelease() {
     }
 
@@ -74,12 +82,12 @@ public class SubmissionDeadlineRelease {
         this.invoiceDate = invoiceDate;
     }
 
-    public String getVehicleNumber() {
-        return vehicleNumber;
+    public String getChassisNumber() {
+        return chassisNumber;
     }
 
-    public void setVehicleNumber(String vehicleNumber) {
-        this.vehicleNumber = vehicleNumber;
+    public void setChassisNumber(String chassisNumber) {
+        this.chassisNumber = chassisNumber;
     }
 
     public String getRepairDate() {

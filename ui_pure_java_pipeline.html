@@ -327,9 +327,13 @@
       <span style="color: #9ca3af;">Node:</span> <span id="migrate-node-label">—</span>
       <span style="color: #9ca3af; margin-left: 12px;">Context:</span> <span id="migrate-context-label">—</span>
       <button type="button" id="migrate-view-rpg-btn" style="margin-left: 12px;">View RPG snippet</button>
+      <button type="button" id="migrate-view-java-btn" style="margin-left: 8px;">View generated Java</button>
     </div>
     <div id="migrate-rpg-snippet" style="display: none; margin-top: 8px;">
       <pre id="migrate-rpg-snippet-pre" style="max-height: 200px; overflow: auto; font-size: 10px; padding: 10px; background: #0f172a; border: 1px solid #1e293b; border-radius: 4px;"></pre>
+    </div>
+    <div id="migrate-java-snippet" style="display: none; margin-top: 8px;">
+      <pre id="migrate-java-snippet-pre" style="max-height: 260px; overflow: auto; font-size: 10px; padding: 10px; background: #020617; border: 1px solid #1e293b; border-radius: 4px;"></pre>
     </div>
     <div id="migrate-status"></div>
     <div id="migrate-fix-gaps" style="display: none; margin-top: 8px;">
@@ -479,6 +483,27 @@
     }
   }
 
+  async function showJavaSnippet(unitId, nodeId) {
+    if (!unitId || !nodeId) return;
+    const pre = document.getElementById('migrate-java-snippet-pre');
+    const div = document.getElementById('migrate-java-snippet');
+    if (!pre || !div) return;
+    try {
+      const res = await fetch('/api/pure-java-source?unitId=' + encodeURIComponent(unitId) + '&nodeId=' + encodeURIComponent(nodeId));
+      const data = await res.json();
+      if (data.error) {
+        pre.textContent = 'Error: ' + data.error;
+      } else {
+        const header = (data.path ? '// ' + data.path + '\\n\\n' : '');
+        pre.textContent = header + (data.javaSource || '(no source)');
+      }
+      div.style.display = 'block';
+    } catch (e) {
+      pre.textContent = 'Error: ' + e.message;
+      div.style.display = 'block';
+    }
+  }
+
   function updateMigrateTraceability() {
     const unitId = document.getElementById('migrate-unit')?.value;
     const nodeId = document.getElementById('migrate-node')?.value;
@@ -555,11 +580,17 @@
     const outputPre = document.getElementById('migrate-output');
     const fileTreeDiv = document.getElementById('file-structure');
     const fileTree = document.getElementById('file-tree');
+    const javaDiv = document.getElementById('migrate-java-snippet');
+    const javaPre = document.getElementById('migrate-java-snippet-pre');
     
     statusDiv.innerHTML = '<div class="status info">Migrating to Pure Java (this may take 2-5 minutes)...</div>';
     outputPre.style.display = 'block';
     outputPre.textContent = 'Starting migration...';
     fileTreeDiv.style.display = 'none';
+    if (javaDiv && javaPre) {
+      javaPre.textContent = '';
+      javaDiv.style.display = 'none';
+    }
     
     try {
       const enforceLogic = document.getElementById('migrate-enforce-logic')?.checked ? '1' : '0';
@@ -605,6 +636,31 @@
         } else {
           window.lastMigrateResult = null;
           document.getElementById('migrate-fix-gaps').style.display = 'none';
+        }
+        
+        // Auto-wire Validate tab to this migrated node for traceability
+        const validateAppInput = document.getElementById('validate-app-dir');
+        const validateContextInput = document.getElementById('validate-context-file');
+        if (validateAppInput) {
+          validateAppInput.value = result.outputDir || (unitId + '_' + nodeId + '_pure_java');
+        }
+        if (validateContextInput) {
+          validateContextInput.value = 'context_index/' + unitId + '_' + nodeId + '.json';
+        }
+        if (typeof updateValidateTraceability === 'function') {
+          updateValidateTraceability();
+        }
+
+        // Auto-wire Build tab (projectDir) to the generated app if it is a Maven project
+        const buildDirInput = document.getElementById('build-project-dir');
+        if (buildDirInput && result.outputDir && result.isMavenProject) {
+          // Only auto-target the generated directory when it is a Maven project (has pom.xml).
+          buildDirInput.value = result.outputDir;
+        }
+
+        // Automatically show freshly generated Java for this node (cause → effect)
+        if (typeof showJavaSnippet === 'function') {
+          showJavaSnippet(unitId, nodeId);
         }
         
         // Display file structure
@@ -1249,6 +1305,7 @@
   }
 
 
+
   // Handle RPG directory browser picker
   function setupRpgDirectoryPicker() {
     const browseBtn = document.getElementById('browse-rpg-btn');
@@ -1374,6 +1431,14 @@
         const unitId = document.getElementById('migrate-unit')?.value;
         const nodeId = document.getElementById('migrate-node')?.value;
         showRpgSnippet(unitId, nodeId, 'migrate-rpg-snippet-pre', 'migrate-rpg-snippet');
+      });
+    }
+    const migrateViewJavaBtn = document.getElementById('migrate-view-java-btn');
+    if (migrateViewJavaBtn) {
+      migrateViewJavaBtn.addEventListener('click', function() {
+        const unitId = document.getElementById('migrate-unit')?.value;
+        const nodeId = document.getElementById('migrate-node')?.value;
+        showJavaSnippet(unitId, nodeId);
       });
     }
     

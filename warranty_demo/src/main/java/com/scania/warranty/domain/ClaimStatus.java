@@ -1,23 +1,25 @@
+/**
+ * Domain entity or value object for the warranty claims model.
+ * <p>
+ * Generated from RPG: unit {@code HS1210}, node {@code n404}.
+ */
+
 package com.scania.warranty.domain;
 
+/**
+ * Enum for claim status codes (STATUS CODE SDE).
+ */
 public enum ClaimStatus {
-    CREATED(0, "Created"),
-    PENDING(2, "Pending"),
-    SUBMITTED(3, "Submitted"),
-    MINIMUM_REQUEST(5, "Minimum Request"),
-    APPROVED(10, "Approved"),
-    REJECTED(11, "Rejected"),
-    ERROR(16, "Error"),
-    MINIMUM_POSTED(20, "Minimum Posted"),
-    PENDING_MANUAL(30, "Pending Manual Processing"),
-    EXCLUDED(99, "Excluded");
+    CREATED(0),
+    PENDING(0),
+    MINIMUM(5),
+    APPROVED(20),
+    EXCLUDED(99);
 
     private final int code;
-    private final String description;
 
-    ClaimStatus(int code, String description) {
+    ClaimStatus(int code) {
         this.code = code;
-        this.description = description;
     }
 
     public int getCode() {
@@ -25,15 +27,28 @@ public enum ClaimStatus {
     }
 
     public String getDescription() {
-        return description;
+        switch (this) {
+            case CREATED:
+            case PENDING:
+                return "Pending";
+            case MINIMUM:
+                return "Minimum";
+            case APPROVED:
+                return "Approved";
+            case EXCLUDED:
+                return "Excluded";
+            default:
+                return "";
+        }
     }
 
+    // @origin HS1210 L919-996 (IF)
     public static ClaimStatus fromCode(int code) {
         for (ClaimStatus status : values()) {
             if (status.code == code) {
                 return status;
             }
         }
-        return null;
+        return PENDING;
     }
 }

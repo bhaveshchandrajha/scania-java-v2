@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Global Context / Knowledge Graph Builder</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #020617;
+      color: #e5e7eb;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: #0b1120;
+      border-bottom: 1px solid #1f2937;
+    }
+    header h1 {
+      font-size: 18px;
+      margin: 0;
+    }
+    header span {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .container {
+      max-width: 960px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+    .card {
+      background: #020617;
+      border-radius: 8px;
+      padding: 16px 20px;
+      border: 1px solid #1f2937;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+    .card h2 {
+      margin-top: 0;
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+    .card p {
+      margin-top: 4px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    label {
+      font-size: 12px;
+      color: #d1d5db;
+      display: inline-block;
+      width: 120px;
+    }
+    input, select {
+      background: #020617;
+      color: #e5e7eb;
+      border: 1px solid #374151;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 12px;
+    }
+    button.primary {
+      background: #3b82f6;
+      color: white;
+      border: 1px solid #2563eb;
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    button.primary:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+    .status {
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+    .status.info {
+      background: #111827;
+      border: 1px solid #1f2937;
+      color: #e5e7eb;
+    }
+    .status.success {
+      background: #022c22;
+      border: 1px solid #047857;
+      color: #bbf7d0;
+    }
+    .status.error {
+      background: #450a0a;
+      border: 1px solid #b91c1c;
+      color: #fecaca;
+    }
+    pre {
+      margin-top: 10px;
+      padding: 10px;
+      background: #020617;
+      border-radius: 4px;
+      border: 1px solid #1f2937;
+      font-size: 11px;
+      max-height: 280px;
+      overflow: auto;
+    }
+    .file-tree {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      padding: 12px;
+      background: #020617;
+      border: 1px solid #1f2937;
+      border-radius: 6px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    .file-tree .file {
+      color: #60a5fa;
+    }
+    .file-tree .dir {
+      color: #fbbf24;
+      font-weight: bold;
+    }
+    #val-java-preview.val-java-code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 11px;
+      line-height: 1.4;
+      padding: 8px;
+      white-space: pre;
+    }
+    #val-java-preview .val-java-line {
+      font-family: inherit;
+    }
+    #val-java-preview .val-java-origin {
+      cursor: pointer;
+    }
+    #val-java-preview .val-java-origin:hover {
+      background: rgba(59, 130, 246, 0.15);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Global Context / Knowledge Graph Builder</h1>
+      <span>Build DB registry, program-level context, and call graph from AST + RPG.</span>
+    </div>
+    <span style="font-size: 10px; color: #9ca3af;">Backend: /api/build-global-context</span>
+  </header>
+
+  <div class="container">
+    <div class="tabs" style="display: flex; gap: 8px; margin-bottom: 12px;">
+      <div class="tab active" data-tab="step1" style="padding: 6px 10px; cursor: pointer; font-size: 12px; border-radius: 4px; background: #111827; border: 1px solid #1f2937;">1. Build Global Context</div>
+      <div class="tab" data-tab="step2" style="padding: 6px 10px; cursor: pointer; font-size: 12px; border-radius: 4px; background: #020617; border: 1px solid #1f2937; color: #9ca3af;">2. Knowledge Graph View</div>
+      <div class="tab" data-tab="step3" style="padding: 6px 10px; cursor: pointer; font-size: 12px; border-radius: 4px; background: #020617; border: 1px solid #1f2937; color: #9ca3af;">3. Migrate Feature</div>
+      <div class="tab" data-tab="step4" style="padding: 6px 10px; cursor: pointer; font-size: 12px; border-radius: 4px; background: #020617; border: 1px solid #1f2937; color: #9ca3af;">4. Validation</div>
+      <div class="tab" data-tab="step5" style="padding: 6px 10px; cursor: pointer; font-size: 12px; border-radius: 4px; background: #020617; border: 1px solid #1f2937; color: #9ca3af;">5. Build Application</div>
+      <div class="tab" data-tab="step6" style="padding: 6px 10px; cursor: pointer; font-size: 12px; border-radius: 4px; background: #020617; border: 1px solid #1f2937; color: #9ca3af;">6. Run & Demo</div>
+    </div>
+
+    <div id="tab-step1" class="tab-content" style="display: block;">
+      <div class="card">
+        <h2>1. Inputs & Global Context</h2>
+      <p>Point to your AST directory (with *-ast.json files) and the RPG root directory (e.g. extracted PoC_HS1210).
+         Then click <strong>Build Global Context</strong>. Afterwards you can export a Neo4j Cypher script in step 2.</p>
+
+        <div style="margin-bottom: 8px;">
+          <label>AST Directory:</label>
+          <select id="ast-dir" style="width: 320px;"></select>
+        </div>
+        <div style="margin-bottom: 8px;">
+          <label>RPG Directory:</label>
+          <input type="text" id="rpg-dir" style="width: 340px;" placeholder="/Users/you/Downloads/PoC_HS1210">
+        </div>
+        <div style="margin-bottom: 8px;">
+          <button class="primary" id="discover-btn">🔍 Discover Directories</button>
+          <button class="primary" id="build-btn">Build Global Context</button>
+        </div>
+
+        <div id="status"></div>
+        <pre id="output" style="display: none;"></pre>
+      </div>
+    </div>
+
+    <div id="tab-step2" class="tab-content" style="display: none;">
+      <div class="card">
+        <h2>2. Knowledge Graph</h2>
+        <p>Build and preview the application knowledge graph. Programs, procedures, and DB files are shown as an
+           interactive graph. Drag nodes to rearrange, scroll to zoom, click a node for details.</p>
+        <div style="margin-bottom: 8px; display: flex; gap: 8px; align-items: center;">
+          <button class="primary" id="export-btn">Build Knowledge Graph View</button>
+          <button class="primary" id="preview-graph-btn" style="background:#6366f1;border-color:#4f46e5;">Preview Graph</button>
+          <span id="graph-legend" style="font-size:10px;color:#6b7280;margin-left:8px;display:none;">
+            <span style="color:#3b82f6;">⬡ Program</span> &nbsp;
+            <span style="color:#a855f7;">● Procedure</span> &nbsp;
+            <span style="color:#10b981;">● Subroutine</span> &nbsp;
+            <span style="color:#f59e0b;">◆ DB File</span> &nbsp;
+            <span style="color:#ef4444;">● External</span>
+          </span>
+        </div>
+        <div id="export-status"></div>
+        <pre id="export-output" style="display: none;"></pre>
+        <div id="graph-container" style="display:none; margin-top:10px; border:1px solid #1f2937; border-radius:8px; overflow:hidden; position:relative;">
+          <canvas id="graph-canvas" width="1400" height="700" style="background:#020617; display:block; width:100%; cursor:grab;"></canvas>
+          <div id="graph-tooltip" style="display:none; position:absolute; background:#111827; border:1px solid #374151; border-radius:6px; padding:8px 12px; font-size:11px; color:#e5e7eb; max-width:300px; pointer-events:none; z-index:10; white-space:pre-line;"></div>
+          <div id="graph-controls" style="position:absolute;top:8px;right:12px;display:flex;gap:4px;">
+            <button onclick="graphZoom(1.2)" style="padding:2px 8px;font-size:14px;background:#1e293b;color:#e5e7eb;border:1px solid #374151;border-radius:4px;cursor:pointer;">+</button>
+            <button onclick="graphZoom(0.83)" style="padding:2px 8px;font-size:14px;background:#1e293b;color:#e5e7eb;border:1px solid #374151;border-radius:4px;cursor:pointer;">−</button>
+            <button onclick="graphFit()" style="padding:2px 8px;font-size:11px;background:#1e293b;color:#e5e7eb;border:1px solid #374151;border-radius:4px;cursor:pointer;">Fit</button>
+          </div>
+          <div id="graph-stats" style="position:absolute;bottom:8px;right:12px;font-size:10px;color:#4b5563;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-step3" class="tab-content" style="display: none;">
+      <div class="card">
+        <h2>3. Migrate Feature</h2>
+        <p>Select a program and a starting point (procedure or subroutine), then migrate that feature using the
+           global context. A short explanation and a manifest will be created for traceability.</p>
+        <div style="margin-bottom: 8px;">
+          <label>Program:</label>
+          <select id="mf-program" style="width: 220px;"></select>
+        </div>
+        <div style="margin-bottom: 8px;">
+          <label>Feature:</label>
+          <select id="mf-node" style="width: 320px;"></select>
+        </div>
+        <div style="margin-bottom: 8px;">
+          <button class="primary" id="mf-refresh-btn">Refresh Feature List</button>
+          <button class="primary" id="mf-run-btn">Migrate Feature</button>
+        </div>
+        <div id="mf-status"></div>
+        <pre id="mf-output" style="display: none;"></pre>
+      </div>
+    </div>
+
+    <div id="tab-step4" class="tab-content" style="display: none;">
+      <div class="card">
+        <h2>4. Validation</h2>
+        <p>Review generated code and validation results for client review. Run validation after migrating a feature.</p>
+        <div style="margin-bottom: 8px; display: flex; gap: 8px; align-items: center;">
+          <label>Project:</label>
+          <input type="text" id="val-project-dir" style="width: 180px;" value="warranty_demo" readonly>
+          <label style="width:auto;">Program:</label>
+          <select id="val-program" style="width: 120px;"></select>
+          <label style="width:auto;">Feature:</label>
+          <select id="val-node" style="width: 200px;"></select>
+          <button class="primary" id="val-run-btn">Run Validation</button>
+        </div>
+        <div id="val-status"></div>
+        <div id="val-results" style="display: none; margin-top: 12px;">
+          <h4 style="margin: 0 0 8px 0; font-size: 13px;">Validation Results</h4>
+          <div id="val-metrics" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px;"></div>
+          <h4 style="margin: 12px 0 8px 0; font-size: 12px; color: #9ca3af;">Validation Details</h4>
+          <div id="val-details" style="margin-bottom: 16px;"></div>
+          <h4 style="margin: 12px 0 8px 0; font-size: 13px;">Java → RPG Traceability</h4>
+          <p style="font-size: 11px; color: #9ca3af; margin: 0 0 8px 0;">Select a Java file, then hover over a line with <code>@origin</code> to preview the source RPG block.</p>
+          <div style="display: flex; gap: 12px; align-items: stretch; margin-bottom: 12px;">
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 11px; color: #9ca3af; margin-bottom: 4px;">Java (hover line to view RPG)</div>
+              <select id="val-file-select" style="width: 100%; margin-bottom: 4px; font-size: 11px;"></select>
+              <div id="val-java-preview" style="max-height: 280px; font-size: 11px; overflow: auto; cursor: default; font-family: monospace; white-space: pre-wrap; padding: 8px; background: #020617; border: 1px solid #1f2937; border-radius: 4px;"></div>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 11px; color: #9ca3af; margin-bottom: 4px;">RPG source (on hover)</div>
+              <div id="val-rpg-preview" style="max-height: 280px; font-size: 12px; overflow: auto; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; font-family: monospace; color: #e2e8f0; min-height: 200px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-step5" class="tab-content" style="display: none;">
+      <div class="card">
+        <h2>5. Build Application</h2>
+        <p>Build the integrated Java application after migrating one or more features. Maven compiles <strong>all</strong> Java sources in the project—including the latest migrated feature and existing features.</p>
+        <div id="build-context" style="margin-bottom: 12px; padding: 10px 12px; background: #111827; border: 1px solid #1f2937; border-radius: 6px; font-size: 11px;">
+          <div style="color: #9ca3af;">Loading build context…</div>
+        </div>
+        <div style="margin-bottom: 8px;">
+          <label>Project Directory:</label>
+          <input type="text" id="build-project-dir" style="width: 260px;" value="warranty_demo" readonly>
+        </div>
+        <div style="margin-bottom: 8px;">
+          <button class="primary" id="build-app-btn">Build Application</button>
+        </div>
+        <div id="build-status"></div>
+        <pre id="build-output" style="display: none;"></pre>
+      </div>
+    </div>
+
+    <div id="tab-step6" class="tab-content" style="display: none;">
+      <div class="card">
+        <h2>6. Run & Demo</h2>
+        <p>Start the migrated application and demonstrate that the capability was successfully migrated. Customize the code in <code>warranty_demo/</code> as needed.</p>
+        <div id="run-context" style="margin-bottom: 12px; padding: 10px 12px; background: #111827; border: 1px solid #1f2937; border-radius: 6px; font-size: 11px;">
+          <div style="color: #9ca3af;">App URL: <code>http://localhost:8081</code> · Demo: <code>/demo.html</code></div>
+        </div>
+        <div style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="primary" id="run-app-btn">Run Application</button>
+          <button class="primary" id="open-demo-btn" style="background: #059669; border-color: #047857;">Open Demo</button>
+          <button id="check-status-btn" style="background: #374151; border: 1px solid #4b5563; color: #e5e7eb; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer;">Check Status</button>
+        </div>
+        <div id="run-status" style="margin-bottom: 12px;"></div>
+        <div style="margin-bottom: 8px;">
+          <div style="font-size: 11px; color: #9ca3af; margin-bottom: 6px;">Quick API Test</div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button id="test-migrated-btn" style="background: #374151; border: 1px solid #4b5563; color: #e5e7eb; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer;">Test /api/demo/migrated-queries</button>
+            <button id="test-search-btn" style="background: #374151; border: 1px solid #4b5563; color: #e5e7eb; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer;">Test /api/claims/search</button>
+          </div>
+          <pre id="api-test-output" style="margin-top: 8px; font-size: 10px; max-height: 160px; overflow: auto;"></pre>
+        </div>
+        <div style="font-size: 11px; color: #64748b; margin-top: 12px;">
+          <strong>Customize:</strong> Edit code in <code>warranty_demo/src/main/java/</code> — see <a href="#" id="customize-link" style="color: #60a5fa;">CUSTOMIZE.md</a> for guidance.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function discoverGlobalDirs() {
+      const statusDiv = document.getElementById('status');
+      const discoverBtn = document.getElementById('discover-btn');
+      const originalText = discoverBtn.textContent;
+      discoverBtn.disabled = true;
+      discoverBtn.textContent = 'Discovering...';
+      statusDiv.innerHTML = '';
+
+      try {
+        const res = await fetch('/api/discover-directories');
+        const data = await res.json();
+
+        // AST dirs
+        const astSelect = document.getElementById('ast-dir');
+        astSelect.innerHTML = '';
+        if (data.astDirs && data.astDirs.length > 0) {
+          data.astDirs.forEach(dir => {
+            const option = document.createElement('option');
+            option.value = dir.path;
+            option.textContent = dir.label ? `${dir.path} — ${dir.label} (${dir.fileCount} files)` : `${dir.path} (${dir.fileCount} files)`;
+            if (dir.path === data.defaultAstDir || (!data.defaultAstDir && dir.path.includes('JSON_20260211'))) {
+              option.selected = true;
+            }
+            astSelect.appendChild(option);
+          });
+        } else {
+          const option = document.createElement('option');
+          option.value = data.defaultAstDir || 'JSON_ast/JSON_20260211';
+          option.textContent = option.value;
+          astSelect.appendChild(option);
+        }
+
+        // RPG suggestion
+        const rpgInput = document.getElementById('rpg-dir');
+        if (data.rpgDirs && data.rpgDirs.length > 0) {
+          rpgInput.value = data.rpgDirs[0];
+        } else if (data.zipFiles && data.zipFiles.length > 0 && data.suggestion) {
+          statusDiv.innerHTML = '<div class="status info">💡 ' + data.suggestion + '</div>';
+        }
+
+        discoverBtn.textContent = '✓ Discovered';
+        setTimeout(() => { discoverBtn.textContent = originalText; }, 2000);
+      } catch (e) {
+        console.error('discoverGlobalDirs error', e);
+        statusDiv.innerHTML = '<div class="status error">✗ Failed to discover directories: ' + e.message + '</div>';
+        discoverBtn.textContent = originalText;
+      } finally {
+        discoverBtn.disabled = false;
+      }
+    }
+
+    async function buildGlobalContext() {
+      const astDir = document.getElementById('ast-dir')?.value;
+      const rpgDir = document.getElementById('rpg-dir')?.value?.trim();
+      const statusDiv = document.getElementById('status');
+      const outputPre = document.getElementById('output');
+      const buildBtn = document.getElementById('build-btn');
+
+      if (!astDir || !rpgDir) {
+        alert('Please select an AST directory and provide an RPG directory.');
+        return;
+      }
+
+      buildBtn.disabled = true;
+      statusDiv.innerHTML = '<div class="status info">Building global context (DB registry, program context, call graph)...</div>';
+      outputPre.style.display = 'block';
+      outputPre.textContent = 'Running global_context scripts...';
+
+      try {
+        const res = await fetch('/api/build-global-context', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ astDir, rpgDir })
+        });
+        const result = await res.json();
+        if (result.success) {
+          statusDiv.innerHTML = '<div class="status success">✓ Global context built successfully!</div>';
+          outputPre.textContent = result.output || 'Success';
+        } else {
+          statusDiv.innerHTML = '<div class="status error">✗ Global context build failed</div>';
+          outputPre.textContent = result.error || 'Unknown error';
+        }
+      } catch (e) {
+        statusDiv.innerHTML = '<div class="status error">✗ Error: ' + e.message + '</div>';
+        outputPre.textContent = 'Error: ' + e.message;
+      } finally {
+        buildBtn.disabled = false;
+      }
+    }
+
+    async function exportNeo4j() {
+      const statusDiv = document.getElementById('export-status');
+      const outputPre = document.getElementById('export-output');
+      const exportBtn = document.getElementById('export-btn');
+
+      exportBtn.disabled = true;
+      statusDiv.innerHTML = '<div class="status info">Building knowledge graph view from global context artifacts...</div>';
+      outputPre.style.display = 'block';
+      outputPre.textContent = 'Running export_neo4j_cypher.py...';
+
+      try {
+        const res = await fetch('/api/export-neo4j', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({})
+        });
+        const result = await res.json();
+        if (result.success) {
+          statusDiv.innerHTML = '<div class="status success">✓ Knowledge graph view created successfully!</div>';
+          outputPre.textContent = result.output || 'Success';
+        } else {
+          statusDiv.innerHTML = '<div class="status error">✗ Knowledge graph view build failed</div>';
+          outputPre.textContent = result.error || 'Unknown error';
+        }
+      } catch (e) {
+        statusDiv.innerHTML = '<div class="status error">✗ Error: ' + e.message + '</div>';
+        outputPre.textContent = 'Error: ' + e.message;
+      } finally {
+        exportBtn.disabled = false;
+      }
+    }
+
+    /* ───── Interactive knowledge-graph preview (force-directed, pure canvas) ───── */
+    let _gZoom = 1, _gPanX = 0, _gPanY = 0;
+    let _gNodes = [], _gEdges = [], _gCanvas, _gCtx, _gW, _gH;
+    function graphZoom(f) { _gZoom *= f; }
+    function graphFit() {
+      if (!_gNodes.length) return;
+      let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+      for (const n of _gNodes) { minX=Math.min(minX,n.x); maxX=Math.max(maxX,n.x); minY=Math.min(minY,n.y); maxY=Math.max(maxY,n.y); }
+      const pw = maxX-minX||1, ph = maxY-minY||1;
+      _gZoom = Math.min(_gW/pw, _gH/ph) * 0.85;
+      _gPanX = _gW/2 - (minX+maxX)/2 * _gZoom;
+      _gPanY = _gH/2 - (minY+maxY)/2 * _gZoom;
+    }
+
+    async function previewGraph() {
+      const container = document.getElementById('graph-container');
+      const canvas    = document.getElementById('graph-canvas');
+      const tooltip   = document.getElementById('graph-tooltip');
+      const stats     = document.getElementById('graph-stats');
+      const legend    = document.getElementById('graph-legend');
+      const statusDiv = document.getElementById('export-status');
+
+      container.style.display = 'block';
+      legend.style.display = 'inline';
+      statusDiv.innerHTML = '<div class="status info">Loading graph data…</div>';
+
+      let resp;
+      try { resp = await fetch('/api/knowledge-graph-data'); } catch (e) {
+        statusDiv.innerHTML = '<div class="status error">✗ Could not reach server: ' + e.message + '</div>';
+        return;
+      }
+      const data = await resp.json();
+      if (!data.nodes || data.nodes.length === 0) {
+        statusDiv.innerHTML = '<div class="status error">✗ No graph data. Build global context first.</div>';
+        return;
+      }
+      statusDiv.innerHTML = '<div class="status success">✓ Graph loaded — ' + data.nodes.length + ' nodes, ' + data.edges.length + ' edges</div>';
+      stats.textContent = data.nodes.length + ' nodes · ' + data.edges.length + ' edges';
+
+      _gCanvas = canvas;
+      _gW = canvas.width; _gH = canvas.height;
+      _gCtx = canvas.getContext('2d');
+      const W = _gW, H = _gH, ctx = _gCtx;
+
+      const TYPE_COLORS = { program:'#3b82f6', procedure:'#a855f7', subroutine:'#10b981', dbfile:'#f59e0b', external:'#ef4444' };
+      const TYPE_RADIUS = { program:22, procedure:11, subroutine:10, dbfile:14, external:9 };
+      const TYPE_SHAPE  = { program:'hex', procedure:'circle', subroutine:'circle', dbfile:'diamond', external:'circle' };
+      const EDGE_COLORS = { HAS_NODE:'#1e293b', USES_FILE:'#78350f', CALLS:'#818cf8' };
+      const EDGE_ALPHAS = { HAS_NODE:0.25, USES_FILE:0.45, CALLS:0.8 };
+
+      const nodes = data.nodes.map((n, i) => {
+        const angle = (2 * Math.PI * i) / data.nodes.length;
+        const spread = Math.min(W, H) * 0.4;
+        return {
+          ...n,
+          x: W/2 + spread * Math.cos(angle) + (Math.random()-0.5)*80,
+          y: H/2 + spread * Math.sin(angle) + (Math.random()-0.5)*80,
+          vx: 0, vy: 0,
+          r: TYPE_RADIUS[n.type] || 12,
+          color: TYPE_COLORS[n.type] || '#6b7280',
+          shape: TYPE_SHAPE[n.type] || 'circle',
+        };
+      });
+      _gNodes = nodes;
+      const nodeMap = {};
+      nodes.forEach(n => { nodeMap[n.id] = n; });
+
+      const edges = data.edges.filter(e => nodeMap[e.from] && nodeMap[e.to]).map(e => ({
+        ...e, source: nodeMap[e.from], target: nodeMap[e.to],
+        color: EDGE_COLORS[e.type] || '#374151',
+        alpha: EDGE_ALPHAS[e.type] || 0.5,
+      }));
+      _gEdges = edges;
+
+      /* Physics simulation */
+      const REPULSION = 6000, ATTRACT = 0.004, DAMP = 0.86, CENTER_PULL = 0.008;
+      let simIter = 0;
+
+      function tick() {
+        for (const n of nodes) { n.vx = 0; n.vy = 0; }
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            let dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+            let d2 = dx*dx + dy*dy || 1;
+            let f = REPULSION / d2;
+            nodes[i].vx += dx * f; nodes[i].vy += dy * f;
+            nodes[j].vx -= dx * f; nodes[j].vy -= dy * f;
+          }
+        }
+        for (const e of edges) {
+          let dx = e.target.x - e.source.x, dy = e.target.y - e.source.y;
+          let d = Math.sqrt(dx*dx + dy*dy) || 1;
+          let idealLen = e.type === 'USES_FILE' ? 180 : (e.type === 'HAS_NODE' ? 80 : 120);
+          let f = ATTRACT * (d - idealLen);
+          let fx = dx/d * f, fy = dy/d * f;
+          e.source.vx += fx; e.source.vy += fy;
+          e.target.vx -= fx; e.target.vy -= fy;
+        }
+        const cx = W / 2, cy = H / 2;
+        for (const n of nodes) {
+          n.vx += (cx - n.x) * CENTER_PULL;
+          n.vy += (cy - n.y) * CENTER_PULL;
+          n.vx *= DAMP; n.vy *= DAMP;
+          if (!n._dragging) { n.x += n.vx; n.y += n.vy; }
+        }
+        simIter++;
+      }
+
+      function drawHex(cx, cy, r) {
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+          const a = Math.PI/6 + i * Math.PI/3;
+          const px = cx + r * Math.cos(a), py = cy + r * Math.sin(a);
+          i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+      }
+
+      function drawDiamond(cx, cy, r) {
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - r);
+        ctx.lineTo(cx + r*0.8, cy);
+        ctx.lineTo(cx, cy + r);
+        ctx.lineTo(cx - r*0.8, cy);
+        ctx.closePath();
+      }
+
+      function draw() {
+        ctx.save();
+        ctx.clearRect(0, 0, W, H);
+        ctx.translate(_gPanX, _gPanY);
+        ctx.scale(_gZoom, _gZoom);
+
+        // Edges
+        for (const e of edges) {
+          const x1=e.source.x, y1=e.source.y, x2=e.target.x, y2=e.target.y;
+          const dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy)||1;
+          const ux=dx/len, uy=dy/len;
+          const r2 = e.target.r;
+          const tx = x2 - ux*(r2+4), ty = y2 - uy*(r2+4);
+          ctx.globalAlpha = e.alpha;
+          ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(tx, ty);
+          ctx.strokeStyle = e.color; ctx.lineWidth = e.type === 'CALLS' ? 1.6 : 0.8;
+          ctx.stroke();
+          if (e.type === 'CALLS') {
+            const sz = 5;
+            ctx.beginPath();
+            ctx.moveTo(tx, ty);
+            ctx.lineTo(tx - ux*sz - uy*sz*0.5, ty - uy*sz + ux*sz*0.5);
+            ctx.lineTo(tx - ux*sz + uy*sz*0.5, ty - uy*sz - ux*sz*0.5);
+            ctx.closePath(); ctx.fillStyle = e.color; ctx.fill();
+          }
+          ctx.globalAlpha = 1;
+        }
+
+        // Highlighted edges (when a node is selected)
+        if (_selectedNode) {
+          for (const e of edges) {
+            if (e.source !== _selectedNode && e.target !== _selectedNode) continue;
+            const x1=e.source.x, y1=e.source.y, x2=e.target.x, y2=e.target.y;
+            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+            ctx.strokeStyle = '#f472b6'; ctx.lineWidth = 2.5; ctx.globalAlpha = 0.8;
+            ctx.stroke(); ctx.globalAlpha = 1;
+          }
+        }
+
+        // Nodes
+        for (const n of nodes) {
+          const dimmed = _selectedNode && n !== _selectedNode && !edges.some(e => (e.source === _selectedNode && e.target === n) || (e.target === _selectedNode && e.source === n));
+          ctx.globalAlpha = dimmed ? 0.2 : 1;
+
+          // Glow
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.r + 5, 0, Math.PI*2);
+          ctx.fillStyle = n.color; ctx.globalAlpha *= 0.12; ctx.fill();
+          ctx.globalAlpha = dimmed ? 0.2 : 1;
+
+          if (n.shape === 'hex') { drawHex(n.x, n.y, n.r); }
+          else if (n.shape === 'diamond') { drawDiamond(n.x, n.y, n.r); }
+          else { ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI*2); }
+          ctx.fillStyle = n.color; ctx.fill();
+          ctx.strokeStyle = n === _selectedNode ? '#f472b6' : '#e5e7eb';
+          ctx.lineWidth = n === _selectedNode ? 2.5 : 1;
+          ctx.stroke();
+
+          ctx.fillStyle = dimmed ? '#4b5563' : '#f9fafb';
+          ctx.font = (n.type === 'program' ? 'bold 11px' : '9px') + ' monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(n.label, n.x, n.y + n.r + 13);
+          ctx.globalAlpha = 1;
+        }
+        ctx.restore();
+      }
+
+      let _selectedNode = null, _dragNode = null, _dragOffX = 0, _dragOffY = 0;
+      let _isPanning = false, _panStartX = 0, _panStartY = 0;
+
+      function worldXY(e) {
+        const rect = canvas.getBoundingClientRect();
+        const sx = (e.clientX - rect.left) * (W / rect.width);
+        const sy = (e.clientY - rect.top) * (H / rect.height);
+        return [(sx - _gPanX) / _gZoom, (sy - _gPanY) / _gZoom];
+      }
+
+      function nodeAt(wx, wy) {
+        for (let i = nodes.length - 1; i >= 0; i--) {
+          const n = nodes[i];
+          const dx = wx - n.x, dy = wy - n.y;
+          if (dx*dx + dy*dy < (n.r + 4)*(n.r + 4)) return n;
+        }
+        return null;
+      }
+
+      canvas.addEventListener('mousedown', e => {
+        const [wx, wy] = worldXY(e);
+        const n = nodeAt(wx, wy);
+        if (n) {
+          _dragNode = n; n._dragging = true;
+          _dragOffX = n.x - wx; _dragOffY = n.y - wy;
+          canvas.style.cursor = 'grabbing';
+        } else {
+          _isPanning = true;
+          const rect = canvas.getBoundingClientRect();
+          _panStartX = (e.clientX - rect.left) * (W / rect.width) - _gPanX;
+          _panStartY = (e.clientY - rect.top) * (H / rect.height) - _gPanY;
+          canvas.style.cursor = 'move';
+        }
+      });
+      canvas.addEventListener('mousemove', e => {
+        const rect = canvas.getBoundingClientRect();
+        if (_dragNode) {
+          const [wx, wy] = worldXY(e);
+          _dragNode.x = wx + _dragOffX;
+          _dragNode.y = wy + _dragOffY;
+          return;
+        }
+        if (_isPanning) {
+          _gPanX = (e.clientX - rect.left) * (W / rect.width) - _panStartX;
+          _gPanY = (e.clientY - rect.top) * (H / rect.height) - _panStartY;
+          return;
+        }
+        const [wx, wy] = worldXY(e);
+        const n = nodeAt(wx, wy);
+        canvas.style.cursor = n ? 'pointer' : 'grab';
+        if (n) {
+          tooltip.style.display = 'block';
+          tooltip.textContent = n.title || n.label;
+          tooltip.style.left = (e.clientX - rect.left + 14) + 'px';
+          tooltip.style.top  = (e.clientY - rect.top - 10)  + 'px';
+        } else {
+          tooltip.style.display = 'none';
+        }
+      });
+      canvas.addEventListener('mouseup', () => {
+        if (_dragNode) { _dragNode._dragging = false; _dragNode = null; }
+        _isPanning = false;
+        canvas.style.cursor = 'grab';
+      });
+      canvas.addEventListener('mouseleave', () => {
+        tooltip.style.display = 'none';
+        _isPanning = false;
+        if (_dragNode) { _dragNode._dragging = false; _dragNode = null; }
+      });
+      canvas.addEventListener('click', e => {
+        const [wx, wy] = worldXY(e);
+        _selectedNode = nodeAt(wx, wy);
+      });
+      canvas.addEventListener('wheel', e => {
+        e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        const sx = (e.clientX - rect.left) * (W / rect.width);
+        const sy = (e.clientY - rect.top) * (H / rect.height);
+        const factor = e.deltaY < 0 ? 1.1 : 0.9;
+        _gPanX = sx - (sx - _gPanX) * factor;
+        _gPanY = sy - (sy - _gPanY) * factor;
+        _gZoom *= factor;
+      }, {passive: false});
+
+      function loop() {
+        if (simIter < 400) tick();
+        draw();
+        requestAnimationFrame(loop);
+      }
+      loop();
+      setTimeout(graphFit, 1200);
+    }
+
+    let PROGRAMS_LIST = [];
+    function populateValNodes(programId) {
+      const vn = document.getElementById('val-node');
+      if (!vn) return;
+      vn.innerHTML = '';
+      const prog = PROGRAMS_LIST.find(p => p.programId === programId);
+      if (!prog || !prog.nodes || prog.nodes.length === 0) {
+        vn.appendChild(new Option('No features', ''));
+        return;
+      }
+      prog.nodes.forEach(n => {
+        const label = `${n.nodeId} – ${n.kind || ''} ${n.procedureName || n.name || ''}`.trim();
+        vn.appendChild(new Option(label, n.nodeId));
+      });
+    }
+
+    async function loadProgramsAndNodes() {
+      const programSelect = document.getElementById('mf-program');
+      const nodeSelect = document.getElementById('mf-node');
+      const statusDiv = document.getElementById('mf-status');
+
+      if (!programSelect || !nodeSelect) return;
+
+      try {
+        const res = await fetch('/api/list-programs');
+        const data = await res.json();
+        const programs = data.programs || [];
+        PROGRAMS_LIST = programs;
+
+        programSelect.innerHTML = '';
+        nodeSelect.innerHTML = '';
+
+        if (programs.length === 0) {
+          statusDiv.innerHTML = '<div class="status info">No programs found. Make sure you ran \"Build Global Context\" first.</div>';
+          return;
+        }
+
+        programs.forEach((p, idx) => {
+          const opt = document.createElement('option');
+          opt.value = p.programId;
+          opt.textContent = p.programId;
+          if (idx === 0) opt.selected = true;
+          programSelect.appendChild(opt);
+        });
+
+        function populateNodesFor(programId) {
+          nodeSelect.innerHTML = '';
+          const prog = programs.find(p => p.programId === programId);
+          if (!prog || !prog.nodes || prog.nodes.length === 0) {
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = 'No features available';
+            nodeSelect.appendChild(opt);
+            return;
+          }
+          prog.nodes.forEach(n => {
+            const label = `${n.nodeId} – ${n.kind || ''} ${n.procedureName || n.name || ''}`.trim();
+            const opt = document.createElement('option');
+            opt.value = n.nodeId;
+            opt.textContent = label;
+            nodeSelect.appendChild(opt);
+          });
+        }
+
+        populateNodesFor(programSelect.value);
+        programSelect.addEventListener('change', () => populateNodesFor(programSelect.value));
+
+        // Sync validation tab dropdowns
+        const valProg = document.getElementById('val-program');
+        const valNode = document.getElementById('val-node');
+        if (valProg && valNode) {
+          valProg.innerHTML = programSelect.innerHTML;
+          valProg.value = programSelect.value;
+          populateValNodes(programSelect.value);
+          valProg.addEventListener('change', () => populateValNodes(valProg.value));
+        }
+
+        statusDiv.innerHTML = '<div class="status success">✓ Loaded programs and features.</div>';
+      } catch (e) {
+        console.error('loadProgramsAndNodes error', e);
+        statusDiv.innerHTML = '<div class="status error">✗ Failed to load programs: ' + e.message + '</div>';
+      }
+    }
+
+    async function migrateFeature() {
+      const programSelect = document.getElementById('mf-program');
+      const nodeSelect = document.getElementById('mf-node');
+      const statusDiv = document.getElementById('mf-status');
+      const outputPre = document.getElementById('mf-output');
+      const runBtn = document.getElementById('mf-run-btn');
+      const programId = programSelect?.value;
+      const entryNodeId = nodeSelect?.value;
+      if (!programId || !entryNodeId) {
+        alert('Please select both a program and a feature.');
+        return;
+      }
+
+      runBtn.disabled = true;
+      statusDiv.innerHTML = '<div class="status info">Migrating feature and building application (agentic flow)...</div>';
+      outputPre.style.display = 'block';
+      outputPre.textContent = '';
+
+      try {
+        const rpgDir = document.getElementById('rpg-dir')?.value?.trim() || null;
+        const res = await fetch('/api/migrate-feature', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ programId, entryNodeId, rpgDir })
+        });
+        const result = await res.json();
+        if (result.success) {
+          const buildSuccess = result.buildSuccess === true;
+          const valLink = '<a href="#" id="go-to-validation" style="color:#86efac;margin-left:8px;">→ Go to Validation</a>';
+          if (buildSuccess) {
+            statusDiv.innerHTML = '<div class="status success">✓ Feature migrated and application build succeeded.' + valLink + '</div>';
+          } else {
+            statusDiv.innerHTML = '<div class="status error">⚠ Feature migrated, but application build failed.' + valLink + '</div>';
+          }
+          document.getElementById('go-to-validation')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            const vp = document.getElementById('val-program');
+            const vn = document.getElementById('val-node');
+            if (vp && vn) {
+              vp.value = programId;
+              populateValNodes(programId);
+              vn.value = entryNodeId;
+            }
+            document.querySelector('.tab[data-tab="step4"]')?.click();
+            setTimeout(() => runValidation(), 200);
+          });
+
+          let text = '';
+          if (result.summary) {
+            text += result.summary + '\\n\\n';
+          }
+          if (result.manifestPath) {
+            text += 'Manifest: ' + result.manifestPath + '\\n';
+          }
+          const files = result.generatedFiles || [];
+          if (files.length > 0) {
+            text += '\\nFiles written under application source (e.g. warranty_demo/src/main/java/):\\n';
+            files.forEach(f => {
+              text += '  - ' + f + '\\n';
+            });
+          }
+          // Append build output
+          if (typeof result.buildExitCode !== 'undefined') {
+            text += '\\nBuild exit code: ' + result.buildExitCode + '\\n';
+          }
+          if (result.buildOutput) {
+            text += '\\nBuild output:\\n' + result.buildOutput;
+          }
+
+          outputPre.textContent = text || (result.output || 'Success');
+        } else {
+          statusDiv.innerHTML = '<div class="status error">✗ Feature migration failed</div>';
+          outputPre.textContent = result.error || 'Unknown error';
+        }
+      } catch (e) {
+        statusDiv.innerHTML = '<div class="status error">✗ Error: ' + e.message + '</div>';
+        outputPre.textContent = 'Error: ' + e.message;
+      } finally {
+        runBtn.disabled = false;
+      }
+    }
+
+    async function runValidation() {
+      const projectDir = document.getElementById('val-project-dir')?.value?.trim() || 'warranty_demo';
+      const programId = document.getElementById('val-program')?.value;
+      const nodeId = document.getElementById('val-node')?.value;
+      const statusDiv = document.getElementById('val-status');
+      const resultsDiv = document.getElementById('val-results');
+      const btn = document.getElementById('val-run-btn');
+
+      btn.disabled = true;
+      statusDiv.innerHTML = '<div class="status info">Running validation...</div>';
+      resultsDiv.style.display = 'none';
+
+      if (!programId || !nodeId) {
+        statusDiv.innerHTML = '<div class="status error">✗ Select a program and feature that has been migrated.</div>';
+        btn.disabled = false;
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/validate', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ projectDir, programId, entryNodeId: nodeId })
+        });
+        const text = await res.text();
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (_) {
+          statusDiv.innerHTML = '<div class="status error">✗ Server returned invalid response. ' + (res.status ? 'Status: ' + res.status : '') + '</div>';
+          btn.disabled = false;
+          return;
+        }
+        if (!data.success) {
+          statusDiv.innerHTML = '<div class="status error">✗ ' + (data.error || 'Validation failed') + '</div>';
+          return;
+        }
+
+        const v = data.validation || {};
+        const files = data.generatedFiles || [];
+        const rpgSnippet = data.rpgSnippet || '(No RPG snippet)';
+        const rpgStartLine = data.rpgStartLine || 1;
+
+        statusDiv.innerHTML = '<div class="status success">✓ Validation complete — Overall: ' + (v.overall_score ?? 0) + '%</div>';
+        resultsDiv.style.display = 'block';
+
+        // Metrics grid
+        const metricsEl = document.getElementById('val-metrics');
+        const resMap = v.results || {};
+        const dbMap = resMap.database_mapping || {};
+        const arch = resMap.architecture || {};
+        const modern = resMap.modern_java || {};
+        const struct = resMap.structure || {};
+        const pkg = resMap.packages || {};
+        const logic = resMap.logic_completeness || {};
+
+        metricsEl.innerHTML = `
+          <div style="padding:10px;background:#111827;border-radius:6px;border:1px solid #1f2937;">
+            <div style="font-size:10px;color:#9ca3af;margin-bottom:2px;">Overall Score</div>
+            <div style="font-size:18px;font-weight:600;color:${(v.overall_score||0)>=80?'#86efac':'#f87171'}">${v.overall_score ?? 0}%</div>
+            <div style="font-size:10px;color:#6b7280">${v.status || '-'}</div>
+          </div>
+          <div style="padding:10px;background:#111827;border-radius:6px;border:1px solid #1f2937;">
+            <div style="font-size:10px;color:#9ca3af;margin-bottom:2px;">Database Mapping</div>
+            <div style="font-size:14px;font-weight:600">${dbMap.score ?? 0}%</div>
+            <div style="font-size:10px;color:#6b7280">${dbMap.total_contracts ?? 0} contracts</div>
+          </div>
+          <div style="padding:10px;background:#111827;border-radius:6px;border:1px solid #1f2937;">
+            <div style="font-size:10px;color:#9ca3af;margin-bottom:2px;">Architecture</div>
+            <div style="font-size:14px;font-weight:600">${arch.score ?? 0}%</div>
+            <div style="font-size:10px;color:#6b7280">Layered, DDD</div>
+          </div>
+          <div style="padding:10px;background:#111827;border-radius:6px;border:1px solid #1f2937;">
+            <div style="font-size:10px;color:#9ca3af;margin-bottom:2px;">Modern Java</div>
+            <div style="font-size:14px;font-weight:600">${modern.score ?? 0}%</div>
+            <div style="font-size:10px;color:#6b7280">Records, Streams, Optional</div>
+          </div>
+          <div style="padding:10px;background:#111827;border-radius:6px;border:1px solid #1f2937;">
+            <div style="font-size:10px;color:#9ca3af;margin-bottom:2px;">Structure</div>
+            <div style="font-size:14px;font-weight:600">${struct.score ?? 0}%</div>
+            <div style="font-size:10px;color:#6b7280">${struct.found_layers ? struct.found_layers.join(', ') : '-'}</div>
+          </div>
+          <div style="padding:10px;background:#111827;border-radius:6px;border:1px solid #1f2937;">
+            <div style="font-size:10px;color:#9ca3af;margin-bottom:2px;">Logic Completeness</div>
+            <div style="font-size:14px;font-weight:600">${logic.score ?? '-'}%</div>
+            <div style="font-size:10px;color:#6b7280">Control flow, stubs</div>
+          </div>
+        `;
+
+        // Details (checks) — structured sections with consistent typography
+        const detailsEl = document.getElementById('val-details');
+        const categoryLabels = {
+          structure: 'Structure',
+          packages: 'Packages',
+          database_mapping: 'Database Mapping',
+          architecture: 'Architecture',
+          syntax: 'Syntax',
+          modern_java: 'Modern Java',
+          logic_completeness: 'Logic Completeness'
+        };
+        let detailsHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;">';
+        for (const [k, r] of Object.entries(resMap)) {
+          if (r?.skipped || !r?.checks?.length) continue;
+          const label = categoryLabels[k] || k.replace(/_/g, ' ');
+          const checks = (r.checks || []).slice(0, 12);
+          detailsHtml += '<div style="background:#111827;border:1px solid #1f2937;border-radius:6px;padding:10px 12px;">';
+          detailsHtml += '<div style="font-size:11px;font-weight:600;color:#d1d5db;margin-bottom:6px;">' + label + '</div>';
+          detailsHtml += '<ul style="margin:0;padding-left:18px;font-size:11px;color:#9ca3af;line-height:1.5;">';
+          checks.forEach(c => {
+            detailsHtml += '<li style="margin-bottom:2px;">' + (c.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')) + '</li>';
+          });
+          detailsHtml += '</ul></div>';
+        }
+        detailsHtml += '</div>';
+        detailsEl.innerHTML = detailsHtml || '<div style="font-size:11px;color:#6b7280">No details</div>';
+
+        // Java → RPG traceability: hover over @origin line to see RPG in right panel
+        const fileSelect = document.getElementById('val-file-select');
+        const javaPreview = document.getElementById('val-java-preview');
+        const rpgPreview = document.getElementById('val-rpg-preview');
+        const rpgPlaceholder = '<div style="color:#64748b;font-size:12px;padding:24px;text-align:center;">Hover over a Java line with <code style="background:#1e293b;padding:2px 6px;border-radius:4px;">@origin</code> to preview the source RPG block here.</div>';
+        fileSelect.innerHTML = '';
+        files.forEach((f, i) => {
+          const opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = f.path.split('/').pop() || f.path;
+          fileSelect.appendChild(opt);
+        });
+        function extractRpgLines(startLine, endLine) {
+          if (!rpgSnippet || typeof rpgSnippet !== 'string') return null;
+          const lines = rpgSnippet.split('\n');
+          const fromIdx = Math.max(0, startLine - rpgStartLine);
+          const toIdx = Math.min(lines.length, endLine - rpgStartLine + 1);
+          if (fromIdx >= lines.length || toIdx <= fromIdx) return null;
+          return lines.slice(fromIdx, toIdx).map((l, i) => (startLine + i) + ' | ' + l).join('\n');
+        }
+        function parseOrigin(comment) {
+          const m = comment.match(/@origin\s+\S+\s+L(\d+)(?:-(\d+))?/);
+          if (!m) return null;
+          const start = parseInt(m[1], 10);
+          const end = m[2] ? parseInt(m[2], 10) : start;
+          return { start, end };
+        }
+        function renderJavaWithClickableLines(content) {
+          const lines = (content || '').split('\n');
+          let html = '';
+          lines.forEach((line, i) => {
+            const lineNum = i + 1;
+            const originMatch = line.match(/\/\/\s*(@origin\s+\S+\s+L\d+(?:-\d+)?\s*\([^)]+\))/);
+            const origin = originMatch ? parseOrigin(line) : null;
+            const cls = origin ? 'val-java-line val-java-origin' : 'val-java-line';
+            const title = origin ? 'Hover to view RPG L' + origin.start + '-' + origin.end : '';
+            html += '<div class="' + cls + '" data-line="' + lineNum + '" data-origin="' + (origin ? origin.start + '-' + origin.end : '') + '" title="' + (title || '') + '">' + (lineNum).toString().padStart(4) + ' | ' + (line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')) + '</div>';
+          });
+          return html;
+        }
+        function showRpgInPanel(startLine, endLine) {
+          const block = extractRpgLines(startLine, endLine);
+          const text = block || '(RPG lines ' + startLine + '-' + endLine + ' not in snippet)';
+          rpgPreview.innerHTML = '<div style="font-size:11px;color:#94a3b8;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #334155;">RPG source L' + startLine + (endLine !== startLine ? '-' + endLine : '') + '</div><pre style="margin:0;white-space:pre-wrap;word-break:break-all;font-size:11px;">' + (text.replace(/</g,'&lt;').replace(/>/g,'&gt;')) + '</pre>';
+        }
+        function showRpgPlaceholder() {
+          rpgPreview.innerHTML = rpgPlaceholder;
+        }
+        fileSelect.onchange = () => {
+          const idx = parseInt(fileSelect.value, 10);
+          const content = (files[idx]?.content || '').slice(0, 12000) || '(No content)';
+          javaPreview.innerHTML = content === '(No content)' ? content : renderJavaWithClickableLines(content);
+          javaPreview.classList.toggle('val-java-code', content !== '(No content)');
+          showRpgPlaceholder();
+          javaPreview.querySelectorAll('.val-java-origin').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+              const o = el.dataset.origin;
+              if (o) {
+                const [s, e] = o.split('-').map(Number);
+                showRpgInPanel(s, e || s);
+              }
+            });
+          });
+        };
+        if (files.length > 0) {
+          fileSelect.dispatchEvent(new Event('change'));
+        } else {
+          javaPreview.textContent = 'No migration found for this feature. Migrate it first from the Migrate tab.';
+          rpgPreview.innerHTML = rpgPlaceholder;
+        }
+      } catch (e) {
+        statusDiv.innerHTML = '<div class="status error">✗ ' + e.message + '</div>';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function loadBuildContext() {
+      const ctxEl = document.getElementById('build-context');
+      if (!ctxEl) return;
+      try {
+        const res = await fetch('/api/build-context');
+        const data = await res.json();
+        const lm = data.lastMigrated;
+        let html = '<div style="color:#d1d5db;margin-bottom:4px;">✓ Build will compile <strong>' + (data.javaFileCount || 0) + ' Java file(s)</strong> in <code>' + (data.projectDir || 'warranty_demo') + '</code></div>';
+        html += '<div style="color:#9ca3af;font-size:10px;">';
+        if (lm && lm.programId) {
+          html += 'Latest migrated: <strong>' + lm.programId + '</strong> / <strong>' + lm.entryNodeId + '</strong> (' + (lm.generatedCount || 0) + ' file(s)) — included in this build.';
+        } else {
+          html += 'No migrations yet. Migrate a feature first, then build.';
+        }
+        html += '</div>';
+        ctxEl.innerHTML = html;
+      } catch (e) {
+        ctxEl.innerHTML = '<div style="color:#f87171;">Could not load build context: ' + e.message + '</div>';
+      }
+    }
+
+    async function buildApplication() {
+      const statusDiv = document.getElementById('build-status');
+      const outputPre = document.getElementById('build-output');
+      const buildBtn = document.getElementById('build-app-btn');
+      const projectDirInput = document.getElementById('build-project-dir');
+      const projectDir = projectDirInput?.value?.trim() || 'warranty_demo';
+
+      buildBtn.disabled = true;
+      statusDiv.innerHTML = '<div class="status info">Building application (this may take a few minutes)...</div>';
+      outputPre.style.display = 'block';
+      outputPre.textContent = `Running build in ${projectDir}...`;
+
+      try {
+        const res = await fetch('/api/build-application', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ projectDir })
+        });
+        const result = await res.json();
+        if (result.success) {
+          const bc = result.buildContext;
+          let msg = '✓ Application build succeeded.';
+          if (bc && bc.javaFileCount != null) {
+            msg += ' Compiled ' + bc.javaFileCount + ' Java file(s).';
+          }
+          statusDiv.innerHTML = '<div class="status success">' + msg + '</div>';
+          loadBuildContext();
+        } else {
+          statusDiv.innerHTML = '<div class="status error">✗ Application build failed</div>';
+        }
+        outputPre.textContent = (result.output || '') + (result.error ? '\n\nError:\n' + result.error : '');
+      } catch (e) {
+        statusDiv.innerHTML = '<div class="status error">✗ Error: ' + e.message + '</div>';
+        outputPre.textContent = 'Error: ' + e.message;
+      } finally {
+        buildBtn.disabled = false;
+      }
+    }
+
+    const APP_BASE = 'http://localhost:8081';
+    const DEMO_URL = APP_BASE + '/demo.html';
+    let _statusPollTimer = null;
+    const STATUS_POLL_INTERVAL = 5000;
+    const STATUS_POLL_MAX_MS = 180000;
+
+    async function checkAppStatus(silent) {
+      const statusDiv = document.getElementById('run-status');
+      if (!statusDiv) return false;
+      if (!silent) statusDiv.innerHTML = '<div class="status info">Checking…</div>';
+      try {
+        const res = await fetch(APP_BASE + '/api/demo/migrated-queries', { method: 'GET' });
+        if (res.ok) {
+          statusDiv.innerHTML = '<div class="status success">✓ Application is running. Migration demo ready.</div>';
+          return true;
+        }
+        if (!silent) statusDiv.innerHTML = '<div class="status error">✗ Application not responding (status ' + res.status + '). Run it first.</div>';
+        return false;
+      } catch (e) {
+        if (!silent) statusDiv.innerHTML = '<div class="status error">✗ Application not running. Click "Run Application" to start.</div>';
+        return false;
+      }
+    }
+
+    function stopStatusPolling() {
+      if (_statusPollTimer) {
+        clearInterval(_statusPollTimer);
+        _statusPollTimer = null;
+      }
+    }
+
+    function startStatusPolling(startedAt) {
+      stopStatusPolling();
+      _statusPollTimer = setInterval(async () => {
+        const elapsed = Date.now() - startedAt;
+        if (elapsed > STATUS_POLL_MAX_MS) {
+          stopStatusPolling();
+          const statusDiv = document.getElementById('run-status');
+          if (statusDiv) statusDiv.innerHTML = '<div class="status error">✗ Application did not start within 3 minutes. Check the terminal for errors.</div>';
+          return;
+        }
+        const ok = await checkAppStatus(true);
+        if (ok) {
+          stopStatusPolling();
+        }
+      }, STATUS_POLL_INTERVAL);
+    }
+
+    async function runApplication() {
+      const btn = document.getElementById('run-app-btn');
+      const statusDiv = document.getElementById('run-status');
+      btn.disabled = true;
+      statusDiv.innerHTML = '<div class="status info">Starting application (this may take 30–60 seconds)…</div>';
+      try {
+        const res = await fetch('/api/run-application', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({}) });
+        const text = await res.text();
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (_) {
+          statusDiv.innerHTML = '<div class="status error">✗ Server returned invalid response. Ensure you are using the Global Context server (port 8003) or the main UI server with /api/run-application support.</div>';
+          btn.disabled = false;
+          return;
+        }
+        if (data.started) {
+          statusDiv.innerHTML = '<div class="status info">Application starting… Status will update automatically when ready.</div>';
+          startStatusPolling(Date.now());
+        } else {
+          statusDiv.innerHTML = '<div class="status error">✗ ' + (data.error || 'Failed to start') + '</div>';
+        }
+      } catch (e) {
+        statusDiv.innerHTML = '<div class="status error">✗ ' + e.message + '</div>';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function openDemo() {
+      window.open(DEMO_URL, '_blank', 'noopener');
+    }
+
+    function apiTestOutput(msg) {
+      const el = document.getElementById('api-test-output');
+      if (el) el.textContent = msg;
+    }
+
+    async function testMigratedQueries() {
+      apiTestOutput('Testing GET ' + APP_BASE + '/api/demo/migrated-queries…');
+      try {
+        const res = await fetch(APP_BASE + '/api/demo/migrated-queries');
+        const data = await res.json();
+        apiTestOutput('✓ Success\n\n' + JSON.stringify(data, null, 2));
+      } catch (e) {
+        apiTestOutput('✗ Error: ' + e.message);
+      }
+    }
+
+    async function testClaimSearch() {
+      apiTestOutput('Testing POST ' + APP_BASE + '/api/claims/search…');
+      try {
+        const res = await fetch(APP_BASE + '/api/claims/search', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            companyCode: '001',
+            statusFilter: null,
+            statusOperator: null,
+            chassisFilter: null,
+            customerFilter: null,
+            sdeClaimFilter: null,
+            claimTypeFilter: null,
+            openClaimsOnly: false,
+            claimAgeDays: 0,
+            searchString: null,
+            sortAscending: true,
+            sortByClaimNumber: true
+          })
+        });
+        const data = await res.json();
+        apiTestOutput('✓ Success\n\n' + JSON.stringify(data, null, 2));
+      } catch (e) {
+        apiTestOutput('✗ Error: ' + e.message);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Tabs
+      const tabs = document.querySelectorAll('.tabs .tab');
+      const contents = {
+        step1: document.getElementById('tab-step1'),
+        step2: document.getElementById('tab-step2'),
+        step3: document.getElementById('tab-step3'),
+        step4: document.getElementById('tab-step4'),
+        step5: document.getElementById('tab-step5'),
+        step6: document.getElementById('tab-step6'),
+      };
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.getAttribute('data-tab');
+          tabs.forEach(t => {
+            t.classList.remove('active');
+            t.style.background = '#020617';
+            t.style.color = '#9ca3af';
+          });
+          tab.classList.add('active');
+          tab.style.background = '#111827';
+          tab.style.color = '#e5e7eb';
+          Object.keys(contents).forEach(key => {
+            contents[key].style.display = key === target ? 'block' : 'none';
+          });
+          if (target === 'step5') loadBuildContext();
+          if (target === 'step6') checkAppStatus();
+        });
+      });
+
+      document.getElementById('discover-btn').addEventListener('click', discoverGlobalDirs);
+      document.getElementById('build-btn').addEventListener('click', buildGlobalContext);
+      document.getElementById('export-btn').addEventListener('click', exportNeo4j);
+      document.getElementById('preview-graph-btn').addEventListener('click', previewGraph);
+      document.getElementById('mf-refresh-btn').addEventListener('click', loadProgramsAndNodes);
+      document.getElementById('mf-run-btn').addEventListener('click', migrateFeature);
+      document.getElementById('val-run-btn').addEventListener('click', runValidation);
+      document.getElementById('build-app-btn').addEventListener('click', buildApplication);
+      document.getElementById('run-app-btn').addEventListener('click', runApplication);
+      document.getElementById('open-demo-btn').addEventListener('click', openDemo);
+      document.getElementById('check-status-btn').addEventListener('click', checkAppStatus);
+      document.getElementById('test-migrated-btn').addEventListener('click', testMigratedQueries);
+      document.getElementById('test-search-btn').addEventListener('click', testClaimSearch);
+      document.getElementById('customize-link').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open('/api/customize-guide', '_blank');
+      });
+
+      discoverGlobalDirs();
+      loadProgramsAndNodes();
+      loadBuildContext();
+    });
+  </script>
+</body>
+</html>
+

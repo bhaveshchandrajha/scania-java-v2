@@ -76,6 +76,34 @@ ENUM_MAPPINGS = {
     '"N"': "FilterOption.ALL_CLAIMS",
 }
 
+# RPG symbol/indicator semantic mapping for accurate translation
+RPG_SYMBOL_GLOSSARY = """
+## RPG Symbol & Indicator Mapping (for semantic accuracy)
+
+When translating RPG conditions to Java, use these mappings to preserve meaning:
+
+**Status codes (map to ClaimStatus enum):**
+- 99 → ClaimStatus.EXCLUDED (excluded/inactive)
+- 20 → ClaimStatus.APPROVED
+- 11 → ClaimStatus.REJECTED
+- 0 → ClaimStatus.PENDING
+- 5 → ClaimStatus.MINIMUM
+
+**Indicators (MARKxx, etc.):** RPG indicators like MARK12, MARK11 often mean "record selected" or "valid for processing" in subfile/list contexts. When the semantic intent is "record is active/valid", translate to Java as:
+  - `status != null && status != ClaimStatus.EXCLUDED` (i.e. statusCodeSde != 99)
+  - Or `existing != null` when checking for presence
+
+**Common variable mappings:**
+- STATUS, STATUSCODESDE → statusCodeSde (entity field)
+- PAKZ → pakz (company code)
+- RECHNR → rechNr (invoice number)
+- RECHDATUM, RECH_DATUM → rechDatum (invoice date)
+- CLAIMNR, CLANO → claimNr (claim number)
+- FILART, SR_FILART → filter/type fields
+
+**Error handling:** EXSR (external subroutine) for error paths → Java: throw new IllegalArgumentException(...) or similar.
+"""
+
 
 def clean_java_code(java_code: str) -> str:
     """Remove markdown code fences and other non-Java content from generated code."""
@@ -545,6 +573,39 @@ def generate_architecture_guidance(entities: List[Dict], value_objects: List[Dic
     """)
 
 
+def _build_trace_source_map(statement_nodes: List[Dict]) -> str:
+    """Build a compact RPG source line → AST node ID map for LLM traceability annotations."""
+    if not statement_nodes:
+        return ""
+    lines = []
+    skip_kinds = {"Comment", "EndIf", "EndDo", "EndSelect", "EndMon", "EndSubroutine"}
+    for sn in statement_nodes:
+        kind = sn.get("kind", "")
+        if kind in skip_kinds:
+            continue
+        nid = sn.get("id", "?")
+        opcode = sn.get("opcode") or kind
+        sl = sn.get("startLine")
+        el = sn.get("endLine")
+        target = sn.get("target", "")
+        syms = sn.get("symbols", [])
+        desc_parts = [opcode]
+        if target:
+            desc_parts.append(target.replace("sym.var.", "").replace("sym.file.", ""))
+        elif syms:
+            desc_parts.append(", ".join(s.replace("sym.var.", "").replace("sym.file.", "") for s in syms[:3]))
+        desc = " ".join(desc_parts)
+        if sl and el and sl != el:
+            lines.append(f"  Line {sl}-{el}: {nid} ({desc})")
+        elif sl:
+            lines.append(f"  Line {sl}: {nid} ({desc})")
+        else:
+            lines.append(f"  {nid} ({desc})")
+    if not lines:
+        return ""
+    return "\n".join(lines)
+
+
 def build_pure_java_prompt(
     context: dict,
     rpg_source_override: Optional[str] = None,
@@ -619,8 +680,14 @@ def build_pure_java_prompt(
     # Generate architecture guidance
     architecture_guidance = generate_architecture_guidance(entities, value_objects, enums)
     
+    # Build RPG source line → AST node traceability map
+    statement_nodes = context.get("statementNodes", [])
+    line_to_node_map = context.get("lineToNodeMap", {})
+    trace_source_map = _build_trace_source_map(statement_nodes)
+
     db_json = json.dumps(db_contracts, indent=2, ensure_ascii=False)
     symbols_json = json.dumps(symbol_metadata, indent=2, ensure_ascii=False)
+    rpg_symbol_glossary = RPG_SYMBOL_GLOSSARY.strip()
     
     # Build column checklist
     column_checklist_lines = []
@@ -732,6 +799,37 @@ def build_pure_java_prompt(
         {symbols_json}
         --- SYMBOL METADATA END ---
         
+        {rpg_symbol_glossary}
+        ## ⚠️ TRACEABILITY ANNOTATIONS (MANDATORY – semantic accuracy)
+        For every generated Java statement that corresponds to RPG logic, you MUST add an inline
+        comment tracing it back to the **exact** RPG AST node it was derived from. This enables
+        accurate RPG↔Java traceability (not approximate ordinal matching).
+        
+        Use this exact format on the SAME LINE as the statement:
+        
+            javaStatement; // @rpg-trace: <nodeId>
+        
+        Examples (use the CORRECT nodeId from the source map for each statement):
+            claim.setStatusCodeSde(20); // @rpg-trace: n451
+            if (existing.getStatusCodeSde() != null && existing.getStatusCodeSde() != 99) {{ // @rpg-trace: n447
+            return claimRepository.findByPakzAndRechNrAndRechDatum(pakz, rn, rd); // @rpg-trace: n530
+        
+        **CRITICAL:** Match the nodeId to the RPG statement that has the **same semantic meaning**.
+        - IF MARK12 AND MARK11 (record valid) → use the IF node's id; Java condition should mirror the intent
+        - CHAIN/READ → use the CHAIN/Read node's id
+        - EVAL/assignments → use the EVAL node's id
+        - EXSR (error handling) → use the ExSr node's id
+        
+        For multi-line statements, place the annotation on the first line.
+        For entity fields from DB contracts (not from a specific RPG statement): // @rpg-trace: schema
+        For boilerplate (imports, package, class declaration): no annotation needed.
+        
+        The following map shows RPG source lines → AST node IDs. Use it to pick the correct nodeId:
+        
+        --- RPG SOURCE MAP START ---
+        {trace_source_map if trace_source_map else "(No statement nodes available)"}
+        --- RPG SOURCE MAP END ---
+        
         ## ⚠️ LOGIC COMPLETENESS – ENFORCED (validation will fail otherwise)
         Your generated code will be **automatically validated** for logic completeness. If any of the following are present, the build will **fail validation** and the code will be rejected:
         - **Empty loops**: Any `for (...)` or `while (...)` with an empty body `{{ }}` → FAIL. Every loop MUST contain real statements (e.g. map, repository.save, field copy).
@@ -796,6 +894,7 @@ def build_pure_java_prompt(
            - Generate **multiple Java files** (one per class/interface)
            - Start each file with package declaration: `package com.scania.warranty.domain;`
            - Include all necessary imports
+           - Add a **one-line Javadoc** for each public class, interface, or enum describing its role (e.g. "JPA entity for claim header (HSG71LF2)." or "Service for claim search and list operations.").
            - Separate files clearly with comments: `// === domain/Claim.java ===`
            - Use clear file separators: `// ==========================================`
         
@@ -1003,40 +1102,167 @@ def parse_multi_file_output(java_code: str, output_dir: Path) -> Dict[str, str]:
     return cleaned_files
 
 
-def write_multi_file_output(files: Dict[str, str], base_output_dir: Path, unit_id: str, node_id: str):
-    """Write multiple Java files to appropriate package directories."""
-    output_dir = base_output_dir / f"{unit_id}_{node_id}_pure_java"
+# Layer descriptions for file-level Javadoc (helps maintainers understand generated code)
+_FILE_DESCRIPTION_BY_LAYER = {
+    "domain": "Domain entity or value object for the warranty claims model.",
+    "repository": "Spring Data JPA repository for warranty claim data access.",
+    "service": "Application service implementing warranty claim business logic.",
+    "dto": "Data transfer object for API or display.",
+    "config": "Spring configuration bean.",
+    "web": "REST controller for warranty claim APIs.",
+}
+
+# Package-level descriptions for package-info.java (integration mode)
+_PACKAGE_DESCRIPTION = {
+    "domain": "Domain entities and value objects for the warranty claims application.",
+    "repository": "Spring Data JPA repositories for warranty claim data access.",
+    "service": "Application services implementing warranty claim business logic.",
+    "dto": "Data transfer objects for API and UI.",
+    "config": "Spring configuration and beans.",
+    "web": "REST controllers for warranty claim APIs.",
+}
+
+
+def _file_description_from_path(file_path: str) -> str:
+    """Derive a short file-level description from the path (e.g. domain/Claim.java -> domain)."""
+    normalized = file_path.replace("\\", "/")
+    parts = [p for p in normalized.split("/") if p and p != "com" and p != "scania" and p != "warranty"]
+    if len(parts) >= 2:
+        layer = parts[-2].lower()  # e.g. domain, service
+    elif len(parts) == 1:
+        layer = "domain"  # fallback
+    else:
+        layer = "domain"
+    return _FILE_DESCRIPTION_BY_LAYER.get(layer, "Generated type for the warranty claims application.")
+
+
+def _make_file_header(file_path: str, unit_id: str, node_id: str, add_traceability: bool) -> str:
+    """Build a Javadoc block for the top of a generated Java file (description + optional RPG traceability)."""
+    description = _file_description_from_path(file_path)
+    lines = [
+        "/**",
+        f" * {description}",
+    ]
+    if add_traceability:
+        lines.append(" * <p>")
+        lines.append(f" * Generated from RPG: unit {{@code {unit_id}}}, node {{@code {node_id}}}.")
+    lines.append(" */")
+    return "\n".join(lines)
+
+
+def _prepend_file_header(content: str, header: str) -> str:
+    """Prepend a Javadoc header at the very top of the file (before package)."""
+    content_stripped = content.strip()
+    if not content_stripped:
+        return header
+    return header + "\n\n" + content_stripped
+
+
+def _extract_package_from_content(content: str) -> Optional[str]:
+    """Extract package name from the first 'package X;' line in Java content."""
+    match = re.search(r"^\s*package\s+([\w.]+)\s*;", content, re.MULTILINE)
+    return match.group(1) if match else None
+
+
+def _package_description(package_name: str) -> str:
+    """Short description for a package (last segment, e.g. domain, service)."""
+    segment = package_name.split(".")[-1].lower()
+    return _PACKAGE_DESCRIPTION.get(segment, "Types for the warranty claims application.")
+
+
+def _write_package_info(
+    output_dir: Path,
+    package_name: str,
+    unit_id: str,
+    node_id: str,
+    add_traceability: bool,
+) -> None:
+    """Write package-info.java for the given package (integration mode)."""
+    package_path = package_name.replace(".", "/")
+    package_dir = output_dir / package_path
+    package_dir.mkdir(parents=True, exist_ok=True)
+    info_file = package_dir / "package-info.java"
+    if info_file.exists():
+        return  # Do not overwrite existing package-info
+    description = _package_description(package_name)
+    lines = [
+        "/**",
+        f" * {description}",
+    ]
+    if add_traceability:
+        lines.append(" * <p>")
+        lines.append(f" * Contains types generated from RPG: unit {{@code {unit_id}}}, node {{@code {node_id}}}.")
+    lines.append(" */")
+    lines.append(f"package {package_name};")
+    info_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"// ✅ Wrote package-info.java for {package_name}", file=sys.stderr)
+
+
+def write_multi_file_output(
+    files: Dict[str, str],
+    base_output_dir: Path,
+    unit_id: str,
+    node_id: str,
+    integrate_into_project: bool = False,
+    add_traceability: bool = True,
+) -> Tuple[Path, List[str]]:
+    """
+    Write multiple Java files to appropriate package directories.
+
+    - Standalone (default): create {unitId}_{nodeId}_pure_java under base_output_dir.
+    - Integration mode: write directly under base_output_dir (expected to be e.g. targetProject/src/main/java).
+    - Prepends file-level Javadoc (description + optional RPG unit/node traceability) to each file.
+    """
+    if integrate_into_project:
+        output_dir = base_output_dir
+    else:
+        output_dir = base_output_dir / f"{unit_id}_{node_id}_pure_java"
     output_dir.mkdir(parents=True, exist_ok=True)
     
     written_files = []
+    packages_used: Set[str] = set()
     for file_path, content in files.items():
-        # Normalize path - handle both relative and absolute paths
-        if "/" in file_path or "\\" in file_path:
-            # Extract package path
-            # Handle both forward and backslash separators
-            normalized_path = file_path.replace("\\", "/")
+        header = _make_file_header(file_path, unit_id, node_id, add_traceability)
+        content = _prepend_file_header(content, header)
+        pkg = _extract_package_from_content(content)
+        if pkg:
+            packages_used.add(pkg)
+        # In integration mode, derive path from package so files go under com/scania/warranty/...
+        # (LLM often outputs short markers like domain/Claim.java but package is com.scania.warranty.domain)
+        normalized_path = file_path.replace("\\", "/")
+        file_name = normalized_path.split("/")[-1] if "/" in normalized_path else file_path
+        if integrate_into_project and pkg:
+            file_dir = output_dir / pkg.replace(".", "/")
+            target_file = file_dir / file_name
+        elif "/" in normalized_path or "\\" in file_path:
             parts = normalized_path.split("/")
-            file_name = parts[-1]
             package_parts = parts[:-1]
-            
-            # Create package directory structure
             file_dir = output_dir
             for part in package_parts:
                 file_dir = file_dir / part
             file_dir.mkdir(parents=True, exist_ok=True)
-            
             target_file = file_dir / file_name
         else:
-            # Single file, put in root
             target_file = output_dir / file_path
+        target_file.parent.mkdir(parents=True, exist_ok=True)
         
         try:
             target_file.write_text(content, encoding="utf-8")
-            written_files.append(str(target_file.relative_to(base_output_dir)))
-            print(f"// ✅ Wrote {target_file.relative_to(base_output_dir)} ({len(content)} chars)", file=sys.stderr)
+            # For logging, keep paths relative to the logical base (project root or output root)
+            rel_base = base_output_dir
+            try:
+                rel_path = target_file.relative_to(rel_base)
+            except ValueError:
+                rel_path = target_file.name
+            written_files.append(str(rel_path))
+            print(f"// ✅ Wrote {rel_path} ({len(content)} chars)", file=sys.stderr)
         except Exception as e:
             print(f"// ❌ Error writing {target_file}: {e}", file=sys.stderr)
             raise
+    
+    if integrate_into_project and packages_used:
+        for pkg in sorted(packages_used):
+            _write_package_info(output_dir, pkg, unit_id, node_id, add_traceability)
     
     if written_files:
         print(f"\n// ✅ Successfully generated {len(written_files)} Java files", file=sys.stderr)
@@ -1049,7 +1275,7 @@ def write_multi_file_output(files: Dict[str, str], base_output_dir: Path, unit_i
     else:
         print(f"// ⚠️  WARNING: No files were written!", file=sys.stderr)
     
-    return written_files
+    return output_dir, written_files
 
 
 def main():
@@ -1095,6 +1321,27 @@ def main():
         default=None,
         metavar="PATH",
         help="Path to the RPG source file (e.g. HS1210.sqlrpgle). If provided, the full source for the node's range (startLine-endLine from context) is loaded and sent to the LLM so it can generate complete logic instead of stubs.",
+    )
+    parser.add_argument(
+        "--integration-app",
+        default=None,
+        help="Logical app id for integration mode (e.g. warranty-claims). Optional, for metadata only.",
+    )
+    parser.add_argument(
+        "--target-project",
+        default=None,
+        help="Existing Spring Boot project root to integrate into (e.g. warranty_demo). "
+             "When set, generated Java is written into this project instead of a standalone *_pure_java directory.",
+    )
+    parser.add_argument(
+        "--no-traceability",
+        action="store_true",
+        help="Do not add RPG unit/node traceability comments to generated files and package-info.",
+    )
+    parser.add_argument(
+        "--no-inline-origin",
+        action="store_true",
+        help="Do not inject // @origin RPG line annotations into generated Java (traceability in IDE).",
     )
     args = parser.parse_args()
 
@@ -1178,6 +1425,18 @@ def main():
     import time
     start_time = time.time()
     
+    # Determine output strategy
+    integration_mode = args.target_project is not None
+    if integration_mode:
+        target_root = Path(args.target_project)
+        if not target_root.is_dir():
+            raise SystemExit(f"Target project root not found: {target_root}")
+        base_output_dir = target_root / "src/main/java"
+        print(f"// Integration mode: writing into existing project {target_root}", file=sys.stderr)
+    else:
+        base_output_dir = Path(args.output_dir)
+        print(f"// Standalone mode: writing into {base_output_dir} / {unit_id}_{node_id}_pure_java", file=sys.stderr)
+
     print("// Starting Pure Java migration (Track B)...", file=sys.stderr, flush=True)
     
     try:
@@ -1216,10 +1475,28 @@ def main():
                 
                 # Parse and write multi-file output
                 print(f"\n// Parsing multi-file output...", file=sys.stderr)
-                files = parse_multi_file_output(java_code_stream, Path(args.output_dir))
+                files = parse_multi_file_output(java_code_stream, base_output_dir)
                 print(f"// Found {len(files)} Java files to write", file=sys.stderr)
                 if files:
-                    write_multi_file_output(files, Path(args.output_dir), unit_id, node_id)
+                    output_dir, written_files = write_multi_file_output(
+                        files,
+                        base_output_dir,
+                        unit_id,
+                        node_id,
+                        integrate_into_project=integration_mode,
+                        add_traceability=not args.no_traceability,
+                    )
+                    if not args.no_inline_origin and written_files:
+                        try:
+                            from inject_origin_annotations import inject_annotations
+                            root_dir = context_path.resolve().parent.parent
+                            inject_annotations(output_dir, unit_id, node_id, root_dir)
+                        except Exception as e:
+                            print(f"// ⚠️  Inline origin injection skipped: {e}", file=sys.stderr)
+                    if integration_mode:
+                        print(f"// ✅ Migration complete! Files integrated into project: {output_dir.parent.parent}", file=sys.stderr)
+                    else:
+                        print(f"// ✅ Migration complete! Files written to: {output_dir}", file=sys.stderr)
                 else:
                     print("// ⚠️  WARNING: No files extracted from output. Check parser logic.", file=sys.stderr)
         else:
@@ -1271,11 +1548,28 @@ def main():
             
             # Parse and write multi-file output
             print(f"// Parsing multi-file output...", file=sys.stderr)
-            files = parse_multi_file_output(java_code, Path(args.output_dir))
+            files = parse_multi_file_output(java_code, base_output_dir)
             print(f"// Found {len(files)} Java files to write", file=sys.stderr)
             if files:
-                write_multi_file_output(files, Path(args.output_dir), unit_id, node_id)
-                print(f"// ✅ Migration complete! Files written to: {Path(args.output_dir) / f'{unit_id}_{node_id}_pure_java'}", file=sys.stderr)
+                output_dir, written_files = write_multi_file_output(
+                    files,
+                    base_output_dir,
+                    unit_id,
+                    node_id,
+                    integrate_into_project=integration_mode,
+                    add_traceability=not args.no_traceability,
+                )
+                if not args.no_inline_origin and written_files:
+                    try:
+                        from inject_origin_annotations import inject_annotations
+                        root_dir = context_path.resolve().parent.parent
+                        inject_annotations(output_dir, unit_id, node_id, root_dir)
+                    except Exception as e:
+                        print(f"// ⚠️  Inline origin injection skipped: {e}", file=sys.stderr)
+                if integration_mode:
+                    print(f"// ✅ Migration complete! Files integrated into project: {output_dir.parent.parent}", file=sys.stderr)
+                else:
+                    print(f"// ✅ Migration complete! Files written to: {output_dir}", file=sys.stderr)
             else:
                 print("// ⚠️  WARNING: No files extracted from output. Check parser logic.", file=sys.stderr)
                 print("// Output preview (first 500 chars):", file=sys.stderr)

@@ -2,24 +2,24 @@
   "astNode": {
     "id": "n1779",
     "kind": "Procedure",
-    "name": null,
-    "sem": "{\"sym.file.HSG71PF\":{\"refersTo\":\"sym.file.HSG71PF\"},\"sym.file.HSG73PF\":{\"refersTo\":\"sym.file.HSG73PF\"},\"sym.file.HSGPSLF3\":{\"refersTo\":\"sym.file.HSGPSLF3\"},\"sym.var.KEY_GPS\":{\"refersTo\":\"sym.var.KEY_GPS\"},\"sym.var.create\":{\"refersTo\":\"sym.var.create\"},\"sym.var.maintenance\":{\"refersTo\":\"sym.var.maintenance\"},\"sym.var.groups\":{\"refersTo\":\"sym.var.groups\"},\"sym.var.partNo\":{\"refersTo\":\"sym.var.partNo\"},\"sym.var.partValue\":{\"refersTo\":\"sym.var.partValue\"},\"sym.var.text\":{\"refersTo\":\"sym.var.text\"},\"sym.var.failureNo\":{\"refersTo\":\"sym.var.failureNo\"},\"sym.var.lineNo\":{\"refersTo\":\"sym.var.lineNo\"},\"sym.var.valueMat\":{\"refersTo\":\"sym.var.valueMat\"},\"sym.var.valueLab\":{\"refersTo\":\"sym.var.valueLab\"},\"sym.var.valueSpe\":{\"refersTo\":\"sym.var.valueSpe\"}}",
+    "name": "CreateClaim",
+    "sem": "{\"sym.file.HSG71PF\": {\"refersTo\": \"sym.file.HSG71PF\"}, \"sym.file.HSG73PF\": {\"refersTo\": \"sym.file.HSG73PF\"}, \"sym.file.HSGPSLF3\": {\"refersTo\": \"sym.file.HSGPSLF3\"}, \"sym.var.KEY_GPS\": {\"refersTo\": \"sym.var.KEY_GPS\"}, \"sym.var.create\": {\"refersTo\": \"sym.var.create\"}, \"sym.var.maintenance\": {\"refersTo\": \"sym.var.maintenance\"}, \"sym.var.groups\": {\"refersTo\": \"sym.var.groups\"}, \"sym.var.partNo\": {\"refersTo\": \"sym.var.partNo\"}, \"sym.var.partValue\": {\"refersTo\": \"sym.var.partValue\"}, \"sym.var.text\": {\"refersTo\": \"sym.var.text\"}, \"sym.var.failureNo\": {\"refersTo\": \"sym.var.failureNo\"}, \"sym.var.lineNo\": {\"refersTo\": \"sym.var.lineNo\"}, \"sym.var.valueMat\": {\"refersTo\": \"sym.var.valueMat\"}, \"sym.var.valueLab\": {\"refersTo\": \"sym.var.valueLab\"}, \"sym.var.valueSpe\": {\"refersTo\": \"sym.var.valueSpe\"}}",
     "outgoingEdges": [
+      "sym.file.HSG71PF",
+      "sym.file.HSG73PF",
+      "sym.file.HSGPSLF3",
+      "sym.var.KEY_GPS",
       "sym.var.create",
-      "sym.var.maintenance",
+      "sym.var.failureNo",
       "sym.var.groups",
+      "sym.var.lineNo",
+      "sym.var.maintenance",
       "sym.var.partNo",
       "sym.var.partValue",
       "sym.var.text",
-      "sym.var.failureNo",
-      "sym.var.lineNo",
-      "sym.var.valueMat",
       "sym.var.valueLab",
-      "sym.var.valueSpe",
-      "sym.var.KEY_GPS",
-      "sym.file.HSGPSLF3",
-      "sym.file.HSG71PF",
-      "sym.file.HSG73PF"
+      "sym.var.valueMat",
+      "sym.var.valueSpe"
     ],
     "range": {
       "sourceId": "qsys:HSSRC/QRPGLESRC/HS1210",
@@ -27,89 +27,40 @@
       "startColumn": 7,
       "endLine": 2887,
       "endColumn": 24
-    },
-    "raw": {
-      "id": "n1779",
-      "kind": "Procedure",
-      "sem": {
-        "sym.file.HSG71PF": {
-          "refersTo": "sym.file.HSG71PF"
-        },
-        "sym.file.HSG73PF": {
-          "refersTo": "sym.file.HSG73PF"
-        },
-        "sym.file.HSGPSLF3": {
-          "refersTo": "sym.file.HSGPSLF3"
-        },
-        "sym.var.KEY_GPS": {
-          "refersTo": "sym.var.KEY_GPS"
-        },
-        "sym.var.create": {
-          "refersTo": "sym.var.create"
-        },
-        "sym.var.maintenance": {
-          "refersTo": "sym.var.maintenance"
-        },
-        "sym.var.groups": {
-          "refersTo": "sym.var.groups"
-        },
-        "sym.var.partNo": {
-          "refersTo": "sym.var.partNo"
-        },
-        "sym.var.partValue": {
-          "refersTo": "sym.var.partValue"
-        },
-        "sym.var.text": {
-          "refersTo": "sym.var.text"
-        },
-        "sym.var.failureNo": {
-          "refersTo": "sym.var.failureNo"
-        },
-        "sym.var.lineNo": {
-          "refersTo": "sym.var.lineNo"
-        },
-        "sym.var.valueMat": {
-          "refersTo": "sym.var.valueMat"
-        },
-        "sym.var.valueLab": {
-          "refersTo": "sym.var.valueLab"
-        },
-        "sym.var.valueSpe": {
-          "refersTo": "sym.var.valueSpe"
-        }
-      },
-      "range": {
-        "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
-        "startLine": 2798,
-        "startLinePP": 2800,
-        "startCol": 7,
-        "startByte": 132452,
-        "endLine": 2887,
-        "endLinePP": 2889,
-        "endCol": 24,
-        "endByte": 135857
-      },
-      "props": {
-        "opcode": "PROC",
-        "name": "CreateClaim"
-      },
-      "children": [
-        "n1780",
-        "n1781",
-        "n1782",
-        "n1783",
-        "n1784",
-        "n1785",
-        "n1822",
-        "n1836"
-      ]
     }
   },
-  "narrative": "### Node n1779: Procedure\n\nProcedure `n1779` expresses business logic derived from its semantic block and referenced symbols/files.\n\n- **Files / DB Contracts**:\n  - HSG71PF (columns: PAKZ CHAR(3), RECH.-NR. CHAR(5), RECH.-DATUM CHAR(8), AUFTRAGS-NR. CHAR(5), WETE CHAR(1), CLAIM-NR. CHAR(8), CHASSIS-NR. CHAR(7), KENNZEICHEN CHAR(10), ZUL.-DATUM DECIMAL(8,0), REP.-DATUM DECIMAL(8,0), KM-STAND DECIMAL(3,0), PRODUKT-TYP DECIMAL(1,0), ANHANG CHAR(1), AUSL#NDER CHAR(1), KD-NR. CHAR(6), KD-NAME CHAR(30), CLAIM-NR. SDE CHAR(8), STATUS CODE SDE DECIMAL(2,0), ANZ. FEHLER DECIMAL(2,0), BEREICH CHAR(1), AUF.NR. CHAR(10))\n  - HSG73PF (columns: PAKZ CHAR(3), RECH.-NR. CHAR(5), RECH.-DATUM CHAR(8), AUFTRAGS-NR. CHAR(5), BEREICH CHAR(1), CLAIM-NR. CHAR(8), FEHLER-NR. CHAR(2), FOLGE-NR. CHAR(2), FEHLER-TEIL CHAR(18), HAUPTGRUPPE CHAR(2), NEBENGRUPPE CHAR(2), SCHAD.-C1 CHAR(2), SCHAD.-C2 CHAR(2), TEXT1 CHAR(65), TEXT2 CHAR(65), STEUER CODE CHAR(2), BEW. CODE1 CHAR(2), BEW. CODE2 DECIMAL(4,0), BEW. DATUM DECIMAL(8,0), VERG. MAT. DECIMAL(3,0), VERG. ARB. DECIMAL(3,0), VERG. SPEZ. DECIMAL(3,0), BEANTR. MAT. DECIMAL(11,2), BEANTRG. ARB. DECIMAL(11,2), BEANTRG. SPEZ. DECIMAL(11,2), CLAIM-ART DECIMAL(1,0), V.-REP.-DATUM DECIMAL(8,0), V.-KM-STAND DECIMAL(3,0), FELDTEST-NR. DECIMAL(6,0), KAMPAGNEN-NR. CHAR(8), EPS CHAR(20), STATUS CODE DECIMAL(2,0), VARIANT CODE DECIMAL(2,0), ACTION CODE DECIMAL(2,0), TEXT3 CHAR(65), TEXT4 CHAR(65), FEHLER-NR. SDE CHAR(2), ANHANG CHAR(1), SOURCE CHAR(5), COMPLAIN CHAR(5), SYMPTOM CHAR(5), FAILURE CHAR(5), LOCATION CHAR(5), REPAIR CHAR(5), ERG.CODE CHAR(2), RESULT1 CHAR(2), RESULT2 CHAR(5), FAULT1 CHAR(2), FAULT2 CHAR(5), REPLY1 CHAR(2), REPLY2 CHAR(5), EXPLANATION1 CHAR(2), EXPLANATION2 CHAR(5))\n  - HSGPSLF3 (columns: KUERZEL CHAR(3), CLAIM-NR. CHAR(8), FEHLER-NR. CHAR(2), FOLGE-NR. CHAR(2), ZEILE DECIMAL(3,0), AUFTEILUNG DECIMAL(3,0), SATZART CHAR(3), NR. CHAR(18), MENGE DECIMAL(5,0), WERT DECIMAL(11,2), STEUER-CODE CHAR(40), HAUPTGRUPPE CHAR(2), ZEIT DECIMAL(3,1), GRUND DECIMAL(4,0), VERG�TUNG DECIMAL(3,0), MANUELL CHAR(1), KAMPAGNE DECIMAL(8,0), POS.-NR. DECIMAL(3,0), RESULTCODE CHAR(2), CODE TYPE CHAR(2), CODE ID CHAR(5), COMPFAC. DECIMAL(3,0), GROSSPRICE DECIMAL(13,2), DISCOUNT DECIMAL(5,2), COMPAMOUNT DECIMAL(15,2), COMPQTY DECIMAL(7,0), TYPE CHAR(5), MIA STATUS CHAR(1), CATEGORYS CHAR(2), TEXT CHAR(2000))\n\n- **Variables**:\n  - KEY_GPS (type: t.klist.KEY_GPS)\n  - create\n  - maintenance\n  - groups (type: t.char.4)\n  - partNo (type: t.char.7)\n  - partValue (type: t.dec11_2)\n  - text (type: t.char.65)\n  - failureNo (type: t.dec2_0)\n  - lineNo (type: t.dec1_0)\n  - valueMat (type: t.dec11_2)\n  - valueLab (type: t.dec11_2)\n  - valueSpe (type: t.dec11_2)\n\n- **Outgoing edges**:\n  - sym.var.create\n  - sym.var.maintenance\n  - sym.var.groups\n  - sym.var.partNo\n  - sym.var.partValue\n  - sym.var.text\n  - sym.var.failureNo\n  - sym.var.lineNo\n  - sym.var.valueMat\n  - sym.var.valueLab\n  - sym.var.valueSpe\n  - sym.var.KEY_GPS\n  - sym.file.HSGPSLF3\n  - sym.file.HSG71PF\n  - sym.file.HSG73PF\n\n- **Raw sem JSON**:\n```json\n{\n  \"sym.file.HSG71PF\" : {\n    \"refersTo\" : \"sym.file.HSG71PF\"\n  },\n  \"sym.file.HSG73PF\" : {\n    \"refersTo\" : \"sym.file.HSG73PF\"\n  },\n  \"sym.file.HSGPSLF3\" : {\n    \"refersTo\" : \"sym.file.HSGPSLF3\"\n  },\n  \"sym.var.KEY_GPS\" : {\n    \"refersTo\" : \"sym.var.KEY_GPS\"\n  },\n  \"sym.var.create\" : {\n    \"refersTo\" : \"sym.var.create\"\n  },\n  \"sym.var.maintenance\" : {\n    \"refersTo\" : \"sym.var.maintenance\"\n  },\n  \"sym.var.groups\" : {\n    \"refersTo\" : \"sym.var.groups\"\n  },\n  \"sym.var.partNo\" : {\n    \"refersTo\" : \"sym.var.partNo\"\n  },\n  \"sym.var.partValue\" : {\n    \"refersTo\" : \"sym.var.partValue\"\n  },\n  \"sym.var.text\" : {\n    \"refersTo\" : \"sym.var.text\"\n  },\n  \"sym.var.failureNo\" : {\n    \"refersTo\" : \"sym.var.failureNo\"\n  },\n  \"sym.var.lineNo\" : {\n    \"refersTo\" : \"sym.var.lineNo\"\n  },\n  \"sym.var.valueMat\" : {\n    \"refersTo\" : \"sym.var.valueMat\"\n  },\n  \"sym.var.valueLab\" : {\n    \"refersTo\" : \"sym.var.valueLab\"\n  },\n  \"sym.var.valueSpe\" : {\n    \"refersTo\" : \"sym.var.valueSpe\"\n  }\n}\n```\n",
+  "narrative": "### Node n1779: Procedure `CreateClaim`\n\nThis procedure references symbols derived from its semantic block and symbol table.\n\n- **Files / DB Contracts**:\n  - HSG71PF (columns: PAKZ CHAR, RECH.-NR. CHAR, RECH.-DATUM CHAR, AUFTRAGS-NR. CHAR, WETE CHAR, CLAIM-NR. CHAR, CHASSIS-NR. CHAR, KENNZEICHEN CHAR, ZUL.-DATUM DECIMAL, REP.-DATUM DECIMAL, KM-STAND DECIMAL, PRODUKT-TYP DECIMAL, ANHANG CHAR, AUSL#NDER CHAR, KD-NR. CHAR, KD-NAME CHAR, CLAIM-NR. SDE CHAR, STATUS CODE SDE DECIMAL, ANZ. FEHLER DECIMAL, BEREICH CHAR +1 more)\n  - HSG73PF (columns: PAKZ CHAR, RECH.-NR. CHAR, RECH.-DATUM CHAR, AUFTRAGS-NR. CHAR, BEREICH CHAR, CLAIM-NR. CHAR, FEHLER-NR. CHAR, FOLGE-NR. CHAR, FEHLER-TEIL CHAR, HAUPTGRUPPE CHAR, NEBENGRUPPE CHAR, SCHAD.-C1 CHAR, SCHAD.-C2 CHAR, TEXT1 CHAR, TEXT2 CHAR, STEUER CODE CHAR, BEW. CODE1 CHAR, BEW. CODE2 DECIMAL, BEW. DATUM DECIMAL, VERG. MAT. DECIMAL +33 more)\n  - HSGPSLF3 (columns: KUERZEL CHAR, CLAIM-NR. CHAR, FEHLER-NR. CHAR, FOLGE-NR. CHAR, ZEILE DECIMAL, AUFTEILUNG DECIMAL, SATZART CHAR, NR. CHAR, MENGE DECIMAL, WERT DECIMAL, STEUER-CODE CHAR, HAUPTGRUPPE CHAR, ZEIT DECIMAL, GRUND DECIMAL, VERGÜTUNG DECIMAL, MANUELL CHAR, KAMPAGNE DECIMAL, POS.-NR. DECIMAL, RESULTCODE CHAR, CODE TYPE CHAR +10 more)\n\n- **Variables**:\n  - KEY_GPS (type: t.klist.KEY_GPS)\n  - create\n  - failureNo (type: t.dec2_0)\n  - groups (type: t.char.4)\n  - lineNo (type: t.dec1_0)\n  - maintenance\n  - partNo (type: t.char.7)\n  - partValue (type: t.dec11_2)\n  - text (type: t.char.65)\n  - valueLab (type: t.dec11_2)\n  - valueMat (type: t.dec11_2)\n  - valueSpe (type: t.dec11_2)\n\n- **Raw sem JSON**:\n```json\n{\n  \"sym.file.HSG71PF\": {\n    \"refersTo\": \"sym.file.HSG71PF\"\n  },\n  \"sym.file.HSG73PF\": {\n    \"refersTo\": \"sym.file.HSG73PF\"\n  },\n  \"sym.file.HSGPSLF3\": {\n    \"refersTo\": \"sym.file.HSGPSLF3\"\n  },\n  \"sym.var.KEY_GPS\": {\n    \"refersTo\": \"sym.var.KEY_GPS\"\n  },\n  \"sym.var.create\": {\n    \"refersTo\": \"sym.var.create\"\n  },\n  \"sym.var.maintenance\": {\n    \"refersTo\": \"sym.var.maintenance\"\n  },\n  \"sym.var.groups\": {\n    \"refersTo\": \"sym.var.groups\"\n  },\n  \"sym.var.partNo\": {\n    \"refersTo\": \"sym.var.partNo\"\n  },\n  \"sym.var.partValue\": {\n    \"refersTo\": \"sym.var.partValue\"\n  },\n  \"sym.var.text\": {\n    \"refersTo\": \"sym.var.text\"\n  },\n  \"sym.var.failureNo\": {\n    \"refersTo\": \"sym.var.failureNo\"\n  },\n  \"sym.var.lineNo\": {\n    \"refersTo\": \"sym.var.lineNo\"\n  },\n  \"sym.var.valueMat\": {\n    \"refersTo\": \"sym.var.valueMat\"\n  },\n  \"sym.var.valueLab\": {\n    \"refersTo\": \"sym.var.valueLab\"\n  },\n  \"sym.var.valueSpe\": {\n    \"refersTo\": \"sym.var.valueSpe\"\n  }\n}\n```",
   "rpgSnippet": "     P CreateClaim     B\n     D CreateClaim     PI\n     D*----------------------------------------------------------------\n     D create          S               N   Inz(*Off)\n     D maintenance     S               N   Inz(*Off)\n     D groups          S              4A   Inz(*Blanks)\n     D partNo          S              7A   Inz(*Blanks)\n     D partValue       S             11  2 Inz(0)\n     D text            S             65A   Dim(4) Inz(*Blanks)\n     D failureNo       S              2  0 Inz(0)\n     D lineNo          S              1  0 Inz(0)\n     D valueMat        S             11  2 Inz(0)\n     D valueLab        S             11  2 Inz(0)\n     D valueSpe        S             11  2 Inz(0)\n     D*****************************************************************\n      /free\n        FailureNo = 1;\n        SetLl Key_GPS HSGPSLF3;\n        ReadE Key_GPS HSGPSLF3;\n        DoW Not %Eof(HSGPSLF3);\n           If GPS150 > failureNo;\n              createFail(failureNo:groups:partNo:maintenance:text:\n                         valueMat:valueLab:valueSpe);\n              FailureNo = GPS150;\n              Maintenance = *Off;\n              clear text;\n              lineNo = 0;\n              valueMat = 0;\n              valueLab = 0;\n              valueSpe = 0;\n              groups = *Blanks;\n              partNo = *Blanks;\n              partValue = 0;\n           EndIf;\n           If GPS150 > 0;\n              create = *On;\n              GPS020 = %Subst(%EditC(GPS150:'X'):2:2);\n              GPS025 = '00';\n              //Check if Maintenance Standard time\n              If GPS040 = 'MAT';\n                 Chain GPS050 ITLSMF3;\n                 If %Found(ITLSMF3) And SFRAN = 'SC';\n                    If GPS070 > partValue;\n                       partNo = GPS050;\n                       partValue = GPS070;\n                    EndIf;\n                 EndIf;\n              EndIf;\n              Exec SQL Set :GPS080U = Upper(:GPS080);\n              If GPS040 = 'ARB' And %Scan('WARTUNG':GPS080U) > 0;\n                 Maintenance = *On;\n                 groups = %Subst(GPS050:1:4);\n              EndIf;\n              //Retrieve Main and Subgroup\n              If GPS040 = 'ARB' And Groups = *Blanks;\n                 groups = %Subst(GPS050:1:4);\n              EndIf;\n              If GPS040 = 'TXT' And %Subst(GPS080:1:1) <> '+' and lineNo < 4;\n                 lineNo +=1;\n                 text(lineNo) = GPS080;\n              EndIf;\n              Select;\n              When GPS040 = 'ARB';\n                 valueLab += GPS060 * GPS070;\n              When GPS040 = 'MAT';\n                 valueMat += GPS060 * GPS070;\n              When GPS040 = 'TXT';\n              Other;\n                 valueSpe += GPS070;\n              EndSl;\n           EndIf;\n           ReadE Key_GPS HSGPSLF3;\n        EndDo;\n        If create;\n           createFail(failureNo:groups:partNo:maintenance:text:\n                      valueMat:valueLab:valueSpe);\n           Chain (G71000:G71050:G71060) HSG71LF2;\n           If %Found(HSG71LF2);\n              G71170 = 3;\n              Update HSG71LR2;\n           EndIf;\n           If PKZ = 'SNF';\n              //sendClaim(G71000:G71050:*Blanks:*Blanks);\n           EndIf;\n        EndIf;\n        Unlock HSG71PF;\n        Unlock HSG73PF;\n       Return;\n      /end-free\n     P                 E",
   "dbContracts": [
     {
       "name": "HSG71PF",
+      "symbolId": "sym.file.HSG71PF",
+      "library": "HSSRC",
+      "typeId": "t.file.HSG71PF",
+      "recordFormat": "HSG71PR",
+      "keyed": false,
+      "keys": [
+        {
+          "name": "G71000",
+          "ascending": true
+        },
+        {
+          "name": "G71010",
+          "ascending": true
+        },
+        {
+          "name": "G71020",
+          "ascending": true
+        },
+        {
+          "name": "G71030",
+          "ascending": true
+        },
+        {
+          "name": "G71040",
+          "ascending": true
+        }
+      ],
       "description": null,
       "columns": [
         {
@@ -118,7 +69,10 @@
           "type": "CHAR",
           "length": 3,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.3",
+          "sqlType": "CHAR(3)",
+          "nullable": false
         },
         {
           "name": "RECH.-NR.",
@@ -126,7 +80,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "RECH.-DATUM",
@@ -134,7 +91,10 @@
           "type": "CHAR",
           "length": 8,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.8",
+          "sqlType": "CHAR(8)",
+          "nullable": false
         },
         {
           "name": "AUFTRAGS-NR.",
@@ -142,7 +102,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "WETE",
@@ -150,7 +113,10 @@
           "type": "CHAR",
           "length": 1,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.1",
+          "sqlType": "CHAR(1)",
+          "nullable": false
         },
         {
           "name": "CLAIM-NR.",
@@ -158,7 +124,10 @@
           "type": "CHAR",
           "length": 8,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.8",
+          "sqlType": "CHAR(8)",
+          "nullable": false
         },
         {
           "name": "CHASSIS-NR.",
@@ -166,7 +135,10 @@
           "type": "CHAR",
           "length": 7,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.7",
+          "sqlType": "CHAR(7)",
+          "nullable": false
         },
         {
           "name": "KENNZEICHEN",
@@ -174,7 +146,10 @@
           "type": "CHAR",
           "length": 10,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.10",
+          "sqlType": "CHAR(10)",
+          "nullable": false
         },
         {
           "name": "ZUL.-DATUM",
@@ -182,7 +157,10 @@
           "type": "DECIMAL",
           "length": 8,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec8_0",
+          "sqlType": "DECIMAL(8,0)",
+          "nullable": false
         },
         {
           "name": "REP.-DATUM",
@@ -190,7 +168,10 @@
           "type": "DECIMAL",
           "length": 8,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec8_0",
+          "sqlType": "DECIMAL(8,0)",
+          "nullable": false
         },
         {
           "name": "KM-STAND",
@@ -198,7 +179,10 @@
           "type": "DECIMAL",
           "length": 3,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec3_0",
+          "sqlType": "DECIMAL(3,0)",
+          "nullable": false
         },
         {
           "name": "PRODUKT-TYP",
@@ -206,7 +190,10 @@
           "type": "DECIMAL",
           "length": 1,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec1_0",
+          "sqlType": "DECIMAL(1,0)",
+          "nullable": false
         },
         {
           "name": "ANHANG",
@@ -214,7 +201,10 @@
           "type": "CHAR",
           "length": 1,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.1",
+          "sqlType": "CHAR(1)",
+          "nullable": false
         },
         {
           "name": "AUSL#NDER",
@@ -222,7 +212,10 @@
           "type": "CHAR",
           "length": 1,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.1",
+          "sqlType": "CHAR(1)",
+          "nullable": false
         },
         {
           "name": "KD-NR.",
@@ -230,7 +223,10 @@
           "type": "CHAR",
           "length": 6,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.6",
+          "sqlType": "CHAR(6)",
+          "nullable": false
         },
         {
           "name": "KD-NAME",
@@ -238,7 +234,10 @@
           "type": "CHAR",
           "length": 30,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.30",
+          "sqlType": "CHAR(30)",
+          "nullable": false
         },
         {
           "name": "CLAIM-NR. SDE",
@@ -246,7 +245,10 @@
           "type": "CHAR",
           "length": 8,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.8",
+          "sqlType": "CHAR(8)",
+          "nullable": false
         },
         {
           "name": "STATUS CODE SDE",
@@ -254,7 +256,10 @@
           "type": "DECIMAL",
           "length": 2,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec2_0",
+          "sqlType": "DECIMAL(2,0)",
+          "nullable": false
         },
         {
           "name": "ANZ. FEHLER",
@@ -262,7 +267,10 @@
           "type": "DECIMAL",
           "length": 2,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec2_0",
+          "sqlType": "DECIMAL(2,0)",
+          "nullable": false
         },
         {
           "name": "BEREICH",
@@ -270,7 +278,10 @@
           "type": "CHAR",
           "length": 1,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.1",
+          "sqlType": "CHAR(1)",
+          "nullable": false
         },
         {
           "name": "AUF.NR.",
@@ -278,171 +289,54 @@
           "type": "CHAR",
           "length": 10,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.10",
+          "sqlType": "CHAR(10)",
+          "nullable": false
         }
       ],
-      "raw": {
-        "symbolId": "sym.file.HSG71PF",
-        "name": "HSG71PF",
-        "library": "HSSRC",
-        "typeId": "t.file.HSG71PF",
-        "externallyDescribed": true,
-        "recordFormat": "HSG71PR",
-        "usage": [
-          "update",
-          "update",
-          "input",
-          "input",
-          "input",
-          "input",
-          "input",
-          "update",
-          "input",
-          "update",
-          "input",
-          "input",
-          "input",
-          "input",
-          "input"
-        ],
-        "keyed": false,
-        "keys": [
-          {
-            "name": "G71000",
-            "ascending": true
-          },
-          {
-            "name": "G71010",
-            "ascending": true
-          },
-          {
-            "name": "G71020",
-            "ascending": true
-          },
-          {
-            "name": "G71030",
-            "ascending": true
-          },
-          {
-            "name": "G71040",
-            "ascending": true
-          }
-        ],
-        "commitmentControl": false,
-        "openOptions": {
-          "usropn": false
-        },
-        "columns": [
-          {
-            "name": "PAKZ",
-            "typeId": "t.char.3",
-            "nullable": false
-          },
-          {
-            "name": "RECH.-NR.",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "RECH.-DATUM",
-            "typeId": "t.char.8",
-            "nullable": false
-          },
-          {
-            "name": "AUFTRAGS-NR.",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "WETE",
-            "typeId": "t.char.1",
-            "nullable": false
-          },
-          {
-            "name": "CLAIM-NR.",
-            "typeId": "t.char.8",
-            "nullable": false
-          },
-          {
-            "name": "CHASSIS-NR.",
-            "typeId": "t.char.7",
-            "nullable": false
-          },
-          {
-            "name": "KENNZEICHEN",
-            "typeId": "t.char.10",
-            "nullable": false
-          },
-          {
-            "name": "ZUL.-DATUM",
-            "typeId": "t.dec8_0",
-            "nullable": false
-          },
-          {
-            "name": "REP.-DATUM",
-            "typeId": "t.dec8_0",
-            "nullable": false
-          },
-          {
-            "name": "KM-STAND",
-            "typeId": "t.dec3_0",
-            "nullable": false
-          },
-          {
-            "name": "PRODUKT-TYP",
-            "typeId": "t.dec1_0",
-            "nullable": false
-          },
-          {
-            "name": "ANHANG",
-            "typeId": "t.char.1",
-            "nullable": false
-          },
-          {
-            "name": "AUSL#NDER",
-            "typeId": "t.char.1",
-            "nullable": false
-          },
-          {
-            "name": "KD-NR.",
-            "typeId": "t.char.6",
-            "nullable": false
-          },
-          {
-            "name": "KD-NAME",
-            "typeId": "t.char.30",
-            "nullable": false
-          },
-          {
-            "name": "CLAIM-NR. SDE",
-            "typeId": "t.char.8",
-            "nullable": false
-          },
-          {
-            "name": "STATUS CODE SDE",
-            "typeId": "t.dec2_0",
-            "nullable": false
-          },
-          {
-            "name": "ANZ. FEHLER",
-            "typeId": "t.dec2_0",
-            "nullable": false
-          },
-          {
-            "name": "BEREICH",
-            "typeId": "t.char.1",
-            "nullable": false
-          },
-          {
-            "name": "AUF.NR.",
-            "typeId": "t.char.10",
-            "nullable": false
-          }
-        ]
-      }
+      "sourceUnits": [
+        "qsys:HSSRC/QRPGLESRC/HS1210",
+        "qsys:HSSRC/QRPGLESRC/HS1212"
+      ]
     },
     {
       "name": "HSG73PF",
+      "symbolId": "sym.file.HSG73PF",
+      "library": "HSSRC",
+      "typeId": "t.file.HSG73PF",
+      "recordFormat": "HSG73PR",
+      "keyed": false,
+      "keys": [
+        {
+          "name": "G73000",
+          "ascending": true
+        },
+        {
+          "name": "G73010",
+          "ascending": true
+        },
+        {
+          "name": "G73020",
+          "ascending": true
+        },
+        {
+          "name": "G73030",
+          "ascending": true
+        },
+        {
+          "name": "G73040",
+          "ascending": true
+        },
+        {
+          "name": "G73050",
+          "ascending": true
+        },
+        {
+          "name": "G73060",
+          "ascending": true
+        }
+      ],
       "description": null,
       "columns": [
         {
@@ -451,7 +345,10 @@
           "type": "CHAR",
           "length": 3,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.3",
+          "sqlType": "CHAR(3)",
+          "nullable": false
         },
         {
           "name": "RECH.-NR.",
@@ -459,7 +356,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "RECH.-DATUM",
@@ -467,7 +367,10 @@
           "type": "CHAR",
           "length": 8,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.8",
+          "sqlType": "CHAR(8)",
+          "nullable": false
         },
         {
           "name": "AUFTRAGS-NR.",
@@ -475,7 +378,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "BEREICH",
@@ -483,7 +389,10 @@
           "type": "CHAR",
           "length": 1,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.1",
+          "sqlType": "CHAR(1)",
+          "nullable": false
         },
         {
           "name": "CLAIM-NR.",
@@ -491,7 +400,10 @@
           "type": "CHAR",
           "length": 8,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.8",
+          "sqlType": "CHAR(8)",
+          "nullable": false
         },
         {
           "name": "FEHLER-NR.",
@@ -499,7 +411,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "FOLGE-NR.",
@@ -507,7 +422,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "FEHLER-TEIL",
@@ -515,7 +433,10 @@
           "type": "CHAR",
           "length": 18,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.18",
+          "sqlType": "CHAR(18)",
+          "nullable": false
         },
         {
           "name": "HAUPTGRUPPE",
@@ -523,7 +444,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "NEBENGRUPPE",
@@ -531,7 +455,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "SCHAD.-C1",
@@ -539,7 +466,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "SCHAD.-C2",
@@ -547,7 +477,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "TEXT1",
@@ -555,7 +488,10 @@
           "type": "CHAR",
           "length": 65,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.65",
+          "sqlType": "CHAR(65)",
+          "nullable": false
         },
         {
           "name": "TEXT2",
@@ -563,7 +499,10 @@
           "type": "CHAR",
           "length": 65,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.65",
+          "sqlType": "CHAR(65)",
+          "nullable": false
         },
         {
           "name": "STEUER CODE",
@@ -571,7 +510,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "BEW. CODE1",
@@ -579,7 +521,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "BEW. CODE2",
@@ -587,7 +532,10 @@
           "type": "DECIMAL",
           "length": 4,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec4_0",
+          "sqlType": "DECIMAL(4,0)",
+          "nullable": false
         },
         {
           "name": "BEW. DATUM",
@@ -595,7 +543,10 @@
           "type": "DECIMAL",
           "length": 8,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec8_0",
+          "sqlType": "DECIMAL(8,0)",
+          "nullable": false
         },
         {
           "name": "VERG. MAT.",
@@ -603,7 +554,10 @@
           "type": "DECIMAL",
           "length": 3,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec3_0",
+          "sqlType": "DECIMAL(3,0)",
+          "nullable": false
         },
         {
           "name": "VERG. ARB.",
@@ -611,7 +565,10 @@
           "type": "DECIMAL",
           "length": 3,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec3_0",
+          "sqlType": "DECIMAL(3,0)",
+          "nullable": false
         },
         {
           "name": "VERG. SPEZ.",
@@ -619,7 +576,10 @@
           "type": "DECIMAL",
           "length": 3,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec3_0",
+          "sqlType": "DECIMAL(3,0)",
+          "nullable": false
         },
         {
           "name": "BEANTR. MAT.",
@@ -627,7 +587,10 @@
           "type": "DECIMAL",
           "length": 11,
           "scale": 2,
-          "key": false
+          "key": false,
+          "typeId": "t.dec11_2",
+          "sqlType": "DECIMAL(11,2)",
+          "nullable": false
         },
         {
           "name": "BEANTRG. ARB.",
@@ -635,7 +598,10 @@
           "type": "DECIMAL",
           "length": 11,
           "scale": 2,
-          "key": false
+          "key": false,
+          "typeId": "t.dec11_2",
+          "sqlType": "DECIMAL(11,2)",
+          "nullable": false
         },
         {
           "name": "BEANTRG. SPEZ.",
@@ -643,7 +609,10 @@
           "type": "DECIMAL",
           "length": 11,
           "scale": 2,
-          "key": false
+          "key": false,
+          "typeId": "t.dec11_2",
+          "sqlType": "DECIMAL(11,2)",
+          "nullable": false
         },
         {
           "name": "CLAIM-ART",
@@ -651,7 +620,10 @@
           "type": "DECIMAL",
           "length": 1,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec1_0",
+          "sqlType": "DECIMAL(1,0)",
+          "nullable": false
         },
         {
           "name": "V.-REP.-DATUM",
@@ -659,7 +631,10 @@
           "type": "DECIMAL",
           "length": 8,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec8_0",
+          "sqlType": "DECIMAL(8,0)",
+          "nullable": false
         },
         {
           "name": "V.-KM-STAND",
@@ -667,7 +642,10 @@
           "type": "DECIMAL",
           "length": 3,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec3_0",
+          "sqlType": "DECIMAL(3,0)",
+          "nullable": false
         },
         {
           "name": "FELDTEST-NR.",
@@ -675,7 +653,10 @@
           "type": "DECIMAL",
           "length": 6,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec6_0",
+          "sqlType": "DECIMAL(6,0)",
+          "nullable": false
         },
         {
           "name": "KAMPAGNEN-NR.",
@@ -683,7 +664,10 @@
           "type": "CHAR",
           "length": 8,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.8",
+          "sqlType": "CHAR(8)",
+          "nullable": false
         },
         {
           "name": "EPS",
@@ -691,7 +675,10 @@
           "type": "CHAR",
           "length": 20,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.20",
+          "sqlType": "CHAR(20)",
+          "nullable": false
         },
         {
           "name": "STATUS CODE",
@@ -699,7 +686,10 @@
           "type": "DECIMAL",
           "length": 2,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec2_0",
+          "sqlType": "DECIMAL(2,0)",
+          "nullable": false
         },
         {
           "name": "VARIANT CODE",
@@ -707,7 +697,10 @@
           "type": "DECIMAL",
           "length": 2,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec2_0",
+          "sqlType": "DECIMAL(2,0)",
+          "nullable": false
         },
         {
           "name": "ACTION CODE",
@@ -715,7 +708,10 @@
           "type": "DECIMAL",
           "length": 2,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec2_0",
+          "sqlType": "DECIMAL(2,0)",
+          "nullable": false
         },
         {
           "name": "TEXT3",
@@ -723,7 +719,10 @@
           "type": "CHAR",
           "length": 65,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.65",
+          "sqlType": "CHAR(65)",
+          "nullable": false
         },
         {
           "name": "TEXT4",
@@ -731,7 +730,10 @@
           "type": "CHAR",
           "length": 65,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.65",
+          "sqlType": "CHAR(65)",
+          "nullable": false
         },
         {
           "name": "FEHLER-NR. SDE",
@@ -739,7 +741,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "ANHANG",
@@ -747,7 +752,10 @@
           "type": "CHAR",
           "length": 1,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.1",
+          "sqlType": "CHAR(1)",
+          "nullable": false
         },
         {
           "name": "SOURCE",
@@ -755,7 +763,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "COMPLAIN",
@@ -763,7 +774,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "SYMPTOM",
@@ -771,7 +785,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "FAILURE",
@@ -779,7 +796,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "LOCATION",
@@ -787,7 +807,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "REPAIR",
@@ -795,7 +818,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "ERG.CODE",
@@ -803,7 +829,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "RESULT1",
@@ -811,7 +840,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "RESULT2",
@@ -819,7 +851,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "FAULT1",
@@ -827,7 +862,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "FAULT2",
@@ -835,7 +873,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "REPLY1",
@@ -843,7 +884,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "REPLY2",
@@ -851,7 +895,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "EXPLANATION1",
@@ -859,7 +906,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "EXPLANATION2",
@@ -867,343 +917,50 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         }
       ],
-      "raw": {
-        "symbolId": "sym.file.HSG73PF",
-        "name": "HSG73PF",
-        "library": "HSSRC",
-        "typeId": "t.file.HSG73PF",
-        "externallyDescribed": true,
-        "recordFormat": "HSG73PR",
-        "usage": [
-          "update",
-          "input",
-          "update",
-          "update",
-          "update",
-          "update",
-          "input",
-          "input",
-          "input",
-          "input",
-          "input",
-          "update",
-          "input",
-          "update",
-          "input",
-          "input",
-          "input",
-          "input",
-          "input"
-        ],
-        "keyed": false,
-        "keys": [
-          {
-            "name": "G73000",
-            "ascending": true
-          },
-          {
-            "name": "G73010",
-            "ascending": true
-          },
-          {
-            "name": "G73020",
-            "ascending": true
-          },
-          {
-            "name": "G73030",
-            "ascending": true
-          },
-          {
-            "name": "G73040",
-            "ascending": true
-          },
-          {
-            "name": "G73050",
-            "ascending": true
-          },
-          {
-            "name": "G73060",
-            "ascending": true
-          }
-        ],
-        "commitmentControl": false,
-        "openOptions": {
-          "usropn": false
-        },
-        "columns": [
-          {
-            "name": "PAKZ",
-            "typeId": "t.char.3",
-            "nullable": false
-          },
-          {
-            "name": "RECH.-NR.",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "RECH.-DATUM",
-            "typeId": "t.char.8",
-            "nullable": false
-          },
-          {
-            "name": "AUFTRAGS-NR.",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "BEREICH",
-            "typeId": "t.char.1",
-            "nullable": false
-          },
-          {
-            "name": "CLAIM-NR.",
-            "typeId": "t.char.8",
-            "nullable": false
-          },
-          {
-            "name": "FEHLER-NR.",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "FOLGE-NR.",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "FEHLER-TEIL",
-            "typeId": "t.char.18",
-            "nullable": false
-          },
-          {
-            "name": "HAUPTGRUPPE",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "NEBENGRUPPE",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "SCHAD.-C1",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "SCHAD.-C2",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "TEXT1",
-            "typeId": "t.char.65",
-            "nullable": false
-          },
-          {
-            "name": "TEXT2",
-            "typeId": "t.char.65",
-            "nullable": false
-          },
-          {
-            "name": "STEUER CODE",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "BEW. CODE1",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "BEW. CODE2",
-            "typeId": "t.dec4_0",
-            "nullable": false
-          },
-          {
-            "name": "BEW. DATUM",
-            "typeId": "t.dec8_0",
-            "nullable": false
-          },
-          {
-            "name": "VERG. MAT.",
-            "typeId": "t.dec3_0",
-            "nullable": false
-          },
-          {
-            "name": "VERG. ARB.",
-            "typeId": "t.dec3_0",
-            "nullable": false
-          },
-          {
-            "name": "VERG. SPEZ.",
-            "typeId": "t.dec3_0",
-            "nullable": false
-          },
-          {
-            "name": "BEANTR. MAT.",
-            "typeId": "t.dec11_2",
-            "nullable": false
-          },
-          {
-            "name": "BEANTRG. ARB.",
-            "typeId": "t.dec11_2",
-            "nullable": false
-          },
-          {
-            "name": "BEANTRG. SPEZ.",
-            "typeId": "t.dec11_2",
-            "nullable": false
-          },
-          {
-            "name": "CLAIM-ART",
-            "typeId": "t.dec1_0",
-            "nullable": false
-          },
-          {
-            "name": "V.-REP.-DATUM",
-            "typeId": "t.dec8_0",
-            "nullable": false
-          },
-          {
-            "name": "V.-KM-STAND",
-            "typeId": "t.dec3_0",
-            "nullable": false
-          },
-          {
-            "name": "FELDTEST-NR.",
-            "typeId": "t.dec6_0",
-            "nullable": false
-          },
-          {
-            "name": "KAMPAGNEN-NR.",
-            "typeId": "t.char.8",
-            "nullable": false
-          },
-          {
-            "name": "EPS",
-            "typeId": "t.char.20",
-            "nullable": false
-          },
-          {
-            "name": "STATUS CODE",
-            "typeId": "t.dec2_0",
-            "nullable": false
-          },
-          {
-            "name": "VARIANT CODE",
-            "typeId": "t.dec2_0",
-            "nullable": false
-          },
-          {
-            "name": "ACTION CODE",
-            "typeId": "t.dec2_0",
-            "nullable": false
-          },
-          {
-            "name": "TEXT3",
-            "typeId": "t.char.65",
-            "nullable": false
-          },
-          {
-            "name": "TEXT4",
-            "typeId": "t.char.65",
-            "nullable": false
-          },
-          {
-            "name": "FEHLER-NR. SDE",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "ANHANG",
-            "typeId": "t.char.1",
-            "nullable": false
-          },
-          {
-            "name": "SOURCE",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "COMPLAIN",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "SYMPTOM",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "FAILURE",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "LOCATION",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "REPAIR",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "ERG.CODE",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "RESULT1",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "RESULT2",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "FAULT1",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "FAULT2",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "REPLY1",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "REPLY2",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "EXPLANATION1",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "EXPLANATION2",
-            "typeId": "t.char.5",
-            "nullable": false
-          }
-        ]
-      }
+      "sourceUnits": [
+        "qsys:HSSRC/QRPGLESRC/HS1210",
+        "qsys:HSSRC/QRPGLESRC/HS1212"
+      ]
     },
     {
       "name": "HSGPSLF3",
+      "symbolId": "sym.file.HSGPSLF3",
+      "library": "HSSRC",
+      "typeId": "t.file.HSGPSLF3",
+      "recordFormat": "HSGPSLR3",
+      "keyed": false,
+      "keys": [
+        {
+          "name": "GPS000",
+          "ascending": true
+        },
+        {
+          "name": "GPS010",
+          "ascending": true
+        },
+        {
+          "name": "GPS150",
+          "ascending": true
+        },
+        {
+          "name": "GPS030",
+          "ascending": true
+        },
+        {
+          "name": "GPS020",
+          "ascending": true
+        },
+        {
+          "name": "GPS025",
+          "ascending": true
+        }
+      ],
       "description": null,
       "columns": [
         {
@@ -1212,7 +969,10 @@
           "type": "CHAR",
           "length": 3,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.3",
+          "sqlType": "CHAR(3)",
+          "nullable": false
         },
         {
           "name": "CLAIM-NR.",
@@ -1220,7 +980,10 @@
           "type": "CHAR",
           "length": 8,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.8",
+          "sqlType": "CHAR(8)",
+          "nullable": false
         },
         {
           "name": "FEHLER-NR.",
@@ -1228,7 +991,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "FOLGE-NR.",
@@ -1236,7 +1002,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "ZEILE",
@@ -1244,7 +1013,10 @@
           "type": "DECIMAL",
           "length": 3,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec3_0",
+          "sqlType": "DECIMAL(3,0)",
+          "nullable": false
         },
         {
           "name": "AUFTEILUNG",
@@ -1252,7 +1024,10 @@
           "type": "DECIMAL",
           "length": 3,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec3_0",
+          "sqlType": "DECIMAL(3,0)",
+          "nullable": false
         },
         {
           "name": "SATZART",
@@ -1260,7 +1035,10 @@
           "type": "CHAR",
           "length": 3,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.3",
+          "sqlType": "CHAR(3)",
+          "nullable": false
         },
         {
           "name": "NR.",
@@ -1268,7 +1046,10 @@
           "type": "CHAR",
           "length": 18,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.18",
+          "sqlType": "CHAR(18)",
+          "nullable": false
         },
         {
           "name": "MENGE",
@@ -1276,7 +1057,10 @@
           "type": "DECIMAL",
           "length": 5,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec5_0",
+          "sqlType": "DECIMAL(5,0)",
+          "nullable": false
         },
         {
           "name": "WERT",
@@ -1284,7 +1068,10 @@
           "type": "DECIMAL",
           "length": 11,
           "scale": 2,
-          "key": false
+          "key": false,
+          "typeId": "t.dec11_2",
+          "sqlType": "DECIMAL(11,2)",
+          "nullable": false
         },
         {
           "name": "STEUER-CODE",
@@ -1292,7 +1079,10 @@
           "type": "CHAR",
           "length": 40,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.40",
+          "sqlType": "CHAR(40)",
+          "nullable": false
         },
         {
           "name": "HAUPTGRUPPE",
@@ -1300,7 +1090,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "ZEIT",
@@ -1308,7 +1101,10 @@
           "type": "DECIMAL",
           "length": 3,
           "scale": 1,
-          "key": false
+          "key": false,
+          "typeId": "t.dec3_1",
+          "sqlType": "DECIMAL(3,1)",
+          "nullable": false
         },
         {
           "name": "GRUND",
@@ -1316,15 +1112,21 @@
           "type": "DECIMAL",
           "length": 4,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec4_0",
+          "sqlType": "DECIMAL(4,0)",
+          "nullable": false
         },
         {
-          "name": "VERG�TUNG",
+          "name": "VERGÜTUNG",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec3_0",
+          "sqlType": "DECIMAL(3,0)",
+          "nullable": false
         },
         {
           "name": "MANUELL",
@@ -1332,7 +1134,10 @@
           "type": "CHAR",
           "length": 1,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.1",
+          "sqlType": "CHAR(1)",
+          "nullable": false
         },
         {
           "name": "KAMPAGNE",
@@ -1340,7 +1145,10 @@
           "type": "DECIMAL",
           "length": 8,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec8_0",
+          "sqlType": "DECIMAL(8,0)",
+          "nullable": false
         },
         {
           "name": "POS.-NR.",
@@ -1348,7 +1156,10 @@
           "type": "DECIMAL",
           "length": 3,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec3_0",
+          "sqlType": "DECIMAL(3,0)",
+          "nullable": false
         },
         {
           "name": "RESULTCODE",
@@ -1356,7 +1167,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "CODE TYPE",
@@ -1364,7 +1178,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "CODE ID",
@@ -1372,7 +1189,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "COMPFAC.",
@@ -1380,7 +1200,10 @@
           "type": "DECIMAL",
           "length": 3,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec3_0",
+          "sqlType": "DECIMAL(3,0)",
+          "nullable": false
         },
         {
           "name": "GROSSPRICE",
@@ -1388,7 +1211,10 @@
           "type": "DECIMAL",
           "length": 13,
           "scale": 2,
-          "key": false
+          "key": false,
+          "typeId": "t.dec13_2",
+          "sqlType": "DECIMAL(13,2)",
+          "nullable": false
         },
         {
           "name": "DISCOUNT",
@@ -1396,7 +1222,10 @@
           "type": "DECIMAL",
           "length": 5,
           "scale": 2,
-          "key": false
+          "key": false,
+          "typeId": "t.dec5_2",
+          "sqlType": "DECIMAL(5,2)",
+          "nullable": false
         },
         {
           "name": "COMPAMOUNT",
@@ -1404,7 +1233,10 @@
           "type": "DECIMAL",
           "length": 15,
           "scale": 2,
-          "key": false
+          "key": false,
+          "typeId": "t.dec15_2",
+          "sqlType": "DECIMAL(15,2)",
+          "nullable": false
         },
         {
           "name": "COMPQTY",
@@ -1412,7 +1244,10 @@
           "type": "DECIMAL",
           "length": 7,
           "scale": 0,
-          "key": false
+          "key": false,
+          "typeId": "t.dec7_0",
+          "sqlType": "DECIMAL(7,0)",
+          "nullable": false
         },
         {
           "name": "TYPE",
@@ -1420,7 +1255,10 @@
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.5",
+          "sqlType": "CHAR(5)",
+          "nullable": false
         },
         {
           "name": "MIA STATUS",
@@ -1428,7 +1266,10 @@
           "type": "CHAR",
           "length": 1,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.1",
+          "sqlType": "CHAR(1)",
+          "nullable": false
         },
         {
           "name": "CATEGORYS",
@@ -1436,7 +1277,10 @@
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
         },
         {
           "name": "TEXT",
@@ -1444,3803 +1288,784 @@
           "type": "CHAR",
           "length": 2000,
           "scale": null,
-          "key": false
+          "key": false,
+          "typeId": "t.char.2000",
+          "sqlType": "CHAR(2000)",
+          "nullable": false
         }
       ],
-      "raw": {
-        "symbolId": "sym.file.HSGPSLF3",
-        "name": "HSGPSLF3",
-        "library": "HSSRC",
-        "typeId": "t.file.HSGPSLF3",
-        "externallyDescribed": true,
-        "recordFormat": "HSGPSLR3",
-        "usage": [
-          "input",
-          "update",
-          "update",
-          "update",
-          "input",
-          "update",
-          "update",
-          "input",
-          "update",
-          "update",
-          "update",
-          "update",
-          "input",
-          "input",
-          "input",
-          "input",
-          "input",
-          "update",
-          "input",
-          "update",
-          "input",
-          "input",
-          "input",
-          "input",
-          "input"
-        ],
-        "keyed": false,
-        "keys": [
-          {
-            "name": "GPS000",
-            "ascending": true
-          },
-          {
-            "name": "GPS010",
-            "ascending": true
-          },
-          {
-            "name": "GPS150",
-            "ascending": true
-          },
-          {
-            "name": "GPS030",
-            "ascending": true
-          },
-          {
-            "name": "GPS020",
-            "ascending": true
-          },
-          {
-            "name": "GPS025",
-            "ascending": true
-          }
-        ],
-        "commitmentControl": false,
-        "openOptions": {
-          "usropn": false
-        },
-        "columns": [
-          {
-            "name": "KUERZEL",
-            "typeId": "t.char.3",
-            "nullable": false
-          },
-          {
-            "name": "CLAIM-NR.",
-            "typeId": "t.char.8",
-            "nullable": false
-          },
-          {
-            "name": "FEHLER-NR.",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "FOLGE-NR.",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "ZEILE",
-            "typeId": "t.dec3_0",
-            "nullable": false
-          },
-          {
-            "name": "AUFTEILUNG",
-            "typeId": "t.dec3_0",
-            "nullable": false
-          },
-          {
-            "name": "SATZART",
-            "typeId": "t.char.3",
-            "nullable": false
-          },
-          {
-            "name": "NR.",
-            "typeId": "t.char.18",
-            "nullable": false
-          },
-          {
-            "name": "MENGE",
-            "typeId": "t.dec5_0",
-            "nullable": false
-          },
-          {
-            "name": "WERT",
-            "typeId": "t.dec11_2",
-            "nullable": false
-          },
-          {
-            "name": "STEUER-CODE",
-            "typeId": "t.char.40",
-            "nullable": false
-          },
-          {
-            "name": "HAUPTGRUPPE",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "ZEIT",
-            "typeId": "t.dec3_1",
-            "nullable": false
-          },
-          {
-            "name": "GRUND",
-            "typeId": "t.dec4_0",
-            "nullable": false
-          },
-          {
-            "name": "VERG�TUNG",
-            "typeId": "t.dec3_0",
-            "nullable": false
-          },
-          {
-            "name": "MANUELL",
-            "typeId": "t.char.1",
-            "nullable": false
-          },
-          {
-            "name": "KAMPAGNE",
-            "typeId": "t.dec8_0",
-            "nullable": false
-          },
-          {
-            "name": "POS.-NR.",
-            "typeId": "t.dec3_0",
-            "nullable": false
-          },
-          {
-            "name": "RESULTCODE",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "CODE TYPE",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "CODE ID",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "COMPFAC.",
-            "typeId": "t.dec3_0",
-            "nullable": false
-          },
-          {
-            "name": "GROSSPRICE",
-            "typeId": "t.dec13_2",
-            "nullable": false
-          },
-          {
-            "name": "DISCOUNT",
-            "typeId": "t.dec5_2",
-            "nullable": false
-          },
-          {
-            "name": "COMPAMOUNT",
-            "typeId": "t.dec15_2",
-            "nullable": false
-          },
-          {
-            "name": "COMPQTY",
-            "typeId": "t.dec7_0",
-            "nullable": false
-          },
-          {
-            "name": "TYPE",
-            "typeId": "t.char.5",
-            "nullable": false
-          },
-          {
-            "name": "MIA STATUS",
-            "typeId": "t.char.1",
-            "nullable": false
-          },
-          {
-            "name": "CATEGORYS",
-            "typeId": "t.char.2",
-            "nullable": false
-          },
-          {
-            "name": "TEXT",
-            "typeId": "t.char.2000",
-            "nullable": false
-          }
-        ]
-      }
+      "sourceUnits": [
+        "qsys:HSSRC/QRPGLESRC/HS1210"
+      ]
     }
   ],
   "symbolMetadata": {
     "sym.var.KEY_GPS": {
       "name": "KEY_GPS",
       "kind": "variable",
-      "description": null,
-      "typeRef": "t.klist.KEY_GPS"
+      "typeId": "t.klist.KEY_GPS",
+      "scopeId": "scope.global",
+      "shared": true
     },
     "sym.var.create": {
       "name": "create",
       "kind": "variable",
-      "description": null,
-      "typeRef": null
+      "typeId": null,
+      "scopeId": "scope.createClaim",
+      "shared": true
     },
     "sym.var.maintenance": {
       "name": "maintenance",
       "kind": "variable",
-      "description": null,
-      "typeRef": null
+      "typeId": null,
+      "scopeId": "scope.createClaim",
+      "shared": true
     },
     "sym.var.groups": {
       "name": "groups",
       "kind": "variable",
-      "description": null,
-      "typeRef": "t.char.4"
+      "typeId": "t.char.4",
+      "scopeId": "scope.createClaim",
+      "shared": true
     },
     "sym.var.partNo": {
       "name": "partNo",
       "kind": "variable",
-      "description": null,
-      "typeRef": "t.char.7"
+      "typeId": "t.char.7",
+      "scopeId": "scope.createClaim",
+      "shared": true
     },
     "sym.var.partValue": {
       "name": "partValue",
       "kind": "variable",
-      "description": null,
-      "typeRef": "t.dec11_2"
+      "typeId": "t.dec11_2",
+      "scopeId": "scope.createClaim",
+      "shared": true
     },
     "sym.var.text": {
       "name": "text",
       "kind": "variable",
-      "description": null,
-      "typeRef": "t.char.65"
+      "typeId": "t.char.65",
+      "scopeId": "scope.createClaim",
+      "shared": true
     },
     "sym.var.failureNo": {
       "name": "failureNo",
       "kind": "variable",
-      "description": null,
-      "typeRef": "t.dec2_0"
+      "typeId": "t.dec2_0",
+      "scopeId": "scope.createClaim",
+      "shared": true
     },
     "sym.var.lineNo": {
       "name": "lineNo",
       "kind": "variable",
-      "description": null,
-      "typeRef": "t.dec1_0"
+      "typeId": "t.dec1_0",
+      "scopeId": "scope.createClaim",
+      "shared": true
     },
     "sym.var.valueMat": {
       "name": "valueMat",
       "kind": "variable",
-      "description": null,
-      "typeRef": "t.dec11_2"
+      "typeId": "t.dec11_2",
+      "scopeId": "scope.createClaim",
+      "shared": true
     },
     "sym.var.valueLab": {
       "name": "valueLab",
       "kind": "variable",
-      "description": null,
-      "typeRef": "t.dec11_2"
+      "typeId": "t.dec11_2",
+      "scopeId": "scope.createClaim",
+      "shared": true
     },
     "sym.var.valueSpe": {
       "name": "valueSpe",
       "kind": "variable",
-      "description": null,
-      "typeRef": "t.dec11_2"
+      "typeId": "t.dec11_2",
+      "scopeId": "scope.createClaim",
+      "shared": true
     }
   },
-  "displayFiles": [
+  "statementNodes": [
     {
-      "symbolId": "sym.dspf.HS1210D",
-      "name": "HS1210D",
-      "fileId": "qsys:HSSRC/QDDSSRC/HS1210D",
-      "path": "/QSYS.LIB/HSSRC.LIB/QDDSSRC.FILE/HS1210D.MBR",
-      "uiContracts": {
-        "displayFiles": [
-          {
-            "symbolId": "sym.dspf.HS1210D",
-            "name": "HS1210D",
-            "typeId": "sym.file.HS1210D",
-            "device": "WORKSTN",
-            "externallyDescribed": true,
-            "library": "HSSRC",
-            "path": "/QSYS.LIB/HSSRC.LIB/QDDSSRC.FILE/HS1210D.MBR",
-            "recordFormats": [
-              {
-                "name": "HS1210S1",
-                "keywords": [
-                  "SFL",
-                  "SFLNXTCHG"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-93",
-                    "typeId": "",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB000",
-                    "typeId": "t.char.3",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB030",
-                    "typeId": "t.char.5",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB040",
-                    "typeId": "t.char.1",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB02O",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB160",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "MARK1",
-                    "typeId": "t.char.2",
-                    "row": 10,
-                    "column": 3,
-                    "keywords": [
-                      "DSPATR(RI)",
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "IN-70",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-71",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB050",
-                    "typeId": "t.char.8",
-                    "row": 10,
-                    "column": 7,
-                    "keywords": [
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "SUB010",
-                    "typeId": "t.char.5",
-                    "row": 10,
-                    "column": 16,
-                    "keywords": [
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "SUB020",
-                    "typeId": "t.char.10",
-                    "row": 10,
-                    "column": 22,
-                    "keywords": [
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "SUB060",
-                    "typeId": "t.char.7",
-                    "row": 10,
-                    "column": 33,
-                    "keywords": [
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "SUB140",
-                    "typeId": "t.char.6",
-                    "row": 10,
-                    "column": 41,
-                    "keywords": [
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "SUB150",
-                    "typeId": "t.char.21",
-                    "row": 10,
-                    "column": 48,
-                    "keywords": [
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "SUBDMC",
-                    "typeId": "t.char.2",
-                    "row": 10,
-                    "column": 70,
-                    "keywords": [
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "SUB170",
-                    "typeId": "t.char.2",
-                    "row": 10,
-                    "column": 74,
-                    "keywords": [
-                      "DSPATR(ND)",
-                      "COLOR(RED)",
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "name": "IN-41",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-43",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUBANZ",
-                    "typeId": "t.char.2",
-                    "row": 10,
-                    "column": 78,
-                    "keywords": [
-                      "DSPATR(ND)",
-                      "EDTWRD('0 ')",
-                      "COLOR(GRN)",
-                      "COLOR(YLW)"
-                    ]
-                  },
-                  {
-                    "name": "IN-45",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-42",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUBCOL",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  }
-                ],
-                "constants": []
-              },
-              {
-                "name": "HS1210C1",
-                "keywords": [
-                  "SFLCTL(HS1210S1)",
-                  "SFLSIZ(0011)",
-                  "SFLPAG(0010)",
-                  "CF03(03 'Verlassen')",
-                  "CF09(09 'Listenanfang bei')",
-                  "CF05(05 'Aktualisieren')",
-                  "CF11(11 'Ansicht')",
-                  "CF12(12 'Zur�ck')",
-                  "CF06(06 'Erstellen')",
-                  "CF19(19 'Filter setzen')",
-                  "CF16(16 'Sortierung')",
-                  "CF17(17 'Sortierung Auf/Ab')",
-                  "OVERLAY",
-                  "SFLCSRRRN(&REC1)",
-                  "SFLDSP",
-                  "SFLDSPCTL",
-                  "SFLDLT",
-                  "SFLEND(*MORE)",
-                  "SFLMSG('Status zur�cksetzen nicht z-       A                                      ul�ssig.')",
-                  "SFLMSG('Angegebene Auswahlnummer ni-       A                                      cht zul�ssig.')",
-                  "SFLMSG('#ndern/L�schen mit diesem S-       A                                      tatus nicht zul�ssig.')"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-90",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-99",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-95",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-55",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-56",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-57",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-03",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-09",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-05",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-11",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-06",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-19",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-16",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-17",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "REC1",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "PAG1",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": [
-                      "SFLRCDNBR(CURSOR)"
-                    ]
-                  },
-                  {
-                    "name": "FILTERA",
-                    "typeId": "t.char.14",
-                    "row": 1,
-                    "column": 44,
-                    "keywords": [
-                      "COLOR(RED)"
-                    ]
-                  },
-                  {
-                    "name": "F16TXT",
-                    "typeId": "t.char.13",
-                    "row": 2,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "F17TXT",
-                    "typeId": "t.char.3",
-                    "row": 2,
-                    "column": 38,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "FILTAG",
-                    "typeId": "t.char.3",
-                    "row": 2,
-                    "column": 55,
-                    "keywords": [
-                      "COLOR(WHT)",
-                      "EDTWRD(' 0 ')"
-                    ]
-                  },
-                  {
-                    "name": "XXDAT",
-                    "typeId": "t.char.3",
-                    "row": 2,
-                    "column": 69,
-                    "keywords": [
-                      "COLOR(BLU)",
-                      "EDTWRD('0  .  .    ')"
-                    ]
-                  },
-                  {
-                    "name": "SUCHEN",
-                    "typeId": "t.char.17",
-                    "row": 3,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "FILTER",
-                    "typeId": "t.char.20",
-                    "row": 3,
-                    "column": 43,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "FILART",
-                    "typeId": "t.char.1",
-                    "row": 3,
-                    "column": 64,
-                    "keywords": [
-                      "COLOR(RED)"
-                    ]
-                  },
-                  {
-                    "name": "IN-45",
-                    "typeId": "t.char.1",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "HS1210C1",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "SDPS Verwaltung Garantieantr�ge",
-                    "row": 1,
-                    "column": 12,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "",
-                    "row": 1,
-                    "column": 59,
-                    "keywords": [
-                      "USER",
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "",
-                    "row": 1,
-                    "column": 70,
-                    "keywords": [
-                      "SYSNAME",
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Sortierung",
-                    "row": 2,
-                    "column": 12,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Anzahl Tage",
-                    "row": 2,
-                    "column": 43,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Suchen nach",
-                    "row": 3,
-                    "column": 12,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "",
-                    "row": 3,
-                    "column": 70,
-                    "keywords": [
-                      "TIME",
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Auswahl eingeben und Eingabetaste dr�cken.",
-                    "row": 4,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "2=#ndern",
-                    "row": 5,
-                    "column": 3,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "4=L�schen",
-                    "row": 5,
-                    "column": 13,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "5=Anzeigen",
-                    "row": 5,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "6=Servicekarte",
-                    "row": 5,
-                    "column": 36,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "8=Garantie-Info",
-                    "row": 5,
-                    "column": 52,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "10=Versenden/Verbuchen",
-                    "row": 6,
-                    "column": 3,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Aus-",
-                    "row": 8,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Claim",
-                    "row": 8,
-                    "column": 7,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Rechnungs-",
-                    "row": 8,
-                    "column": 17,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Chassis",
-                    "row": 8,
-                    "column": 33,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "K U N D E",
-                    "row": 8,
-                    "column": 41,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Dm",
-                    "row": 8,
-                    "column": 70,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Sta-",
-                    "row": 8,
-                    "column": 73,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Fe",
-                    "row": 8,
-                    "column": 78,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "wahl",
-                    "row": 9,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Nr.",
-                    "row": 9,
-                    "column": 7,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Nr.",
-                    "row": 9,
-                    "column": 17,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Datum",
-                    "row": 9,
-                    "column": 23,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Nr.",
-                    "row": 9,
-                    "column": 33,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Nr.",
-                    "row": 9,
-                    "column": 41,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Name",
-                    "row": 9,
-                    "column": 48,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Cd",
-                    "row": 9,
-                    "column": 70,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "tus",
-                    "row": 9,
-                    "column": 73,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "An",
-                    "row": 9,
-                    "column": 78,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "HS1210S2",
-                "keywords": [
-                  "SFL",
-                  "SFLNXTCHG"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-93",
-                    "typeId": "t.char.1",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB010",
-                    "typeId": "t.char.5",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB02O",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB030",
-                    "typeId": "t.char.5",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB040",
-                    "typeId": "t.char.1",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "MARK2",
-                    "typeId": "t.char.2",
-                    "row": 10,
-                    "column": 3,
-                    "keywords": [
-                      "DSPATR(RI)",
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "IN-70",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-71",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB050",
-                    "typeId": "t.char.8",
-                    "row": 10,
-                    "column": 7,
-                    "keywords": [
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "SUB060",
-                    "typeId": "t.char.7",
-                    "row": 10,
-                    "column": 16,
-                    "keywords": [
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "SUB070",
-                    "typeId": "t.char.10",
-                    "row": 10,
-                    "column": 24,
-                    "keywords": [
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "SUB090",
-                    "typeId": "t.char.10",
-                    "row": 10,
-                    "column": 35,
-                    "keywords": [
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "SUB100",
-                    "typeId": "t.char.3",
-                    "row": 10,
-                    "column": 46,
-                    "keywords": [
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "SUB170",
-                    "typeId": "t.char.2",
-                    "row": 10,
-                    "column": 50,
-                    "keywords": [
-                      "DSPATR(ND)"
-                    ]
-                  },
-                  {
-                    "name": "SUBSTA",
-                    "typeId": "t.char.18",
-                    "row": 10,
-                    "column": 53,
-                    "keywords": [
-                      "DSPATR(ND)",
-                      "COLOR(RED)"
-                    ]
-                  },
-                  {
-                    "name": "IN-41",
-                    "typeId": "t.char.18",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB160",
-                    "typeId": "t.char.8",
-                    "row": 10,
-                    "column": 72,
-                    "keywords": []
-                  }
-                ],
-                "constants": []
-              },
-              {
-                "name": "HS1210C2",
-                "keywords": [
-                  "SFLCTL(HS1210S2)",
-                  "SFLSIZ(0011)",
-                  "SFLPAG(0010)",
-                  "CF03(03 'Verlassen')",
-                  "CF09(09 'Listenanfang bei')",
-                  "CF05(05 'Aktualisieren')",
-                  "CF12(12 'Zur�ck')",
-                  "CF06(06 'Erstellen')",
-                  "CF19(19 'Filter setzen')",
-                  "CF16(16 'Sortierung')",
-                  "CF11(11 'Ansicht')",
-                  "OVERLAY",
-                  "SFLCSRRRN(&REC2)",
-                  "SFLDSP",
-                  "SFLDSPCTL",
-                  "SFLDLT",
-                  "SFLEND(*MORE)",
-                  "SFLMSG('Status zur�cksetzen nicht z-       A                                      ul�ssig.')",
-                  "SFLMSG('Angegebene Auswahlnummer ni-       A                                      cht zul�ssig.')",
-                  "SFLMSG('#ndern/L�schen mit diesem S-       A                                      tatus nicht zul�ssig.')"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-90",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-99",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-95",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-55",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-56",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-57",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-03",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-09",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-05",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-06",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-19",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-16",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-11",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "REC2",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "PAG2",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": [
-                      "SFLRCDNBR(CURSOR)"
-                    ]
-                  },
-                  {
-                    "name": "FILTERA",
-                    "typeId": "t.char.14",
-                    "row": 1,
-                    "column": 44,
-                    "keywords": [
-                      "COLOR(RED)"
-                    ]
-                  },
-                  {
-                    "name": "F16TXT",
-                    "typeId": "t.char.13",
-                    "row": 2,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "F17TXT",
-                    "typeId": "t.char.3",
-                    "row": 2,
-                    "column": 38,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "FILTAG",
-                    "typeId": "t.char.3",
-                    "row": 2,
-                    "column": 55,
-                    "keywords": [
-                      "COLOR(WHT)",
-                      "EDTWRD(' 0 ')"
-                    ]
-                  },
-                  {
-                    "name": "XXDAT",
-                    "typeId": "t.char.3",
-                    "row": 2,
-                    "column": 69,
-                    "keywords": [
-                      "COLOR(BLU)",
-                      "EDTWRD('0  .  .    ')"
-                    ]
-                  },
-                  {
-                    "name": "SUCHEN",
-                    "typeId": "t.char.17",
-                    "row": 3,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "FILTER",
-                    "typeId": "t.char.20",
-                    "row": 3,
-                    "column": 43,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "FILART",
-                    "typeId": "t.char.1",
-                    "row": 3,
-                    "column": 64,
-                    "keywords": [
-                      "COLOR(RED)"
-                    ]
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "HS1210C2",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "SDPS Verwaltung Garantieantr�ge",
-                    "row": 1,
-                    "column": 12,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "",
-                    "row": 1,
-                    "column": 59,
-                    "keywords": [
-                      "USER",
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "",
-                    "row": 1,
-                    "column": 70,
-                    "keywords": [
-                      "SYSNAME",
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Sortierung",
-                    "row": 2,
-                    "column": 12,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Anzahl Tage",
-                    "row": 2,
-                    "column": 43,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Suchen nach",
-                    "row": 3,
-                    "column": 12,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "",
-                    "row": 3,
-                    "column": 70,
-                    "keywords": [
-                      "TIME",
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Auswahl eingeben und Eingabetaste dr�cken.",
-                    "row": 4,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "2=#ndern",
-                    "row": 5,
-                    "column": 3,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "4=L�schen",
-                    "row": 5,
-                    "column": 12,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "5=Anzeigen",
-                    "row": 5,
-                    "column": 22,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "6=Servicekarte",
-                    "row": 5,
-                    "column": 33,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "8=Garantie-Info",
-                    "row": 5,
-                    "column": 48,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "10=Versenden/Verbuchen",
-                    "row": 6,
-                    "column": 3,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Aus-",
-                    "row": 8,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Claim",
-                    "row": 8,
-                    "column": 7,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Chassis",
-                    "row": 8,
-                    "column": 16,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Amtliches",
-                    "row": 8,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Reparatur-",
-                    "row": 8,
-                    "column": 35,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "wahl",
-                    "row": 9,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Nr.",
-                    "row": 9,
-                    "column": 7,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Nr.",
-                    "row": 9,
-                    "column": 16,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Kennzeich.",
-                    "row": 9,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Datum",
-                    "row": 9,
-                    "column": 35,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "KM",
-                    "row": 9,
-                    "column": 46,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Status",
-                    "row": 9,
-                    "column": 50,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "HS121002",
-                "keywords": [
-                  "OVERLAY"
-                ],
-                "fields": [
-                  {
-                    "name": "F19",
-                    "typeId": "t.char.17",
-                    "row": 23,
-                    "column": 64,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "name": "F16",
-                    "typeId": "t.char.28",
-                    "row": 23,
-                    "column": 17,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "name": "F11",
-                    "typeId": "t.char.13",
-                    "row": 23,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "name": "F17",
-                    "typeId": "t.char.15",
-                    "row": 23,
-                    "column": 47,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "F3=Verlassen",
-                    "row": 22,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "F9=Positionieren",
-                    "row": 22,
-                    "column": 51,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "F5=Aktualisieren",
-                    "row": 22,
-                    "column": 17,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 22,
-                    "column": 70,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "F6=Erstellen",
-                    "row": 22,
-                    "column": 36,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "HS1210W1",
-                "keywords": [
-                  "WINDOW(2 2 10 75)",
-                  "CF06(06 'Vorheriges zur�ckholen')",
-                  "CF12(12 'Zur�ck')",
-                  "CF16(16 'Neuer Listenanfang')"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-06",
-                    "typeId": "t.char.15",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.15",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-16",
-                    "typeId": "t.char.15",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "LISTA",
-                    "typeId": "t.char.8",
-                    "row": 5,
-                    "column": 29,
-                    "keywords": [
-                      "ERRMSG('Keine vorherige Position ge-       A                                      funden.')",
-                      "CHECK(RZ)",
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "IN-56",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-61",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-62",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "LISTB",
-                    "typeId": "t.char.8",
-                    "row": 3,
-                    "column": 29,
-                    "keywords": [
-                      "ERRMSG('Keine vorherige Position ge-       A                                      funden.')",
-                      "CHECK(RZ)",
-                      "COLOR(WHT)"
-                    ]
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "Claim bearbeiten/Liste positionieren",
-                    "row": 1,
-                    "column": 11,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Listenanfang bei . . . .",
-                    "row": 5,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Anfangszeichen",
-                    "row": 5,
-                    "column": 39,
-                    "keywords": []
-                  },
-                  {
-                    "value": "F6=Vorheriges zur�ckholen",
-                    "row": 9,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 9,
-                    "column": 30,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "F16=Neuer Listenanfang",
-                    "row": 9,
-                    "column": 46,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "HS1210W1",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Claim-Nr. . . . . . . .",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Rechnungs-Nr. . . . . .",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": []
-                  }
-                ]
-              },
-              {
-                "name": "HS1210W2",
-                "keywords": [
-                  "WINDOW(8 2 7 75)",
-                  "CF12(12 'Zur�ck')",
-                  "CF04(04 'Bedienerf�hrung')"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-04",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB050",
-                    "typeId": "t.char.8",
-                    "row": 3,
-                    "column": 48,
-                    "keywords": []
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 6,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "HS1210W2",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Status zur�cksetzen",
-                    "row": 1,
-                    "column": 11,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Eingabetaste dr�cken um den Status des Claims",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "zur�ckzusetzen.",
-                    "row": 3,
-                    "column": 57,
-                    "keywords": []
-                  }
-                ]
-              },
-              {
-                "name": "HS1210S4",
-                "keywords": [
-                  "SFL"
-                ],
-                "fields": [
-                  {
-                    "name": "MARK4",
-                    "typeId": "t.char.2",
-                    "row": 8,
-                    "column": 3,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB010",
-                    "typeId": "t.char.5",
-                    "row": 8,
-                    "column": 7,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB020",
-                    "typeId": "t.char.10",
-                    "row": 8,
-                    "column": 13,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB060",
-                    "typeId": "t.char.7",
-                    "row": 8,
-                    "column": 33,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB140",
-                    "typeId": "t.char.6",
-                    "row": 8,
-                    "column": 41,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB150",
-                    "typeId": "t.char.21",
-                    "row": 8,
-                    "column": 48,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB170",
-                    "typeId": "t.char.2",
-                    "row": 8,
-                    "column": 77,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB050",
-                    "typeId": "t.char.8",
-                    "row": 8,
-                    "column": 24,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUBDMC",
-                    "typeId": "t.char.2",
-                    "row": 8,
-                    "column": 72,
-                    "keywords": []
-                  }
-                ],
-                "constants": []
-              },
-              {
-                "name": "HS1210C4",
-                "keywords": [
-                  "SFLCTL(HS1210S4)",
-                  "SFLSIZ(0013)",
-                  "SFLPAG(0012)",
-                  "CF12(12 'Zur�ck')",
-                  "OVERLAY",
-                  "SFLDSP",
-                  "SFLDSPCTL",
-                  "SFLDLT",
-                  "SFLEND(*MORE)"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-90",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-99",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-95",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "XXDAT",
-                    "typeId": "t.char.2",
-                    "row": 2,
-                    "column": 69,
-                    "keywords": [
-                      "COLOR(BLU)",
-                      "EDTWRD('0  .  .    ')"
-                    ]
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "",
-                    "row": 1,
-                    "column": 70,
-                    "keywords": [
-                      "SYSNAME",
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "",
-                    "row": 1,
-                    "column": 59,
-                    "keywords": [
-                      "USER",
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "",
-                    "row": 3,
-                    "column": 70,
-                    "keywords": [
-                      "TIME",
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "HS1210C4",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "SDPS Verwaltung Garantieantr�ge",
-                    "row": 1,
-                    "column": 11,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "L�schen best�tigen",
-                    "row": 1,
-                    "column": 32,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Eingabetaste dr�cken, um Auswahl 4=L�schen zu best�tigen.",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Mit F12 zur vorherigen Anzeige zur�ckkehren, um die Auswahl zu �ndern.",
-                    "row": 4,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Aus-",
-                    "row": 6,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "wahl",
-                    "row": 7,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Nr.",
-                    "row": 7,
-                    "column": 7,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Chassis",
-                    "row": 6,
-                    "column": 33,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Nr.",
-                    "row": 7,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "K U N D E",
-                    "row": 6,
-                    "column": 41,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Nr.",
-                    "row": 7,
-                    "column": 41,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Name",
-                    "row": 7,
-                    "column": 48,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Rechnungs-",
-                    "row": 6,
-                    "column": 7,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Datum",
-                    "row": 7,
-                    "column": 13,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "L � S C H E N",
-                    "row": 2,
-                    "column": 11,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Nr.",
-                    "row": 7,
-                    "column": 33,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Claim",
-                    "row": 6,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Sta-",
-                    "row": 6,
-                    "column": 76,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "tus",
-                    "row": 7,
-                    "column": 76,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Dem-",
-                    "row": 6,
-                    "column": 71,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Code",
-                    "row": 7,
-                    "column": 71,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "HS121004",
-                "keywords": [
-                  "OVERLAY"
-                ],
-                "fields": [],
-                "constants": [
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 22,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "HS1210W4",
-                "keywords": [
-                  "WINDOW(8 2 7 75)",
-                  "CF12(12 'Zur�ck')",
-                  "CF04(04 'Bedienerf�hrung')"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-04",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 6,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "HS1210W4",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Bedienerf�hrung",
-                    "row": 1,
-                    "column": 11,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Es sind keine offenen Rechnungen vorhanden.",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": []
-                  }
-                ]
-              },
-              {
-                "name": "HS1210W6",
-                "keywords": [
-                  "WINDOW(2 2 18 75)",
-                  "CF04(04 'Bedienerf�hrung')",
-                  "CF11(11 'Betrieb wechseln')",
-                  "CF12(12 'Zur�ck')",
-                  "CF20(20 'Alle offenen Rechnungen au-       A                                      sw�hlen')",
-                  "CF15(15 'Freigabe beantragen')",
-                  "RTNCSRLOC(&REC6 &FLD6 &POS6)"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-04",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-11",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-20",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-15",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "POS6",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "FLD6",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "REC6",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "NEU1",
-                    "typeId": "t.char.5",
-                    "row": 3,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(WHT)",
-                      "ERRMSG('Rechnung nicht gefunden ode-       A                                      r storniert!')",
-                      "ERRMSG('Rechnung bereits als Garant-       A                                      ie-Antrag erfasst!')"
-                    ]
-                  },
-                  {
-                    "name": "IN-58",
-                    "typeId": "t.char.5",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-60",
-                    "typeId": "t.char.5",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SPLITT",
-                    "typeId": "t.char.2",
-                    "row": 3,
-                    "column": 32,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "TAGE",
-                    "typeId": "t.char.2",
-                    "row": 3,
-                    "column": 73,
-                    "keywords": [
-                      "COLOR(WHT)",
-                      "EDTWRD(' 0 ')",
-                      "ERRMSG('Anzahl Tage �berschreitet E-       A                                      inreichungsfrist.')"
-                    ]
-                  },
-                  {
-                    "name": "IN-68",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "NEU2X",
-                    "typeId": "t.char.2",
-                    "row": 5,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(WHT)",
-                      "EDTWRD('  .  .    ')",
-                      "EDTMSK('  &  &    ')",
-                      "ERRMSG('Datum ung�ltig oder Einreic-       A                                      hungsfrist �berschritten.')"
-                    ]
-                  },
-                  {
-                    "name": "IN-67",
-                    "typeId": "t.char.2",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "NEU3",
-                    "typeId": "t.char.5",
-                    "row": 7,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "NEUWT",
-                    "typeId": "t.char.1",
-                    "row": 11,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "PKZ",
-                    "typeId": "t.char.3",
-                    "row": 13,
-                    "column": 24,
-                    "keywords": []
-                  },
-                  {
-                    "name": "BETRIEB",
-                    "typeId": "t.char.30",
-                    "row": 13,
-                    "column": 34,
-                    "keywords": []
-                  },
-                  {
-                    "name": "NEU4",
-                    "typeId": "t.char.1",
-                    "row": 9,
-                    "column": 24,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "HS1210W6",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Erstellen",
-                    "row": 1,
-                    "column": 11,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Rechnungs-Nr./Splitt:",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "/",
-                    "row": 3,
-                    "column": 30,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Anzahl Tage f�r Anzeige",
-                    "row": 3,
-                    "column": 49,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Rechnungs-Datum.....:",
-                    "row": 5,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "TT.MM.JJJJ",
-                    "row": 6,
-                    "column": 24,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Auftrags-Nr. .......:",
-                    "row": 7,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Bereich.............:",
-                    "row": 11,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Betrieb.............:",
-                    "row": 13,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "[F11]",
-                    "row": 13,
-                    "column": 28,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "F4=Rechnung ausw�hlen",
-                    "row": 15,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 15,
-                    "column": 49,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "F11=Betrieb wechseln",
-                    "row": 15,
-                    "column": 26,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "F20=Alle offenen Rechnungen ausw�hlen",
-                    "row": 17,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Fabrikat............:",
-                    "row": 9,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Grundlage ist das Fertig-",
-                    "row": 4,
-                    "column": 49,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "stellungsdatum des Auftrags",
-                    "row": 5,
-                    "column": 49,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "F15=Verl�ngerung Einreichungsfrist beantragen",
-                    "row": 16,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "1=Werkstatt, 2=Theke",
-                    "row": 11,
-                    "column": 26,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "1=Lkw, 3=Bus, 6=Motor",
-                    "row": 9,
-                    "column": 26,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "HS1210W61",
-                "keywords": [
-                  "WINDOW(6 2 6 75)",
-                  "CF04(04 'Bedienerf�hrung')",
-                  "CF11(11 'Betrieb wechseln')",
-                  "CF12(12 'Zur�ck')",
-                  "CF20(20 'Alle offenen Rechnungen au-       A                                      sw�hlen')",
-                  "RTNCSRLOC(&REC6 &FLD6 &POS6)"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-04",
-                    "typeId": "t.char.1",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-11",
-                    "typeId": "t.char.1",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.1",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-20",
-                    "typeId": "t.char.1",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "POS6",
-                    "typeId": "t.char.1",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "FLD6",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "REC6",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "Weiter mit Datenfreigabe",
-                    "row": 5,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 5,
-                    "column": 29,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "In SCAS ist kein Garantie-Start-Datum hinterlegt.",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": []
-                  }
-                ]
-              },
-              {
-                "name": "HS1210W62",
-                "keywords": [
-                  "WINDOW(8 2 7 75)",
-                  "CF12(12 'Zur�ck')",
-                  "CF04(04 'Bedienerf�hrung')"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-04",
-                    "typeId": "t.char.10",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "NEU1",
-                    "typeId": "t.char.5",
-                    "row": 3,
-                    "column": 19,
-                    "keywords": []
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 6,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "HS1210W6",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Verl�ngeung der Einreichungsfrist beantragen",
-                    "row": 1,
-                    "column": 11,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "F�r die Rechnung",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "wurde eine Verl�ngerung der Einreichungsfrist",
-                    "row": 3,
-                    "column": 25,
-                    "keywords": []
-                  },
-                  {
-                    "value": "beantragt.",
-                    "row": 4,
-                    "column": 2,
-                    "keywords": []
-                  }
-                ]
-              },
-              {
-                "name": "HS1210W7",
-                "keywords": [
-                  "WINDOW(8 2 7 75)",
-                  "CF12(12 'Zur�ck')",
-                  "CF04(04 'Bedienerf�hrung')"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.5",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-04",
-                    "typeId": "t.char.5",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "ANZAHL",
-                    "typeId": "t.char.5",
-                    "row": 3,
-                    "column": 12,
-                    "keywords": [
-                      "EDTWRD('   0 ')"
-                    ]
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 6,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "HS1210W7",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Offene Rechnungen �bernehmen",
-                    "row": 1,
-                    "column": 11,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Es wurden",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "neue Garantieantr�ge erstellt.",
-                    "row": 3,
-                    "column": 18,
-                    "keywords": []
-                  }
-                ]
-              },
-              {
-                "name": "HS1210W9",
-                "keywords": [
-                  "WINDOW(3 5 17 68)",
-                  "CF04(04 'Bedienerf�hrung')",
-                  "CF11(11 'Betrieb wechseln')",
-                  "CF12(12 'Zur�ck')"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-04",
-                    "typeId": "t.char.5",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-11",
-                    "typeId": "t.char.5",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.5",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "STATUS",
-                    "typeId": "t.char.2",
-                    "row": 5,
-                    "column": 25,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "FILTFG",
-                    "typeId": "t.char.7",
-                    "row": 9,
-                    "column": 23,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "FILTKD",
-                    "typeId": "t.char.6",
-                    "row": 10,
-                    "column": 23,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "FILPKZ",
-                    "typeId": "t.char.3",
-                    "row": 12,
-                    "column": 23,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "STATXT",
-                    "typeId": "t.char.30",
-                    "row": 5,
-                    "column": 33,
-                    "keywords": []
-                  },
-                  {
-                    "name": "BETRIEB",
-                    "typeId": "t.char.30",
-                    "row": 12,
-                    "column": 33,
-                    "keywords": []
-                  },
-                  {
-                    "name": "ZEICHEN",
-                    "typeId": "t.char.1",
-                    "row": 5,
-                    "column": 23,
-                    "keywords": [
-                      "COLOR(WHT)",
-                      "VALUES('=' '>' '<' '*')"
-                    ]
-                  },
-                  {
-                    "name": "FILSDE",
-                    "typeId": "t.char.8",
-                    "row": 11,
-                    "column": 23,
-                    "keywords": [
-                      "COLOR(WHT)",
-                      "CHECK(RZ)"
-                    ]
-                  },
-                  {
-                    "name": "FILMIN",
-                    "typeId": "t.char.1",
-                    "row": 8,
-                    "column": 23,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "FILTAG",
-                    "typeId": "t.char.1",
-                    "row": 13,
-                    "column": 23,
-                    "keywords": [
-                      "COLOR(WHT)",
-                      "EDTWRD(' 0 ')"
-                    ]
-                  },
-                  {
-                    "name": "FILART",
-                    "typeId": "t.char.1",
-                    "row": 14,
-                    "column": 23,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "FILOFF",
-                    "typeId": "t.char.1",
-                    "row": 7,
-                    "column": 23,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 16,
-                    "column": 45,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "HS1210W9",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Filter setzen",
-                    "row": 1,
-                    "column": 11,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Anzeige beschr�nken auf",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Status..............",
-                    "row": 5,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "F4=Auswahl Status",
-                    "row": 16,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Fahrgestell.........",
-                    "row": 9,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Kunden-Nr...........",
-                    "row": 10,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Betrieb.............",
-                    "row": 12,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "F11=Betrieb wechseln",
-                    "row": 16,
-                    "column": 22,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "[F4]",
-                    "row": 5,
-                    "column": 28,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "[F11]",
-                    "row": 12,
-                    "column": 27,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "=/</>",
-                    "row": 6,
-                    "column": 23,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "gleich/kleiner/gr��er",
-                    "row": 6,
-                    "column": 33,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Claim-Nr. Scas......",
-                    "row": 11,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Nur Minimum.........",
-                    "row": 8,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "J=Ja, N=Nein",
-                    "row": 8,
-                    "column": 25,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Antrags Alter.......",
-                    "row": 13,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Tage",
-                    "row": 13,
-                    "column": 27,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "(0=keine Beschr�nkung)",
-                    "row": 13,
-                    "column": 32,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Antrags Art.........",
-                    "row": 14,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "leer=Alle, G=Garantie, R=R&W, A=AR, K=Kulanz",
-                    "row": 14,
-                    "column": 25,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "Nicht gesendete.....",
-                    "row": 7,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "J=Ja, N=Nein",
-                    "row": 7,
-                    "column": 25,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "HS1210SA",
-                "keywords": [
-                  "SFL"
-                ],
-                "fields": [
-                  {
-                    "name": "MARKA",
-                    "typeId": "t.char.1",
-                    "row": 8,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "STATA",
-                    "typeId": "t.char.2",
-                    "row": 8,
-                    "column": 4,
-                    "keywords": []
-                  },
-                  {
-                    "name": "DATA",
-                    "typeId": "t.char.67",
-                    "row": 8,
-                    "column": 7,
-                    "keywords": []
-                  }
-                ],
-                "constants": []
-              },
-              {
-                "name": "HS1210CA",
-                "keywords": [
-                  "SFLCTL(HS1210SA)",
-                  "CF12(12 'Zur�ck')",
-                  "BLINK",
-                  "OVERLAY",
-                  "SFLDSP",
-                  "SFLDSPCTL",
-                  "SFLCLR",
-                  "SFLEND(*MORE)",
-                  "SFLSIZ(0009)",
-                  "SFLPAG(0008)",
-                  "WINDOW(2 2 18 75 *NOMSGLIN)"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-90",
-                    "typeId": "t.char.67",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-99",
-                    "typeId": "t.char.67",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-95",
-                    "typeId": "t.char.67",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.67",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "DATTXT",
-                    "typeId": "t.char.20",
-                    "row": 2,
-                    "column": 10,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "DATTOP",
-                    "typeId": "t.char.50",
-                    "row": 7,
-                    "column": 7,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "OPTION",
-                    "typeId": "t.char.20",
-                    "row": 5,
-                    "column": 14,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "HS1210CA",
-                    "row": 1,
-                    "column": 1,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Bedienerf�hrung",
-                    "row": 1,
-                    "column": 10,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Wahl",
-                    "row": 7,
-                    "column": 1,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Auswahl eingeben und Eingabetaste dr�cken.",
-                    "row": 4,
-                    "column": 1,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "1=Ausw�hlen",
-                    "row": 5,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "HS1210W0",
-                "keywords": [
-                  "CF12(12 'Zur�ck')",
-                  "CF04(04 'Bedienerf�hrung')",
-                  "WINDOW(8 11 7 56)"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.20",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-04",
-                    "typeId": "t.char.20",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB050",
-                    "typeId": "t.char.8",
-                    "row": 3,
-                    "column": 35,
-                    "keywords": []
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 6,
-                    "column": 1,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "HS1210W0",
-                    "row": 1,
-                    "column": 1,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Claim freigeben",
-                    "row": 1,
-                    "column": 10,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Eingabetaste dr�cken um den Claim",
-                    "row": 3,
-                    "column": 1,
-                    "keywords": []
-                  },
-                  {
-                    "value": "zu versenden.",
-                    "row": 3,
-                    "column": 44,
-                    "keywords": []
-                  },
-                  {
-                    "value": "--------------------------------------------------------",
-                    "row": 4,
-                    "column": 1,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "HS1210WF",
-                "keywords": [
-                  "WINDOW(8 2 7 75)",
-                  "CF12(12 'Zur�ck')",
-                  "CF04(04 'Bedienerf�hrung')"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-04",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 6,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "HS1210WF",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "F E H L E R",
-                    "row": 1,
-                    "column": 11,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Keine freie Claim-Nr. vorhanden!!! - EDV Benachrichtigen.",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(RED)"
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "HS1210WG",
-                "keywords": [
-                  "WINDOW(8 2 7 75)",
-                  "CF12(12 'Zur�ck')",
-                  "CF04(04 'Bedienerf�hrung')"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-04",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 6,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "HS1210WG",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Alle offenen Rechnungen ausw�hlen",
-                    "row": 1,
-                    "column": 11,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Eingabetaste dr�cken um Claims f�r alle offenen Garantierechnungen zu",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "erstellen.",
-                    "row": 4,
-                    "column": 2,
-                    "keywords": []
-                  }
-                ]
-              },
-              {
-                "name": "HS1210WM",
-                "keywords": [
-                  "WINDOW(8 2 7 75)",
-                  "CF12(12 'Zur�ck')",
-                  "CF04(04 'Bedienerf�hrung')"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-04",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "SUB050",
-                    "typeId": "t.char.8",
-                    "row": 3,
-                    "column": 36,
-                    "keywords": []
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 6,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "HS1210WM",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Claim ausbuchen",
-                    "row": 1,
-                    "column": 11,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Eingabetaste dr�cken um den Claim",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "auszubuchen.",
-                    "row": 3,
-                    "column": 45,
-                    "keywords": []
-                  }
-                ]
-              },
-              {
-                "name": "HS1210WS",
-                "keywords": [
-                  "WINDOW(5 12 9 55)",
-                  "CF12(12 'Zur�ck')",
-                  "BLINK"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.8",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "FAR150",
-                    "typeId": "t.char.17",
-                    "row": 1,
-                    "column": 27,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "name": "ANZDRU",
-                    "typeId": "t.char.1",
-                    "row": 6,
-                    "column": 20,
-                    "keywords": [
-                      "COLOR(WHT)",
-                      "VALUES('A' 'D' 'Z' 'C')"
-                    ]
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "HS1210WS",
-                    "row": 1,
-                    "column": 1,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Servicekarte",
-                    "row": 1,
-                    "column": 10,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "f�r",
-                    "row": 1,
-                    "column": 23,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Auswahl eingeben und Datenfreigabe dr�cken.",
-                    "row": 3,
-                    "column": 1,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "(A)nzeigen oder (D)rucken oder (Z)usammenf. drucken?",
-                    "row": 5,
-                    "column": 1,
-                    "keywords": []
-                  },
-                  {
-                    "value": "(C)laims anzeigen?",
-                    "row": 6,
-                    "column": 1,
-                    "keywords": []
-                  },
-                  {
-                    "value": "(A/C/D/Z)",
-                    "row": 6,
-                    "column": 22,
-                    "keywords": []
-                  },
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 8,
-                    "column": 1,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "HS1210WE",
-                "keywords": [
-                  "CF12(12 'Zur�ck')",
-                  "CF04(04 'Bedienerf�hrung')",
-                  "WINDOW(4 2 11 74)"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.1",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-04",
-                    "typeId": "t.char.1",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "G73050",
-                    "typeId": "t.char.8",
-                    "row": 1,
-                    "column": 32,
-                    "keywords": []
-                  },
-                  {
-                    "name": "G73060",
-                    "typeId": "t.char.2",
-                    "row": 1,
-                    "column": 41,
-                    "keywords": []
-                  },
-                  {
-                    "name": "ERRORT",
-                    "typeId": "t.char.210",
-                    "row": 5,
-                    "column": 3,
-                    "keywords": [
-                      "CHGINPDFT",
-                      "DSPATR(PR)",
-                      "CNTFLD(070)",
-                      "COLOR(RED)"
-                    ]
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "F12=Zur�ck",
-                    "row": 9,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "HS1210WE",
-                    "row": 1,
-                    "column": 2,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Lokale Pr�fung Claim",
-                    "row": 1,
-                    "column": 11,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Bitte Fehler korrigieren und erneut senden.",
-                    "row": 3,
-                    "column": 2,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "HS1210WW",
-                "keywords": [
-                  "CF12(12 'Zur�ck')",
-                  "CF04(04 'Bedienerf�hrung')",
-                  "WINDOW(8 8 7 62)"
-                ],
-                "fields": [
-                  {
-                    "name": "IN-12",
-                    "typeId": "t.char.210",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  },
-                  {
-                    "name": "IN-04",
-                    "typeId": "t.char.210",
-                    "row": 0,
-                    "column": 0,
-                    "keywords": []
-                  }
-                ],
-                "constants": [
-                  {
-                    "value": "F12=Aktualisierung �berspringen",
-                    "row": 6,
-                    "column": 1,
-                    "keywords": [
-                      "COLOR(BLU)"
-                    ]
-                  },
-                  {
-                    "value": "HS1210WW",
-                    "row": 1,
-                    "column": 1,
-                    "keywords": []
-                  },
-                  {
-                    "value": "Claim Status aktualisieren",
-                    "row": 1,
-                    "column": 10,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "--------------------------------------------------------------",
-                    "row": 4,
-                    "column": 1,
-                    "keywords": [
-                      "COLOR(WHT)"
-                    ]
-                  },
-                  {
-                    "value": "Eingabetaste dr�cken um Alle Garantie Claims zu aktualisieren.",
-                    "row": 3,
-                    "column": 1,
-                    "keywords": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
+      "id": "n1780",
+      "kind": "Comment",
+      "opcode": null,
+      "startLine": 2800,
+      "endLine": 2800
+    },
+    {
+      "id": "n1782",
+      "kind": "Comment",
+      "opcode": null,
+      "startLine": 2812,
+      "endLine": 2812
+    },
+    {
+      "id": "n1783",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2814,
+      "endLine": 2814,
+      "target": "sym.var.failureNo",
+      "symbols": [
+        "sym.var.failureNo"
+      ]
+    },
+    {
+      "id": "n1784",
+      "kind": "SetLL",
+      "opcode": "SETLL",
+      "startLine": 2815,
+      "endLine": 2815,
+      "target": "HSGPSLF3",
+      "symbols": [
+        "sym.file.HSGPSLF3",
+        "sym.var.KEY_GPS"
+      ]
+    },
+    {
+      "id": "n1785",
+      "kind": "DoW",
+      "opcode": "DOW",
+      "startLine": 2817,
+      "endLine": 2870,
+      "symbols": [
+        "sym.file.HSGPSLF3",
+        "sym.var.KEY_GPS"
+      ]
+    },
+    {
+      "id": "n1822",
+      "kind": "If",
+      "opcode": "IF",
+      "startLine": 2871,
+      "endLine": 2882,
+      "symbols": [
+        "sym.var.maintenance",
+        "sym.var.groups",
+        "sym.var.partNo",
+        "sym.var.text",
+        "sym.var.failureNo",
+        "sym.var.valueMat",
+        "sym.var.valueLab",
+        "sym.var.valueSpe"
+      ]
+    },
+    {
+      "id": "n1836",
+      "kind": "Return",
+      "opcode": "RETURN",
+      "startLine": 2885,
+      "endLine": 2885
+    },
+    {
+      "id": "n1786",
+      "kind": "Condition",
+      "opcode": "COND",
+      "startLine": 2817,
+      "endLine": 2817
+    },
+    {
+      "id": "n1788",
+      "kind": "If",
+      "opcode": "IF",
+      "startLine": 2818,
+      "endLine": 2831,
+      "symbols": [
+        "sym.var.maintenance",
+        "sym.var.groups",
+        "sym.var.partNo",
+        "sym.var.text",
+        "sym.var.failureNo",
+        "sym.var.valueMat",
+        "sym.var.valueLab",
+        "sym.var.valueSpe"
+      ]
+    },
+    {
+      "id": "n1800",
+      "kind": "If",
+      "opcode": "IF",
+      "startLine": 2832,
+      "endLine": 2868
+    },
+    {
+      "id": "n1821",
+      "kind": "EndDo",
+      "opcode": null,
+      "startLine": 2870,
+      "endLine": 2870
+    },
+    {
+      "id": "n1823",
+      "kind": "Condition",
+      "opcode": "COND",
+      "startLine": 2871,
+      "endLine": 2871,
+      "symbols": [
+        "sym.var.create"
+      ]
+    },
+    {
+      "id": "n1824",
+      "kind": "Chain",
+      "opcode": "CHAIN",
+      "startLine": 2874,
+      "endLine": 2874,
+      "target": "HSG71LF2",
+      "symbols": [
+        "sym.file.HSG71LF2",
+        "sym.var.2876"
+      ]
+    },
+    {
+      "id": "n1825",
+      "kind": "If",
+      "opcode": "IF",
+      "startLine": 2875,
+      "endLine": 2878
+    },
+    {
+      "id": "n1831",
+      "kind": "If",
+      "opcode": "IF",
+      "startLine": 2879,
+      "endLine": 2881
+    },
+    {
+      "id": "n1835",
+      "kind": "EndIf",
+      "opcode": null,
+      "startLine": 2882,
+      "endLine": 2882
+    },
+    {
+      "id": "n1787",
+      "kind": "Builtin",
+      "opcode": null,
+      "startLine": 2817,
+      "endLine": 2817
+    },
+    {
+      "id": "n1789",
+      "kind": "Condition",
+      "opcode": "COND",
+      "startLine": 2818,
+      "endLine": 2818,
+      "symbols": [
+        "sym.var.GPS150",
+        "sym.var.failureNo"
+      ]
+    },
+    {
+      "id": "n1790",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2821,
+      "endLine": 2821,
+      "target": "sym.var.failureNo",
+      "symbols": [
+        "sym.var.GPS150",
+        "sym.var.failureNo"
+      ]
+    },
+    {
+      "id": "n1791",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2822,
+      "endLine": 2822,
+      "target": "sym.var.maintenance",
+      "symbols": [
+        "sym.var.maintenance"
+      ]
+    },
+    {
+      "id": "n1792",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2824,
+      "endLine": 2824,
+      "target": "sym.var.lineNo",
+      "symbols": [
+        "sym.var.lineNo"
+      ]
+    },
+    {
+      "id": "n1793",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2825,
+      "endLine": 2825,
+      "target": "sym.var.valueMat",
+      "symbols": [
+        "sym.var.valueMat"
+      ]
+    },
+    {
+      "id": "n1794",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2826,
+      "endLine": 2826,
+      "target": "sym.var.valueLab",
+      "symbols": [
+        "sym.var.valueLab"
+      ]
+    },
+    {
+      "id": "n1795",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2827,
+      "endLine": 2827,
+      "target": "sym.var.valueSpe",
+      "symbols": [
+        "sym.var.valueSpe"
+      ]
+    },
+    {
+      "id": "n1796",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2828,
+      "endLine": 2828,
+      "target": "sym.var.groups",
+      "symbols": [
+        "sym.var.groups"
+      ]
+    },
+    {
+      "id": "n1797",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2829,
+      "endLine": 2829,
+      "target": "sym.var.partNo",
+      "symbols": [
+        "sym.var.partNo"
+      ]
+    },
+    {
+      "id": "n1798",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2830,
+      "endLine": 2830,
+      "target": "sym.var.partValue",
+      "symbols": [
+        "sym.var.partValue"
+      ]
+    },
+    {
+      "id": "n1799",
+      "kind": "EndIf",
+      "opcode": null,
+      "startLine": 2831,
+      "endLine": 2831
+    },
+    {
+      "id": "n1801",
+      "kind": "Condition",
+      "opcode": "COND",
+      "startLine": 2832,
+      "endLine": 2832,
+      "symbols": [
+        "sym.var.GPS150"
+      ]
+    },
+    {
+      "id": "n1802",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2833,
+      "endLine": 2833,
+      "target": "sym.var.create",
+      "symbols": [
+        "sym.var.create"
+      ]
+    },
+    {
+      "id": "n1803",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2834,
+      "endLine": 2834,
+      "target": "sym.var.GPS020",
+      "symbols": [
+        "sym.var.GPS020"
+      ]
+    },
+    {
+      "id": "n1806",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2835,
+      "endLine": 2835,
+      "target": "sym.var.GPS025",
+      "symbols": [
+        "sym.var.GPS025"
+      ]
+    },
+    {
+      "id": "n1807",
+      "kind": "Comment",
+      "opcode": null,
+      "startLine": 2836,
+      "endLine": 2836
+    },
+    {
+      "id": "n1808",
+      "kind": "If",
+      "opcode": "IF",
+      "startLine": 2837,
+      "endLine": 2845
+    },
+    {
+      "id": "n1826",
+      "kind": "Condition",
+      "opcode": "COND",
+      "startLine": 2875,
+      "endLine": 2875
+    },
+    {
+      "id": "n1828",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2876,
+      "endLine": 2876
+    },
+    {
+      "id": "n1829",
+      "kind": "Update",
+      "opcode": "UPDATE",
+      "startLine": 2877,
+      "endLine": 2877,
+      "target": "HSG71LF2",
+      "symbols": [
+        "sym.var.HSG71LR2"
+      ]
+    },
+    {
+      "id": "n1830",
+      "kind": "EndIf",
+      "opcode": null,
+      "startLine": 2878,
+      "endLine": 2878
+    },
+    {
+      "id": "n1832",
+      "kind": "Condition",
+      "opcode": "COND",
+      "startLine": 2879,
+      "endLine": 2879
+    },
+    {
+      "id": "n1833",
+      "kind": "Comment",
+      "opcode": null,
+      "startLine": 2880,
+      "endLine": 2880
+    },
+    {
+      "id": "n1834",
+      "kind": "EndIf",
+      "opcode": null,
+      "startLine": 2881,
+      "endLine": 2881
+    },
+    {
+      "id": "n1804",
+      "kind": "Builtin",
+      "opcode": null,
+      "startLine": 2834,
+      "endLine": 2834
+    },
+    {
+      "id": "n1809",
+      "kind": "Condition",
+      "opcode": "COND",
+      "startLine": 2837,
+      "endLine": 2837,
+      "symbols": [
+        "sym.var.GPS040"
+      ]
+    },
+    {
+      "id": "n1810",
+      "kind": "Chain",
+      "opcode": "CHAIN",
+      "startLine": 2838,
+      "endLine": 2838,
+      "target": "ITLSMF3",
+      "symbols": [
+        "sym.file.ITLSMF3",
+        "sym.var.GPS050"
+      ]
+    },
+    {
+      "id": "n1811",
+      "kind": "If",
+      "opcode": "IF",
+      "startLine": 2839,
+      "endLine": 2844
+    },
+    {
+      "id": "n1820",
+      "kind": "EndIf",
+      "opcode": null,
+      "startLine": 2845,
+      "endLine": 2845
+    },
+    {
+      "id": "n1827",
+      "kind": "Builtin",
+      "opcode": null,
+      "startLine": 2875,
+      "endLine": 2875
+    },
+    {
+      "id": "n1805",
+      "kind": "Builtin",
+      "opcode": null,
+      "startLine": 2834,
+      "endLine": 2834,
+      "symbols": [
+        "sym.var.GPS150"
+      ]
+    },
+    {
+      "id": "n1812",
+      "kind": "Condition",
+      "opcode": "COND",
+      "startLine": 2839,
+      "endLine": 2839,
+      "symbols": [
+        "sym.var.SFRAN"
+      ]
+    },
+    {
+      "id": "n1814",
+      "kind": "If",
+      "opcode": "IF",
+      "startLine": 2840,
+      "endLine": 2843
+    },
+    {
+      "id": "n1819",
+      "kind": "EndIf",
+      "opcode": null,
+      "startLine": 2844,
+      "endLine": 2844
+    },
+    {
+      "id": "n1813",
+      "kind": "Builtin",
+      "opcode": null,
+      "startLine": 2839,
+      "endLine": 2839
+    },
+    {
+      "id": "n1815",
+      "kind": "Condition",
+      "opcode": "COND",
+      "startLine": 2840,
+      "endLine": 2840,
+      "symbols": [
+        "sym.var.GPS070",
+        "sym.var.partValue"
+      ]
+    },
+    {
+      "id": "n1816",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2841,
+      "endLine": 2841,
+      "target": "sym.var.partNo",
+      "symbols": [
+        "sym.var.GPS050",
+        "sym.var.partNo"
+      ]
+    },
+    {
+      "id": "n1817",
+      "kind": "Assign",
+      "opcode": "EVAL",
+      "startLine": 2842,
+      "endLine": 2842,
+      "target": "sym.var.partValue",
+      "symbols": [
+        "sym.var.GPS070",
+        "sym.var.partValue"
+      ]
+    },
+    {
+      "id": "n1818",
+      "kind": "EndIf",
+      "opcode": null,
+      "startLine": 2843,
+      "endLine": 2843
     }
-  ]
+  ],
+  "lineToNodeMap": {
+    "2800": [
+      "n1780"
+    ],
+    "2812": [
+      "n1782"
+    ],
+    "2814": [
+      "n1783"
+    ],
+    "2815": [
+      "n1784"
+    ],
+    "2817-2870": [
+      "n1785"
+    ],
+    "2871-2882": [
+      "n1822"
+    ],
+    "2885": [
+      "n1836"
+    ],
+    "2817": [
+      "n1786",
+      "n1787"
+    ],
+    "2818-2831": [
+      "n1788"
+    ],
+    "2832-2868": [
+      "n1800"
+    ],
+    "2870": [
+      "n1821"
+    ],
+    "2871": [
+      "n1823"
+    ],
+    "2874": [
+      "n1824"
+    ],
+    "2875-2878": [
+      "n1825"
+    ],
+    "2879-2881": [
+      "n1831"
+    ],
+    "2882": [
+      "n1835"
+    ],
+    "2818": [
+      "n1789"
+    ],
+    "2821": [
+      "n1790"
+    ],
+    "2822": [
+      "n1791"
+    ],
+    "2824": [
+      "n1792"
+    ],
+    "2825": [
+      "n1793"
+    ],
+    "2826": [
+      "n1794"
+    ],
+    "2827": [
+      "n1795"
+    ],
+    "2828": [
+      "n1796"
+    ],
+    "2829": [
+      "n1797"
+    ],
+    "2830": [
+      "n1798"
+    ],
+    "2831": [
+      "n1799"
+    ],
+    "2832": [
+      "n1801"
+    ],
+    "2833": [
+      "n1802"
+    ],
+    "2834": [
+      "n1803",
+      "n1804",
+      "n1805"
+    ],
+    "2835": [
+      "n1806"
+    ],
+    "2836": [
+      "n1807"
+    ],
+    "2837-2845": [
+      "n1808"
+    ],
+    "2875": [
+      "n1826",
+      "n1827"
+    ],
+    "2876": [
+      "n1828"
+    ],
+    "2877": [
+      "n1829"
+    ],
+    "2878": [
+      "n1830"
+    ],
+    "2879": [
+      "n1832"
+    ],
+    "2880": [
+      "n1833"
+    ],
+    "2881": [
+      "n1834"
+    ],
+    "2837": [
+      "n1809"
+    ],
+    "2838": [
+      "n1810"
+    ],
+    "2839-2844": [
+      "n1811"
+    ],
+    "2845": [
+      "n1820"
+    ],
+    "2839": [
+      "n1812",
+      "n1813"
+    ],
+    "2840-2843": [
+      "n1814"
+    ],
+    "2844": [
+      "n1819"
+    ],
+    "2840": [
+      "n1815"
+    ],
+    "2841": [
+      "n1816"
+    ],
+    "2842": [
+      "n1817"
+    ],
+    "2843": [
+      "n1818"
+    ]
+  }
 }

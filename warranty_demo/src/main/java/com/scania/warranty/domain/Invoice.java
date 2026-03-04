@@ -1,517 +1,730 @@
+/**
+ * Domain entity or value object for the warranty claims model.
+ * <p>
+ * Generated from RPG: unit {@code HS1210}, node {@code n404}.
+ */
+
 package com.scania.warranty.domain;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
+/**
+ * JPA entity for invoice header (HSAHKLF3).
+ */
 @Entity
 @Table(name = "HSAHKLF3")
+@IdClass(InvoiceId.class)
 public class Invoice {
-    
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @Column(name = "PAKZ", length = 3)
-    private String companyCode;
-    
-    @Column(name = "RNR", length = 5)
-    private String invoiceNumber;
-    
-    @Column(name = "RG-NR. 10A", length = 10)
-    private String invoiceNumber10;
-    
-    @Column(name = "RDAT", length = 8)
-    private String invoiceDate;
-    
-    @Column(name = "KZ S", length = 1)
-    private String cancellationFlag;
-    
-    @Column(name = "ANR", length = 5)
-    private String jobNumber;
-    
-    @Column(name = "BEREI", length = 1)
-    private String area;
-    
-    @Column(name = "W/T", length = 1)
-    private String workshopType;
-    
-    @Column(name = "SPLITT", length = 2)
-    private String split;
-    
-    @Column(name = "ADAT", length = 8)
-    private String jobDate;
-    
-    @Column(name = "ATEXT", length = 40)
-    private String jobText;
-    
-    @Column(name = "L.RNR", length = 5)
-    private String lastInvoiceNumber;
-    
-    @Column(name = "STO-BEZ-RE", length = 5)
-    private String cancellationReferenceInvoice;
-    
-    @Column(name = "STO-BEZ-REDAT", length = 8)
-    private String cancellationReferenceDate;
-    
-    @Column(name = "KOR-BEZ-RE", length = 5)
-    private String correctionReferenceInvoice;
-    
-    @Column(name = "KOR-BEZ-REDAT", length = 8)
-    private String correctionReferenceDate;
-    
-    @Column(name = "BFORT", length = 1)
-    private String carryForward;
-    
-    @Column(name = "MWST Y/N", length = 1)
-    private String vatFlag;
-    
-    @Column(name = "MWST %", precision = 5, scale = 2)
-    private BigDecimal vatPercent;
-    
-    @Column(name = "MWST % R.", precision = 5, scale = 2)
-    private BigDecimal vatPercentReduced;
-    
-    @Column(name = "BA-SCHL�SSEL", length = 2)
-    private String accountingKey;
-    
-    @Column(name = "KST LOHN", length = 5)
-    private String costCenterLabor;
-    
-    @Column(name = "KST TEILE", length = 5)
-    private String costCenterParts;
-    
-    @Column(name = "FIBU MWST", length = 6)
-    private String accountingVat;
-    
-    @Column(name = "FIBU MWST AT", length = 6)
-    private String accountingVatAustria;
-    
-    @Column(name = "FIBU INTERIM", length = 6)
-    private String accountingInterim;
-    
-    @Column(name = "KTO INTAUF.", length = 6)
-    private String accountInternalOrder;
-    
-    @Column(name = "KTR INT AUF.", length = 7)
-    private String costCenterInternalOrder;
-    
-    @Column(name = "KST INT AUF.", length = 5)
-    private String costCenterInternalOrder2;
-    
-    @Column(name = "SPEZ-CODE", length = 10)
-    private String specialCode;
-    
-    @Column(name = "BRANCH", length = 3)
-    private String branch;
-    
-    @Column(name = "PROD-CODE", length = 10)
-    private String productCode;
-    
-    @Column(name = "PROJEKT", length = 10)
-    private String project;
-    
-    @Column(name = "DOKUMENTENNUMMER", length = 20)
-    private String documentNumber;
-    
-    @Column(name = "KOSTENCODE KONZINT.", length = 3)
-    private String costCodeConcernInternal;
-    
-    @Column(name = "KUNDEN-NR.", length = 6)
-    private String customerNumber;
-    
-    @Column(name = "ANREDE", length = 1)
-    private String salutation;
-    
-    @Column(name = "NAME", length = 30)
-    private String name;
-    
-    @Column(name = "BRANCHE", length = 25)
-    private String industry;
-    
-    @Column(name = "MATCH", length = 5)
-    private String matchCode;
-    
-    @Column(name = "STRASSE", length = 25)
-    private String street;
-    
-    @Column(name = "LAND", length = 3)
-    private String country;
-    
-    @Column(name = "PLZ", length = 5)
-    private String postalCode;
-    
-    @Column(name = "ORT", length = 20)
-    private String city;
-    
-    @Column(name = "TELEFON", length = 17)
-    private String phone;
-    
-    @Column(name = "BESTELLER KUNDE", length = 20)
-    private String orderingCustomer;
-    
-    @Column(name = "VALUTA", length = 1)
-    private String currency;
-    
-    @Column(name = "BONIT#T", length = 1)
-    private String creditRating;
-    
-    @Column(name = "ZAHLUNGSART", length = 1)
-    private String paymentMethod;
-    
-    @Column(name = "RC", length = 3)
-    private String routingCode;
-    
-    @Column(name = "RE KUNDEN-NR.", length = 6)
-    private String invoiceCustomerNumber;
-    
-    @Column(name = "RE ANREDE", length = 1)
-    private String invoiceSalutation;
-    
-    @Column(name = "RE NAME", length = 30)
-    private String invoiceName;
-    
-    @Column(name = "RE BRANCHE", length = 25)
-    private String invoiceIndustry;
-    
-    @Column(name = "RE MATCH", length = 5)
-    private String invoiceMatchCode;
-    
-    @Column(name = "RE STRASSE", length = 25)
-    private String invoiceStreet;
-    
-    @Column(name = "RE LAND", length = 3)
-    private String invoiceCountry;
-    
-    @Column(name = "RE PLZ", length = 5)
-    private String invoicePostalCode;
-    
-    @Column(name = "RE ORT", length = 20)
-    private String invoiceCity;
-    
-    @Column(name = "RE TELE.", length = 17)
-    private String invoicePhone;
-    
-    @Column(name = "RE VALUTA", length = 1)
-    private String invoiceCurrency;
-    
-    @Column(name = "RE BONIT#T", length = 1)
-    private String invoiceCreditRating;
-    
-    @Column(name = "RE ZART", length = 1)
-    private String invoicePaymentType;
-    
-    @Column(name = "RE RC", length = 3)
-    private String invoiceRoutingCode;
-    
-    @Column(name = "UST-ID-NR/OK", length = 20)
-    private String vatIdNumber;
-    
-    @Column(name = "FAHRG.-NR.", length = 17)
-    private String vehicleNumber;
-    
-    @Column(name = "KZ", length = 12)
-    private String licensePlate;
-    
-    @Column(name = "TYP", length = 15)
-    private String vehicleType;
-    
-    @Column(name = "BJ", length = 4)
-    private String buildYear;
-    
-    @Column(name = "ZDAT", length = 8)
-    private String registrationDate;
-    
-    @Column(name = "WRG.", length = 3)
-    private String currency2;
-    
-    @Column(name = "AU", length = 6)
-    private String inspection;
-    
-    @Column(name = "GA", length = 8)
-    private String warrantyDate;
-    
-    @Column(name = "SP", length = 6)
-    private String spare;
-    
-    @Column(name = "TACHO", length = 8)
-    private String odometer;
-    
-    @Column(name = "KM", length = 8)
-    private String kilometers;
-    
-    @Column(name = "HU", length = 6)
-    private String mainInspection;
-    
-    @Column(name = "AN-TAG", length = 8)
-    private String acceptanceDate;
-    
-    @Column(name = "AN-ZEIT", length = 4)
-    private String acceptanceTime;
-    
-    @Column(name = "FERT-TAG", length = 8)
-    private String completionDate;
-    
-    @Column(name = "FERT-ZEIT", length = 4)
-    private String completionTime;
-    
-    @Column(name = "BERATER", length = 20)
-    private String advisor;
-    
-    @Column(name = "LEITZAHL", length = 3)
-    private String routingNumber;
-    
-    @Column(name = "TX.ANF", length = 3)
-    private String textStart;
-    
-    @Column(name = "TX.ENDE", length = 3)
-    private String textEnd;
-    
-    @Column(name = "MOTOR-NR", length = 10)
-    private String engineNumber;
-    
-    @Column(name = "MOTOR-TYP", length = 20)
-    private String engineType;
-    
-    @Column(name = "USER AUFTRAG", length = 10)
-    private String userJob;
-    
-    @Column(name = "USER RECHNUNG", length = 10)
-    private String userInvoice;
-    
-    @Column(name = "RGS NETTO", precision = 9, scale = 2)
-    private BigDecimal invoiceNet;
-    
-    @Column(name = "RGS BASIS AT", precision = 9, scale = 2)
-    private BigDecimal invoiceBasisAustria;
-    
-    @Column(name = "RGS BASIS MWST", precision = 9, scale = 2)
-    private BigDecimal invoiceBasisVat;
-    
-    @Column(name = "RGS MWST", precision = 9, scale = 2)
-    private BigDecimal invoiceVat;
-    
-    @Column(name = "RGS MWST AT", precision = 9, scale = 2)
-    private BigDecimal invoiceVatAustria;
-    
-    @Column(name = "RGS GES BRUTTO", precision = 9, scale = 2)
-    private BigDecimal invoiceTotalGross;
-    
-    @Column(name = "EG-UMSATZ", length = 1)
-    private String euSales;
-    
-    @Column(name = "STEUERFREI DRITTLAND", length = 1)
-    private String taxFreeThirdCountry;
-    
-    @Column(name = "VERBUCHT?", length = 1)
-    private String posted;
-    
-    @Column(name = "RESERVE", precision = 5, scale = 2)
-    private BigDecimal reserve1;
-    
-    @Column(name = "RESERVE", precision = 9, scale = 2, insertable = false, updatable = false)
-    private BigDecimal reserve2;
-    
-    @Column(name = "GA-�BERN.", length = 8)
-    private String warrantyTakeover;
-    
-    @Column(name = "WKT-ID", precision = 9, scale = 0)
-    private Integer workshopId;
-    
-    @Column(name = "RESERVE", precision = 2, scale = 0, insertable = false, updatable = false)
-    private Integer reserve3;
-    
-    @Column(name = "RESERVE", precision = 2, scale = 0, insertable = false, updatable = false)
-    private Integer reserve4;
-    
-    @Column(name = "F:V>0", precision = 3, scale = 0)
-    private Integer flagVGreaterZero;
-    
-    @Column(name = "F:B>0", precision = 3, scale = 0)
-    private Integer flagBGreaterZero;
-    
-    @Column(name = "KAMPAGNE-NR", precision = 6, scale = 0)
-    private Integer campaignNumber;
-    
-    @Column(name = "SPO ORDER", length = 10)
-    private String spoOrder;
-    
-    @Column(name = "KEN-AV", length = 2)
-    private String identifierAv;
-    
-    @Column(name = "KEN-PE", length = 2)
-    private String identifierPe;
-    
-    @Column(name = "KLR-BERECH", length = 1)
-    private String costAccountingCalculation;
-    
-    @Column(name = "KLR-BETRAG", precision = 5, scale = 2)
-    private BigDecimal costAccountingAmount;
-    
-    @Column(name = "ASSI-VORGANG-NR", length = 15)
-    private String assistanceProcessNumber;
-    
-    @Column(name = "ZAGA-GUELTIG", length = 8)
-    private String zagaValid;
-    
-    @Column(name = "R&W FREIGABE-NR", length = 15)
-    private String rwApprovalNumber;
-    
-    @Column(name = "KL-ERWEITERUNG", precision = 5, scale = 0)
-    private Integer goodwillExtension;
-    
-    @Column(name = "KL-AUSNAHME IDNR", length = 3)
-    private String goodwillExceptionId;
-    
-    @Column(name = "KL-AUSNAHME KLARTEXT", length = 40)
-    private String goodwillExceptionText;
-    
-    @Column(name = "FAHRZEUG-ART", length = 20)
-    private String vehicleType2;
-    
-    @Column(name = "HERSTELLER", length = 20)
-    private String manufacturer;
-    
-    @Column(name = "AUFBAUART", length = 20)
-    private String bodyType;
-    
-    @Column(name = "HERSTELLER AUFBAU", length = 20)
-    private String bodyManufacturer;
-    
-    @Column(name = "ZUSATZAUSR�STUNG 1", length = 20)
-    private String additionalEquipment1;
-    
-    @Column(name = "HERSTELLER ZUSATZ 1", length = 20)
-    private String additionalManufacturer1;
-    
-    @Column(name = "ZUSATZAUSR�STUNG 2", length = 20)
-    private String additionalEquipment2;
-    
-    @Column(name = "HERSTELLER ZUSATZ 2", length = 20)
-    private String additionalManufacturer2;
-    
-    @Column(name = "ZUSATZAUSR�STUNG 3", length = 20)
-    private String additionalEquipment3;
-    
-    @Column(name = "HERSTELLER ZUSATZ 3", length = 20)
-    private String additionalManufacturer3;
-    
-    @Column(name = "EINSATZART", length = 20)
-    private String usageType;
-    
-    @Column(name = "EURO-NORM", length = 10)
-    private String euroStandard;
-    
-    @Column(name = "PARTIKELFILTER", length = 1)
-    private String particleFilter;
-    
-    @Column(name = "IS-ART", length = 5)
-    private String isType;
-    
-    @Column(name = "MAIL TO", length = 200)
-    private String mailTo;
-    
-    @Column(name = "MAIL CC", length = 200)
-    private String mailCc;
+    @Column(name = "PAKZ", length = 3, nullable = false)
+    private String pakz; // @rpg-trace: schema
+
+    @Id
+    @Column(name = "RNR", length = 5, nullable = false)
+    private String rnr; // @rpg-trace: schema
+
+    @Column(name = "RG-NR. 10A", length = 10, nullable = false)
+    private String rgNr10A; // @rpg-trace: schema
+
+    @Id
+    @Column(name = "RDAT", length = 8, nullable = false)
+    private String rdat; // @rpg-trace: schema
+
+    @Column(name = "KZ S", length = 1, nullable = false)
+    private String kzS; // @rpg-trace: schema
+
+    @Id
+    @Column(name = "ANR", length = 5, nullable = false)
+    private String anr; // @rpg-trace: schema
+
+    @Id
+    @Column(name = "BEREI", length = 1, nullable = false)
+    private String berei; // @rpg-trace: schema
+
+    @Id
+    @Column(name = "W/T", length = 1, nullable = false)
+    private String wt; // @rpg-trace: schema
+
+    @Id
+    @Column(name = "SPLITT", length = 2, nullable = false)
+    private String splitt; // @rpg-trace: schema
+
+    @Column(name = "ADAT", length = 8, nullable = false)
+    private String adat; // @rpg-trace: schema
+
+    @Column(name = "ATEXT", length = 40, nullable = false)
+    private String atext; // @rpg-trace: schema
+
+    @Column(name = "L.RNR", length = 5, nullable = false)
+    private String lRnr; // @rpg-trace: schema
+
+    @Column(name = "STO-BEZ-RE", length = 5, nullable = false)
+    private String stoBezRe; // @rpg-trace: schema
+
+    @Column(name = "STO-BEZ-REDAT", length = 8, nullable = false)
+    private String stoBezRedat; // @rpg-trace: schema
+
+    @Column(name = "KOR-BEZ-RE", length = 5, nullable = false)
+    private String korBezRe; // @rpg-trace: schema
+
+    @Column(name = "KOR-BEZ-REDAT", length = 8, nullable = false)
+    private String korBezRedat; // @rpg-trace: schema
+
+    @Column(name = "BFORT", length = 1, nullable = false)
+    private String bfort; // @rpg-trace: schema
+
+    @Column(name = "MWST Y/N", length = 1, nullable = false)
+    private String mwstYN; // @rpg-trace: schema
+
+    @Column(name = "MWST %", precision = 5, scale = 2, nullable = false)
+    private BigDecimal mwstPercent; // @rpg-trace: schema
+
+    @Column(name = "MWST % R.", precision = 5, scale = 2, nullable = false)
+    private BigDecimal mwstPercentR; // @rpg-trace: schema
+
+    @Column(name = "BA-SCHLÜSSEL", length = 2, nullable = false)
+    private String baSchluessel; // @rpg-trace: schema
+
+    @Column(name = "KST LOHN", length = 5, nullable = false)
+    private String kstLohn; // @rpg-trace: schema
+
+    @Column(name = "KST TEILE", length = 5, nullable = false)
+    private String kstTeile; // @rpg-trace: schema
+
+    @Column(name = "FIBU MWST", length = 6, nullable = false)
+    private String fibuMwst; // @rpg-trace: schema
+
+    @Column(name = "FIBU MWST AT", length = 6, nullable = false)
+    private String fibuMwstAt; // @rpg-trace: schema
+
+    @Column(name = "FIBU INTERIM", length = 6, nullable = false)
+    private String fibuInterim; // @rpg-trace: schema
+
+    @Column(name = "KTO INTAUF.", length = 6, nullable = false)
+    private String ktoIntauf; // @rpg-trace: schema
+
+    @Column(name = "KTR INT AUF.", length = 7, nullable = false)
+    private String ktrIntAuf; // @rpg-trace: schema
+
+    @Column(name = "KST INT AUF.", length = 5, nullable = false)
+    private String kstIntAuf; // @rpg-trace: schema
+
+    @Column(name = "SPEZ-CODE", length = 10, nullable = false)
+    private String spezCode; // @rpg-trace: schema
+
+    @Column(name = "BRANCH", length = 3, nullable = false)
+    private String branch; // @rpg-trace: schema
+
+    @Column(name = "PROD-CODE", length = 10, nullable = false)
+    private String prodCode; // @rpg-trace: schema
+
+    @Column(name = "PROJEKT", length = 10, nullable = false)
+    private String projekt; // @rpg-trace: schema
+
+    @Column(name = "DOKUMENTENNUMMER", length = 20, nullable = false)
+    private String dokumentennummer; // @rpg-trace: schema
+
+    @Column(name = "KOSTENCODE KONZINT.", length = 3, nullable = false)
+    private String kostencodeKonzint; // @rpg-trace: schema
+
+    @Column(name = "KUNDEN-NR.", length = 6, nullable = false)
+    private String kundenNr; // @rpg-trace: schema
+
+    @Column(name = "ANREDE", length = 1, nullable = false)
+    private String anrede; // @rpg-trace: schema
+
+    @Column(name = "NAME", length = 30, nullable = false)
+    private String name; // @rpg-trace: schema
+
+    @Column(name = "BRANCHE", length = 25, nullable = false)
+    private String branche; // @rpg-trace: schema
+
+    @Column(name = "MATCH", length = 5, nullable = false)
+    private String match; // @rpg-trace: schema
+
+    @Column(name = "STRASSE", length = 25, nullable = false)
+    private String strasse; // @rpg-trace: schema
+
+    @Column(name = "LAND", length = 3, nullable = false)
+    private String land; // @rpg-trace: schema
+
+    @Column(name = "PLZ", length = 5, nullable = false)
+    private String plz; // @rpg-trace: schema
+
+    @Column(name = "ORT", length = 20, nullable = false)
+    private String ort; // @rpg-trace: schema
+
+    @Column(name = "TELEFON", length = 17, nullable = false)
+    private String telefon; // @rpg-trace: schema
+
+    @Column(name = "BESTELLER KUNDE", length = 20, nullable = false)
+    private String bestellerKunde; // @rpg-trace: schema
+
+    @Column(name = "VALUTA", length = 1, nullable = false)
+    private String valuta; // @rpg-trace: schema
+
+    @Column(name = "BONIT#T", length = 1, nullable = false)
+    private String bonitaet; // @rpg-trace: schema
+
+    @Column(name = "ZAHLUNGSART", length = 1, nullable = false)
+    private String zahlungsart; // @rpg-trace: schema
+
+    @Column(name = "RC", length = 3, nullable = false)
+    private String rc; // @rpg-trace: schema
+
+    @Column(name = "RE KUNDEN-NR.", length = 6, nullable = false)
+    private String reKundenNr; // @rpg-trace: schema
+
+    @Column(name = "RE ANREDE", length = 1, nullable = false)
+    private String reAnrede; // @rpg-trace: schema
+
+    @Column(name = "RE NAME", length = 30, nullable = false)
+    private String reName; // @rpg-trace: schema
+
+    @Column(name = "RE BRANCHE", length = 25, nullable = false)
+    private String reBranche; // @rpg-trace: schema
+
+    @Column(name = "RE MATCH", length = 5, nullable = false)
+    private String reMatch; // @rpg-trace: schema
+
+    @Column(name = "RE STRASSE", length = 25, nullable = false)
+    private String reStrasse; // @rpg-trace: schema
+
+    @Column(name = "RE LAND", length = 3, nullable = false)
+    private String reLand; // @rpg-trace: schema
+
+    @Column(name = "RE PLZ", length = 5, nullable = false)
+    private String rePlz; // @rpg-trace: schema
+
+    @Column(name = "RE ORT", length = 20, nullable = false)
+    private String reOrt; // @rpg-trace: schema
+
+    @Column(name = "RE TELE.", length = 17, nullable = false)
+    private String reTele; // @rpg-trace: schema
+
+    @Column(name = "RE VALUTA", length = 1, nullable = false)
+    private String reValuta; // @rpg-trace: schema
+
+    @Column(name = "RE BONIT#T", length = 1, nullable = false)
+    private String reBonitaet; // @rpg-trace: schema
+
+    @Column(name = "RE ZART", length = 1, nullable = false)
+    private String reZart; // @rpg-trace: schema
+
+    @Column(name = "RE RC", length = 3, nullable = false)
+    private String reRc; // @rpg-trace: schema
+
+    @Column(name = "UST-ID-NR/OK", length = 20, nullable = false)
+    private String ustIdNrOk; // @rpg-trace: schema
+
+    @Column(name = "FAHRG.-NR.", length = 17, nullable = false)
+    private String fahrgNr; // @rpg-trace: schema
+
+    @Column(name = "KZ", length = 12, nullable = false)
+    private String kz; // @rpg-trace: schema
+
+    @Column(name = "TYP", length = 15, nullable = false)
+    private String typ; // @rpg-trace: schema
+
+    @Column(name = "BJ", length = 4, nullable = false)
+    private String bj; // @rpg-trace: schema
+
+    @Column(name = "ZDAT", length = 8, nullable = false)
+    private String zdat; // @rpg-trace: schema
+
+    @Column(name = "WRG.", length = 3, nullable = false)
+    private String wrg; // @rpg-trace: schema
+
+    @Column(name = "AU", length = 6, nullable = false)
+    private String au; // @rpg-trace: schema
+
+    @Column(name = "GA", length = 8, nullable = false)
+    private String ga; // @rpg-trace: schema
+
+    @Column(name = "SP", length = 6, nullable = false)
+    private String sp; // @rpg-trace: schema
+
+    @Column(name = "TACHO", length = 8, nullable = false)
+    private String tacho; // @rpg-trace: schema
+
+    @Column(name = "KM", length = 8, nullable = false)
+    private String km; // @rpg-trace: schema
+
+    @Column(name = "HU", length = 6, nullable = false)
+    private String hu; // @rpg-trace: schema
+
+    @Column(name = "AN-TAG", length = 8, nullable = false)
+    private String anTag; // @rpg-trace: schema
+
+    @Column(name = "AN-ZEIT", length = 4, nullable = false)
+    private String anZeit; // @rpg-trace: schema
+
+    @Column(name = "FERT-TAG", length = 8, nullable = false)
+    private String fertTag; // @rpg-trace: schema
+
+    @Column(name = "FERT-ZEIT", length = 4, nullable = false)
+    private String fertZeit; // @rpg-trace: schema
+
+    @Column(name = "BERATER", length = 20, nullable = false)
+    private String berater; // @rpg-trace: schema
+
+    @Column(name = "LEITZAHL", length = 3, nullable = false)
+    private String leitzahl; // @rpg-trace: schema
+
+    @Column(name = "TX.ANF", length = 3, nullable = false)
+    private String txAnf; // @rpg-trace: schema
+
+    @Column(name = "TX.ENDE", length = 3, nullable = false)
+    private String txEnde; // @rpg-trace: schema
+
+    @Column(name = "MOTOR-NR", length = 10, nullable = false)
+    private String motorNr; // @rpg-trace: schema
+
+    @Column(name = "MOTOR-TYP", length = 20, nullable = false)
+    private String motorTyp; // @rpg-trace: schema
+
+    @Column(name = "USER AUFTRAG", length = 10, nullable = false)
+    private String userAuftrag; // @rpg-trace: schema
+
+    @Column(name = "USER RECHNUNG", length = 10, nullable = false)
+    private String userRechnung; // @rpg-trace: schema
+
+    @Column(name = "RGS NETTO", precision = 9, scale = 2, nullable = false)
+    private BigDecimal rgsNetto; // @rpg-trace: schema
+
+    @Column(name = "RGS BASIS AT", precision = 9, scale = 2, nullable = false)
+    private BigDecimal rgsBasisAt; // @rpg-trace: schema
+
+    @Column(name = "RGS BASIS MWST", precision = 9, scale = 2, nullable = false)
+    private BigDecimal rgsBasisMwst; // @rpg-trace: schema
+
+    @Column(name = "RGS MWST", precision = 9, scale = 2, nullable = false)
+    private BigDecimal rgsMwst; // @rpg-trace: schema
+
+    @Column(name = "RGS MWST AT", precision = 9, scale = 2, nullable = false)
+    private BigDecimal rgsMwstAt; // @rpg-trace: schema
+
+    @Column(name = "RGS GES BRUTTO", precision = 9, scale = 2, nullable = false)
+    private BigDecimal rgsGesBrutto; // @rpg-trace: schema
+
+    @Column(name = "EG-UMSATZ", length = 1, nullable = false)
+    private String egUmsatz; // @rpg-trace: schema
+
+    @Column(name = "STEUERFREI DRITTLAND", length = 1, nullable = false)
+    private String steuerfreiDrittland; // @rpg-trace: schema
+
+    @Column(name = "VERBUCHT?", length = 1, nullable = false)
+    private String verbucht; // @rpg-trace: schema
+
+    @Column(name = "RESERVE_1", precision = 5, scale = 2, nullable = false)
+    private BigDecimal reserve1; // @rpg-trace: schema (RESERVE position 1)
+
+    @Column(name = "RESERVE_2", precision = 9, scale = 2, nullable = false)
+    private BigDecimal reserve2; // @rpg-trace: schema (RESERVE position 2)
+
+    @Column(name = "GA-ÜBERN.", length = 8, nullable = false)
+    private String gaUebern; // @rpg-trace: schema
+
+    @Column(name = "WKT-ID", precision = 9, scale = 0, nullable = false)
+    private Integer wktId; // @rpg-trace: schema
+
+    @Column(name = "RESERVE_3", precision = 2, scale = 0, nullable = false)
+    private Integer reserve3; // @rpg-trace: schema (RESERVE position 3)
+
+    @Column(name = "RESERVE_4", precision = 2, scale = 0, nullable = false)
+    private Integer reserve4; // @rpg-trace: schema (RESERVE position 4)
+
+    @Column(name = "F:V>0", precision = 3, scale = 0, nullable = false)
+    private Integer fvGt0; // @rpg-trace: schema
+
+    @Column(name = "F:B>0", precision = 3, scale = 0, nullable = false)
+    private Integer fbGt0; // @rpg-trace: schema
+
+    @Column(name = "KAMPAGNE-NR", precision = 6, scale = 0, nullable = false)
+    private Integer kampagneNr; // @rpg-trace: schema
+
+    @Column(name = "SPO ORDER", length = 10, nullable = false)
+    private String spoOrder; // @rpg-trace: schema
+
+    @Column(name = "KEN-AV", length = 2, nullable = false)
+    private String kenAv; // @rpg-trace: schema
+
+    @Column(name = "KEN-PE", length = 2, nullable = false)
+    private String kenPe; // @rpg-trace: schema
+
+    @Column(name = "KLR-BERECH", length = 1, nullable = false)
+    private String klrBerech; // @rpg-trace: schema
+
+    @Column(name = "KLR-BETRAG", precision = 5, scale = 2, nullable = false)
+    private BigDecimal klrBetrag; // @rpg-trace: schema
+
+    @Column(name = "ASSI-VORGANG-NR", length = 15, nullable = false)
+    private String assiVorgangNr; // @rpg-trace: schema
+
+    @Column(name = "ZAGA-GUELTIG", length = 8, nullable = false)
+    private String zagaGueltig; // @rpg-trace: schema
+
+    @Column(name = "R&W FREIGABE-NR", length = 15, nullable = false)
+    private String rwFreigabeNr; // @rpg-trace: schema
+
+    @Column(name = "KL-ERWEITERUNG", precision = 5, scale = 0, nullable = false)
+    private Integer klErweiterung; // @rpg-trace: schema
+
+    @Column(name = "KL-AUSNAHME IDNR", length = 3, nullable = false)
+    private String klAusnahmeIdnr; // @rpg-trace: schema
+
+    @Column(name = "KL-AUSNAHME KLARTEXT", length = 40, nullable = false)
+    private String klAusnahmeKlartext; // @rpg-trace: schema
+
+    @Column(name = "FAHRZEUG-ART", length = 20, nullable = false)
+    private String fahrzeugArt; // @rpg-trace: schema
+
+    @Column(name = "HERSTELLER", length = 20, nullable = false)
+    private String hersteller; // @rpg-trace: schema
+
+    @Column(name = "AUFBAUART", length = 20, nullable = false)
+    private String aufbauart; // @rpg-trace: schema
+
+    @Column(name = "HERSTELLER AUFBAU", length = 20, nullable = false)
+    private String herstellerAufbau; // @rpg-trace: schema
+
+    @Column(name = "ZUSATZAUSRÜSTUNG 1", length = 20, nullable = false)
+    private String zusatzausruestung1; // @rpg-trace: schema
+
+    @Column(name = "HERSTELLER ZUSATZ 1", length = 20, nullable = false)
+    private String herstellerZusatz1; // @rpg-trace: schema
+
+    @Column(name = "ZUSATZAUSRÜSTUNG 2", length = 20, nullable = false)
+    private String zusatzausruestung2; // @rpg-trace: schema
+
+    @Column(name = "HERSTELLER ZUSATZ 2", length = 20, nullable = false)
+    private String herstellerZusatz2; // @rpg-trace: schema
+
+    @Column(name = "ZUSATZAUSRÜSTUNG 3", length = 20, nullable = false)
+    private String zusatzausruestung3; // @rpg-trace: schema
+
+    @Column(name = "HERSTELLER ZUSATZ 3", length = 20, nullable = false)
+    private String herstellerZusatz3; // @rpg-trace: schema
+
+    @Column(name = "EINSATZART", length = 20, nullable = false)
+    private String einsatzart; // @rpg-trace: schema
+
+    @Column(name = "EURO-NORM", length = 10, nullable = false)
+    private String euroNorm; // @rpg-trace: schema
+
+    @Column(name = "PARTIKELFILTER", length = 1, nullable = false)
+    private String partikelfilter; // @rpg-trace: schema
+
+    @Column(name = "IS-ART", length = 5, nullable = false)
+    private String isArt; // @rpg-trace: schema
+
+    @Column(name = "MAIL TO", length = 200, nullable = false)
+    private String mailTo; // @rpg-trace: schema
+
+    @Column(name = "MAIL CC", length = 200, nullable = false)
+    private String mailCc; // @rpg-trace: schema
 
     // Constructors
     public Invoice() {
     }
 
-    // Getters and Setters (abbreviated for brevity - include all 136 fields)
-    public Long getId() {
-        return id;
+    // Getters and Setters (all 134 fields)
+    public String getPakz() {
+        return pakz;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPakz(String pakz) {
+        this.pakz = pakz;
     }
 
-    public String getCompanyCode() {
-        return companyCode;
+    public String getRnr() {
+        return rnr;
     }
 
-    public void setCompanyCode(String companyCode) {
-        this.companyCode = companyCode;
+    public void setRnr(String rnr) {
+        this.rnr = rnr;
     }
 
-    public String getInvoiceNumber() {
-        return invoiceNumber;
+    public String getRgNr10A() {
+        return rgNr10A;
     }
 
-    public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
+    public void setRgNr10A(String rgNr10A) {
+        this.rgNr10A = rgNr10A;
     }
 
-    public String getInvoiceNumber10() {
-        return invoiceNumber10;
+    public String getRdat() {
+        return rdat;
     }
 
-    public void setInvoiceNumber10(String invoiceNumber10) {
-        this.invoiceNumber10 = invoiceNumber10;
+    public void setRdat(String rdat) {
+        this.rdat = rdat;
     }
 
-    public String getInvoiceDate() {
-        return invoiceDate;
+    public String getKzS() {
+        return kzS;
     }
 
-    public void setInvoiceDate(String invoiceDate) {
-        this.invoiceDate = invoiceDate;
+    public void setKzS(String kzS) {
+        this.kzS = kzS;
     }
 
-    public String getCancellationFlag() {
-        return cancellationFlag;
+    public String getAnr() {
+        return anr;
     }
 
-    public void setCancellationFlag(String cancellationFlag) {
-        this.cancellationFlag = cancellationFlag;
+    public void setAnr(String anr) {
+        this.anr = anr;
     }
 
-    public String getJobNumber() {
-        return jobNumber;
+    public String getBerei() {
+        return berei;
     }
 
-    public void setJobNumber(String jobNumber) {
-        this.jobNumber = jobNumber;
+    public void setBerei(String berei) {
+        this.berei = berei;
     }
 
-    public String getArea() {
-        return area;
+    public String getWt() {
+        return wt;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setWt(String wt) {
+        this.wt = wt;
     }
 
-    public String getWorkshopType() {
-        return workshopType;
+    public String getSplitt() {
+        return splitt;
     }
 
-    public void setWorkshopType(String workshopType) {
-        this.workshopType = workshopType;
+    public void setSplitt(String splitt) {
+        this.splitt = splitt;
     }
 
-    public String getSplit() {
-        return split;
+    public String getAdat() {
+        return adat;
     }
 
-    public void setSplit(String split) {
-        this.split = split;
+    public void setAdat(String adat) {
+        this.adat = adat;
     }
 
-    public String getJobDate() {
-        return jobDate;
+    public String getAtext() {
+        return atext;
     }
 
-    public void setJobDate(String jobDate) {
-        this.jobDate = jobDate;
+    public void setAtext(String atext) {
+        this.atext = atext;
     }
 
-    public String getCustomerNumber() {
-        return customerNumber;
+    public String getlRnr() {
+        return lRnr;
     }
 
-    public void setCustomerNumber(String customerNumber) {
-        this.customerNumber = customerNumber;
+    public void setlRnr(String lRnr) {
+        this.lRnr = lRnr;
+    }
+
+    public String getStoBezRe() {
+        return stoBezRe;
+    }
+
+    public void setStoBezRe(String stoBezRe) {
+        this.stoBezRe = stoBezRe;
+    }
+
+    public String getStoBezRedat() {
+        return stoBezRedat;
+    }
+
+    public void setStoBezRedat(String stoBezRedat) {
+        this.stoBezRedat = stoBezRedat;
+    }
+
+    public String getKorBezRe() {
+        return korBezRe;
+    }
+
+    public void setKorBezRe(String korBezRe) {
+        this.korBezRe = korBezRe;
+    }
+
+    public String getKorBezRedat() {
+        return korBezRedat;
+    }
+
+    public void setKorBezRedat(String korBezRedat) {
+        this.korBezRedat = korBezRedat;
+    }
+
+    public String getBfort() {
+        return bfort;
+    }
+
+    public void setBfort(String bfort) {
+        this.bfort = bfort;
+    }
+
+    public String getMwstYN() {
+        return mwstYN;
+    }
+
+    public void setMwstYN(String mwstYN) {
+        this.mwstYN = mwstYN;
+    }
+
+    public BigDecimal getMwstPercent() {
+        return mwstPercent;
+    }
+
+    public void setMwstPercent(BigDecimal mwstPercent) {
+        this.mwstPercent = mwstPercent;
+    }
+
+    public BigDecimal getMwstPercentR() {
+        return mwstPercentR;
+    }
+
+    public void setMwstPercentR(BigDecimal mwstPercentR) {
+        this.mwstPercentR = mwstPercentR;
+    }
+
+    public String getBaSchluessel() {
+        return baSchluessel;
+    }
+
+    public void setBaSchluessel(String baSchluessel) {
+        this.baSchluessel = baSchluessel;
+    }
+
+    public String getKstLohn() {
+        return kstLohn;
+    }
+
+    public void setKstLohn(String kstLohn) {
+        this.kstLohn = kstLohn;
+    }
+
+    public String getKstTeile() {
+        return kstTeile;
+    }
+
+    public void setKstTeile(String kstTeile) {
+        this.kstTeile = kstTeile;
+    }
+
+    public String getFibuMwst() {
+        return fibuMwst;
+    }
+
+    public void setFibuMwst(String fibuMwst) {
+        this.fibuMwst = fibuMwst;
+    }
+
+    public String getFibuMwstAt() {
+        return fibuMwstAt;
+    }
+
+    public void setFibuMwstAt(String fibuMwstAt) {
+        this.fibuMwstAt = fibuMwstAt;
+    }
+
+    public String getFibuInterim() {
+        return fibuInterim;
+    }
+
+    public void setFibuInterim(String fibuInterim) {
+        this.fibuInterim = fibuInterim;
+    }
+
+    public String getKtoIntauf() {
+        return ktoIntauf;
+    }
+
+    public void setKtoIntauf(String ktoIntauf) {
+        this.ktoIntauf = ktoIntauf;
+    }
+
+    public String getKtrIntAuf() {
+        return ktrIntAuf;
+    }
+
+    public void setKtrIntAuf(String ktrIntAuf) {
+        this.ktrIntAuf = ktrIntAuf;
+    }
+
+    public String getKstIntAuf() {
+        return kstIntAuf;
+    }
+
+    public void setKstIntAuf(String kstIntAuf) {
+        this.kstIntAuf = kstIntAuf;
+    }
+
+    public String getSpezCode() {
+        return spezCode;
+    }
+
+    public void setSpezCode(String spezCode) {
+        this.spezCode = spezCode;
+    }
+
+    public String getBranch() {
+        return branch;
+    }
+
+    public void setBranch(String branch) {
+        this.branch = branch;
+    }
+
+    public String getProdCode() {
+        return prodCode;
+    }
+
+    public void setProdCode(String prodCode) {
+        this.prodCode = prodCode;
+    }
+
+    public String getProjekt() {
+        return projekt;
+    }
+
+    public void setProjekt(String projekt) {
+        this.projekt = projekt;
+    }
+
+    public String getDokumentennummer() {
+        return dokumentennummer;
+    }
+
+    public void setDokumentennummer(String dokumentennummer) {
+        this.dokumentennummer = dokumentennummer;
+    }
+
+    public String getKostencodeKonzint() {
+        return kostencodeKonzint;
+    }
+
+    public void setKostencodeKonzint(String kostencodeKonzint) {
+        this.kostencodeKonzint = kostencodeKonzint;
+    }
+
+    public String getKundenNr() {
+        return kundenNr;
+    }
+
+    public void setKundenNr(String kundenNr) {
+        this.kundenNr = kundenNr;
+    }
+
+    public String getAnrede() {
+        return anrede;
+    }
+
+    public void setAnrede(String anrede) {
+        this.anrede = anrede;
     }
 
     public String getName() {
@@ -522,46 +735,892 @@ public class Invoice {
         this.name = name;
     }
 
-    public String getVehicleNumber() {
-        return vehicleNumber;
+    public String getBranche() {
+        return branche;
     }
 
-    public void setVehicleNumber(String vehicleNumber) {
-        this.vehicleNumber = vehicleNumber;
+    public void setBranche(String branche) {
+        this.branche = branche;
     }
 
-    public String getLicensePlate() {
-        return licensePlate;
+    public String getMatch() {
+        return match;
     }
 
-    public void setLicensePlate(String licensePlate) {
-        this.licensePlate = licensePlate;
+    public void setMatch(String match) {
+        this.match = match;
     }
 
-    public String getRegistrationDate() {
-        return registrationDate;
+    public String getStrasse() {
+        return strasse;
     }
 
-    public void setRegistrationDate(String registrationDate) {
-        this.registrationDate = registrationDate;
+    public void setStrasse(String strasse) {
+        this.strasse = strasse;
     }
 
-    public String getKilometers() {
-        return kilometers;
+    public String getLand() {
+        return land;
     }
 
-    public void setKilometers(String kilometers) {
-        this.kilometers = kilometers;
+    public void setLand(String land) {
+        this.land = land;
     }
 
-    public String getAcceptanceDate() {
-        return acceptanceDate;
+    public String getPlz() {
+        return plz;
+    }
+
+    public void setPlz(String plz) {
+        this.plz = plz;
+    }
+
+    public String getOrt() {
+        return ort;
+    }
+
+    public void setOrt(String ort) {
+        this.ort = ort;
+    }
+
+    public String getTelefon() {
+        return telefon;
+    }
+
+    public void setTelefon(String telefon) {
+        this.telefon = telefon;
+    }
+
+    public String getBestellerKunde() {
+        return bestellerKunde;
+    }
+
+    public void setBestellerKunde(String bestellerKunde) {
+        this.bestellerKunde = bestellerKunde;
+    }
+
+    public String getValuta() {
+        return valuta;
+    }
+
+    public void setValuta(String valuta) {
+        this.valuta = valuta;
+    }
+
+    public String getBonitaet() {
+        return bonitaet;
+    }
+
+    public void setBonitaet(String bonitaet) {
+        this.bonitaet = bonitaet;
+    }
+
+    public String getZahlungsart() {
+        return zahlungsart;
+    }
+
+    public void setZahlungsart(String zahlungsart) {
+        this.zahlungsart = zahlungsart;
+    }
+
+    public String getRc() {
+        return rc;
+    }
+
+    public void setRc(String rc) {
+        this.rc = rc;
+    }
+
+    public String getReKundenNr() {
+        return reKundenNr;
+    }
+
+    public void setReKundenNr(String reKundenNr) {
+        this.reKundenNr = reKundenNr;
+    }
+
+    public String getReAnrede() {
+        return reAnrede;
+    }
+
+    public void setReAnrede(String reAnrede) {
+        this.reAnrede = reAnrede;
+    }
+
+    public String getReName() {
+        return reName;
+    }
+
+    public void setReName(String reName) {
+        this.reName = reName;
+    }
+
+    public String getReBranche() {
+        return reBranche;
+    }
+
+    public void setReBranche(String reBranche) {
+        this.reBranche = reBranche;
+    }
+
+    public String getReMatch() {
+        return reMatch;
+    }
+
+    public void setReMatch(String reMatch) {
+        this.reMatch = reMatch;
+    }
+
+    public String getReStrasse() {
+        return reStrasse;
+    }
+
+    public void setReStrasse(String reStrasse) {
+        this.reStrasse = reStrasse;
+    }
+
+    public String getReLand() {
+        return reLand;
+    }
+
+    public void setReLand(String reLand) {
+        this.reLand = reLand;
+    }
+
+    public String getRePlz() {
+        return rePlz;
+    }
+
+    public void setRePlz(String rePlz) {
+        this.rePlz = rePlz;
+    }
+
+    public String getReOrt() {
+        return reOrt;
+    }
+
+    public void setReOrt(String reOrt) {
+        this.reOrt = reOrt;
+    }
+
+    public String getReTele() {
+        return reTele;
+    }
+
+    public void setReTele(String reTele) {
+        this.reTele = reTele;
+    }
+
+    public String getReValuta() {
+        return reValuta;
+    }
+
+    public void setReValuta(String reValuta) {
+        this.reValuta = reValuta;
+    }
+
+    public String getReBonitaet() {
+        return reBonitaet;
+    }
+
+    public void setReBonitaet(String reBonitaet) {
+        this.reBonitaet = reBonitaet;
+    }
+
+    public String getReZart() {
+        return reZart;
+    }
+
+    public void setReZart(String reZart) {
+        this.reZart = reZart;
+    }
+
+    public String getReRc() {
+        return reRc;
+    }
+
+    public void setReRc(String reRc) {
+        this.reRc = reRc;
+    }
+
+    public String getUstIdNrOk() {
+        return ustIdNrOk;
+    }
+
+    public void setUstIdNrOk(String ustIdNrOk) {
+        this.ustIdNrOk = ustIdNrOk;
+    }
+
+    public String getFahrgNr() {
+        return fahrgNr;
+    }
+
+    public void setFahrgNr(String fahrgNr) {
+        this.fahrgNr = fahrgNr;
+    }
+
+    public String getKz() {
+        return kz;
+    }
+
+    public void setKz(String kz) {
+        this.kz = kz;
+    }
+
+    public String getTyp() {
+        return typ;
+    }
+
+    public void setTyp(String typ) {
+        this.typ = typ;
+    }
+
+    public String getBj() {
+        return bj;
+    }
+
+    public void setBj(String bj) {
+        this.bj = bj;
+    }
+
+    public String getZdat() {
+        return zdat;
+    }
+
+    public void setZdat(String zdat) {
+        this.zdat = zdat;
+    }
+
+    public String getWrg() {
+        return wrg;
+    }
+
+    public void setWrg(String wrg) {
+        this.wrg = wrg;
+    }
+
+    public String getAu() {
+        return au;
+    }
+
+    public void setAu(String au) {
+        this.au = au;
+    }
+
+    public String getGa() {
+        return ga;
+    }
+
+    public void setGa(String ga) {
+        this.ga = ga;
+    }
+
+    public String getSp() {
+        return sp;
+    }
+
+    public void setSp(String sp) {
+        this.sp = sp;
+    }
+
+    public String getTacho() {
+        return tacho;
+    }
+
+    public void setTacho(String tacho) {
+        this.tacho = tacho;
+    }
+
+    public String getKm() {
+        return km;
+    }
+
+    public void setKm(String km) {
+        this.km = km;
+    }
+
+    public String getHu() {
+        return hu;
+    }
+
+    public void setHu(String hu) {
+        this.hu = hu;
+    }
+
+    public String getAnTag() {
+        return anTag;
+    }
+
+    public void setAnTag(String anTag) {
+        this.anTag = anTag;
+    }
+
+    public String getAnZeit() {
+        return anZeit;
+    }
+
+    public void setAnZeit(String anZeit) {
+        this.anZeit = anZeit;
+    }
+
+    public String getFertTag() {
+        return fertTag;
+    }
+
+    public void setFertTag(String fertTag) {
+        this.fertTag = fertTag;
+    }
+
+    public String getFertZeit() {
+        return fertZeit;
+    }
+
+    public void setFertZeit(String fertZeit) {
+        this.fertZeit = fertZeit;
+    }
+
+    public String getBerater() {
+        return berater;
+    }
+
+    public void setBerater(String berater) {
+        this.berater = berater;
+    }
+
+    public String getLeitzahl() {
+        return leitzahl;
+    }
+
+    public void setLeitzahl(String leitzahl) {
+        this.leitzahl = leitzahl;
+    }
+
+    public String getTxAnf() {
+        return txAnf;
+    }
+
+    public void setTxAnf(String txAnf) {
+        this.txAnf = txAnf;
+    }
+
+    public String getTxEnde() {
+        return txEnde;
+    }
+
+    public void setTxEnde(String txEnde) {
+        this.txEnde = txEnde;
+    }
+
+    public String getMotorNr() {
+        return motorNr;
+    }
+
+    public void setMotorNr(String motorNr) {
+        this.motorNr = motorNr;
+    }
+
+    public String getMotorTyp() {
+        return motorTyp;
+    }
+
+    public void setMotorTyp(String motorTyp) {
+        this.motorTyp = motorTyp;
+    }
+
+    public String getUserAuftrag() {
+        return userAuftrag;
+    }
+
+    public void setUserAuftrag(String userAuftrag) {
+        this.userAuftrag = userAuftrag;
+    }
+
+    public String getUserRechnung() {
+        return userRechnung;
+    }
+
+    public void setUserRechnung(String userRechnung) {
+        this.userRechnung = userRechnung;
+    }
+
+    public BigDecimal getRgsNetto() {
+        return rgsNetto;
+    }
+
+    public void setRgsNetto(BigDecimal rgsNetto) {
+        this.rgsNetto = rgsNetto;
+    }
+
+    public BigDecimal getRgsBasisAt() {
+        return rgsBasisAt;
+    }
+
+    public void setRgsBasisAt(BigDecimal rgsBasisAt) {
+        this.rgsBasisAt = rgsBasisAt;
+    }
+
+    public BigDecimal getRgsBasisMwst() {
+        return rgsBasisMwst;
+    }
+
+    public void setRgsBasisMwst(BigDecimal rgsBasisMwst) {
+        this.rgsBasisMwst = rgsBasisMwst;
+    }
+
+    public BigDecimal getRgsMwst() {
+        return rgsMwst;
+    }
+
+    public void setRgsMwst(BigDecimal rgsMwst) {
+        this.rgsMwst = rgsMwst;
+    }
+
+    public BigDecimal getRgsMwstAt() {
+        return rgsMwstAt;
+    }
+
+    public void setRgsMwstAt(BigDecimal rgsMwstAt) {
+        this.rgsMwstAt = rgsMwstAt;
+    }
+
+    public BigDecimal getRgsGesBrutto() {
+        return rgsGesBrutto;
+    }
+
+    public void setRgsGesBrutto(BigDecimal rgsGesBrutto) {
+        this.rgsGesBrutto = rgsGesBrutto;
+    }
+
+    public String getEgUmsatz() {
+        return egUmsatz;
+    }
+
+    public void setEgUmsatz(String egUmsatz) {
+        this.egUmsatz = egUmsatz;
+    }
+
+    public String getSteuerfreiDrittland() {
+        return steuerfreiDrittland;
+    }
+
+    public void setSteuerfreiDrittland(String steuerfreiDrittland) {
+        this.steuerfreiDrittland = steuerfreiDrittland;
+    }
+
+    public String getVerbucht() {
+        return verbucht;
+    }
+
+    public void setVerbucht(String verbucht) {
+        this.verbucht = verbucht;
+    }
+
+    public BigDecimal getReserve1() {
+        return reserve1;
+    }
+
+    public void setReserve1(BigDecimal reserve1) {
+        this.reserve1 = reserve1;
+    }
+
+    public BigDecimal getReserve2() {
+        return reserve2;
+    }
+
+    public void setReserve2(BigDecimal reserve2) {
+        this.reserve2 = reserve2;
+    }
+
+    public String getGaUebern() {
+        return gaUebern;
+    }
+
+    public void setGaUebern(String gaUebern) {
+        this.gaUebern = gaUebern;
+    }
+
+    public Integer getWktId() {
+        return wktId;
+    }
+
+    public void setWktId(Integer wktId) {
+        this.wktId = wktId;
+    }
+
+    public Integer getReserve3() {
+        return reserve3;
+    }
+
+    public void setReserve3(Integer reserve3) {
+        this.reserve3 = reserve3;
+    }
+
+    public Integer getReserve4() {
+        return reserve4;
+    }
+
+    public void setReserve4(Integer reserve4) {
+        this.reserve4 = reserve4;
+    }
+
+    public Integer getFvGt0() {
+        return fvGt0;
+    }
+
+    public void setFvGt0(Integer fvGt0) {
+        this.fvGt0 = fvGt0;
+    }
+
+    public Integer getFbGt0() {
+        return fbGt0;
+    }
+
+    public void setFbGt0(Integer fbGt0) {
+        this.fbGt0 = fbGt0;
+    }
+
+    public Integer getKampagneNr() {
+        return kampagneNr;
+    }
+
+    public void setKampagneNr(Integer kampagneNr) {
+        this.kampagneNr = kampagneNr;
+    }
+
+    public String getSpoOrder() {
+        return spoOrder;
+    }
+
+    public void setSpoOrder(String spoOrder) {
+        this.spoOrder = spoOrder;
+    }
+
+    public String getKenAv() {
+        return kenAv;
+    }
+
+    public void setKenAv(String kenAv) {
+        this.kenAv = kenAv;
+    }
+
+    public String getKenPe() {
+        return kenPe;
+    }
+
+    public void setKenPe(String kenPe) {
+        this.kenPe = kenPe;
+    }
+
+    public String getKlrBerech() {
+        return klrBerech;
+    }
+
+    public void setKlrBerech(String klrBerech) {
+        this.klrBerech = klrBerech;
+    }
+
+    public BigDecimal getKlrBetrag() {
+        return klrBetrag;
+    }
+
+    public void setKlrBetrag(BigDecimal klrBetrag) {
+        this.klrBetrag = klrBetrag;
+    }
+
+    public String getAssiVorgangNr() {
+        return assiVorgangNr;
+    }
+
+    public void setAssiVorgangNr(String assiVorgangNr) {
+        this.assiVorgangNr = assiVorgangNr;
+    }
+
+    public String getZagaGueltig() {
+        return zagaGueltig;
+    }
+
+    public void setZagaGueltig(String zagaGueltig) {
+        this.zagaGueltig = zagaGueltig;
+    }
+
+    public String getRwFreigabeNr() {
+        return rwFreigabeNr;
+    }
+
+    public void setRwFreigabeNr(String rwFreigabeNr) {
+        this.rwFreigabeNr = rwFreigabeNr;
+    }
+
+    public Integer getKlErweiterung() {
+        return klErweiterung;
+    }
+
+    public void setKlErweiterung(Integer klErweiterung) {
+        this.klErweiterung = klErweiterung;
+    }
+
+    public String getKlAusnahmeIdnr() {
+        return klAusnahmeIdnr;
+    }
+
+    public void setKlAusnahmeIdnr(String klAusnahmeIdnr) {
+        this.klAusnahmeIdnr = klAusnahmeIdnr;
+    }
+
+    public String getKlAusnahmeKlartext() {
+        return klAusnahmeKlartext;
+    }
+
+    public void setKlAusnahmeKlartext(String klAusnahmeKlartext) {
+        this.klAusnahmeKlartext = klAusnahmeKlartext;
+    }
+
+    public String getFahrzeugArt() {
+        return fahrzeugArt;
+    }
+
+    public void setFahrzeugArt(String fahrzeugArt) {
+        this.fahrzeugArt = fahrzeugArt;
+    }
+
+    public String getHersteller() {
+        return hersteller;
+    }
+
+    public void setHersteller(String hersteller) {
+        this.hersteller = hersteller;
+    }
+
+    public String getAufbauart() {
+        return aufbauart;
+    }
+
+    public void setAufbauart(String aufbauart) {
+        this.aufbauart = aufbauart;
+    }
+
+    public String getHerstellerAufbau() {
+        return herstellerAufbau;
+    }
+
+    public void setHerstellerAufbau(String herstellerAufbau) {
+        this.herstellerAufbau = herstellerAufbau;
+    }
+
+    public String getZusatzausruestung1() {
+        return zusatzausruestung1;
+    }
+
+    public void setZusatzausruestung1(String zusatzausruestung1) {
+        this.zusatzausruestung1 = zusatzausruestung1;
+    }
+
+    public String getHerstellerZusatz1() {
+        return herstellerZusatz1;
+    }
+
+    public void setHerstellerZusatz1(String herstellerZusatz1) {
+        this.herstellerZusatz1 = herstellerZusatz1;
+    }
+
+    public String getZusatzausruestung2() {
+        return zusatzausruestung2;
+    }
+
+    public void setZusatzausruestung2(String zusatzausruestung2) {
+        this.zusatzausruestung2 = zusatzausruestung2;
+    }
+
+    public String getHerstellerZusatz2() {
+        return herstellerZusatz2;
+    }
+
+    public void setHerstellerZusatz2(String herstellerZusatz2) {
+        this.herstellerZusatz2 = herstellerZusatz2;
+    }
+
+    public String getZusatzausruestung3() {
+        return zusatzausruestung3;
+    }
+
+    public void setZusatzausruestung3(String zusatzausruestung3) {
+        this.zusatzausruestung3 = zusatzausruestung3;
+    }
+
+    public String getHerstellerZusatz3() {
+        return herstellerZusatz3;
+    }
+
+    public void setHerstellerZusatz3(String herstellerZusatz3) {
+        this.herstellerZusatz3 = herstellerZusatz3;
+    }
+
+    public String getEinsatzart() {
+        return einsatzart;
+    }
+
+    public void setEinsatzart(String einsatzart) {
+        this.einsatzart = einsatzart;
+    }
+
+    public String getEuroNorm() {
+        return euroNorm;
+    }
+
+    public void setEuroNorm(String euroNorm) {
+        this.euroNorm = euroNorm;
+    }
+
+    public String getPartikelfilter() {
+        return partikelfilter;
+    }
+
+    public void setPartikelfilter(String partikelfilter) {
+        this.partikelfilter = partikelfilter;
+    }
+
+    public String getIsArt() {
+        return isArt;
+    }
+
+    public void setIsArt(String isArt) {
+        this.isArt = isArt;
+    }
+
+    public String getMailTo() {
+        return mailTo;
+    }
+
+    public void setMailTo(String mailTo) {
+        this.mailTo = mailTo;
+    }
+
+    public String getMailCc() {
+        return mailCc;
+    }
+
+    public void setMailCc(String mailCc) {
+        this.mailCc = mailCc;
+    }
+
+    // Convenience methods for DataInitializer
+    public void setCompanyCode(String companyCode) {
+        this.pakz = companyCode;
+    }
+
+    public String getCompanyCode() {
+        return pakz;
+    }
+
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.rnr = invoiceNumber;
+    }
+
+    public String getInvoiceNumber() {
+        return rnr;
+    }
+
+    public void setInvoiceDate(String invoiceDate) {
+        this.rdat = invoiceDate;
+    }
+
+    public String getInvoiceDate() {
+        return rdat;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.anr = orderNumber;
+    }
+
+    public String getOrderNumber() {
+        return anr;
+    }
+
+    public void setWorkshopType(String workshopType) {
+        this.wt = workshopType;
+    }
+
+    public String getWorkshopType() {
+        return wt;
+    }
+
+    public void setArea(String area) {
+        this.berei = area;
+    }
+
+    public String getArea() {
+        return berei;
+    }
+
+    public void setSplit(String split) {
+        this.splitt = split;
+    }
+
+    public String getSplit() {
+        return splitt;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.adat = orderDate;
+    }
+
+    public String getOrderDate() {
+        return adat;
     }
 
     public void setAcceptanceDate(String acceptanceDate) {
-        this.acceptanceDate = acceptanceDate;
+        this.ga = acceptanceDate;
     }
 
-    // Additional getters/setters for remaining fields omitted for brevity
-    // In production code, include all getters/setters for all 136 fields
+    public String getAcceptanceDate() {
+        return ga;
+    }
+
+    public void setVehicleNumber(String vehicleNumber) {
+        this.fahrgNr = vehicleNumber;
+    }
+
+    public String getVehicleNumber() {
+        return fahrgNr;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.kz = licensePlate;
+    }
+
+    public String getLicensePlate() {
+        return kz;
+    }
+
+    public void setRegistrationDate(String registrationDate) {
+        this.zdat = registrationDate;
+    }
+
+    public String getRegistrationDate() {
+        return zdat;
+    }
+
+    public void setCustomerNumber(String customerNumber) {
+        this.kundenNr = customerNumber;
+    }
+
+    public String getCustomerNumber() {
+        return kundenNr;
+    }
+
+    public void setMileage(String mileage) {
+        this.km = mileage;
+    }
+
+    public String getMileage() {
+        return km;
+    }
+
+    public void setCompletionDate(String completionDate) {
+        this.fertTag = completionDate;
+    }
+
+    public String getCompletionDate() {
+        return fertTag;
+    }
 }

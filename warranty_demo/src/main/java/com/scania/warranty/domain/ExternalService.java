@@ -1,323 +1,325 @@
+/**
+ * Domain entity or value object for the warranty claims model.
+ * <p>
+ * Generated from RPG: unit {@code HS1210}, node {@code n404}.
+ */
+
 package com.scania.warranty.domain;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * JPA entity for external service records (HSFLALF1).
+ */
 @Entity
 @Table(name = "HSFLALF1")
+@IdClass(ExternalServiceId.class)
 public class ExternalService {
-    
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @Column(name = "PKZ", length = 3)
-    private String companyCode;
-    
-    @Column(name = "BES-DAT", length = 8)
-    private String orderDate;
-    
-    @Column(name = "BES-NR", length = 5)
-    private String orderNumber;
-    
-    @Column(name = "LNR-FL", precision = 3, scale = 0)
-    private Integer lineNumberExternal;
-    
-    @Column(name = "KEN-FL", length = 8)
-    private String externalServiceId;
-    
-    @Column(name = "LNR", precision = 3, scale = 0)
-    private Integer lineNumber;
-    
-    @Column(name = "BESCHREIBUNG", length = 40)
-    private String description;
-    
-    @Column(name = "TEXTZEILEN", precision = 3, scale = 0)
-    private Integer textLines;
-    
-    @Column(name = "EK-PREIS", precision = 7, scale = 2)
-    private BigDecimal purchasePrice;
-    
-    @Column(name = "MENGE", precision = 5, scale = 0)
-    private Integer quantity;
-    
-    @Column(name = "EK-RENR", length = 10)
-    private String purchaseInvoiceNumber;
-    
-    @Column(name = "EK-REDAT", length = 8)
-    private String purchaseInvoiceDate;
-    
-    @Column(name = "EK BEMERKUNGEN 1", length = 60)
-    private String purchaseRemarks1;
-    
-    @Column(name = "EK BEMERKUNGEN 2", length = 60)
-    private String purchaseRemarks2;
-    
-    @Column(name = "EK-WERT", precision = 9, scale = 2)
-    private BigDecimal purchaseValue;
-    
-    @Column(name = "ZUS %", length = 3)
-    private String surchargePercent;
-    
-    @Column(name = "VK-WERT", precision = 9, scale = 2)
-    private BigDecimal salesValue;
-    
-    @Column(name = "AUFNR", length = 5)
-    private String jobNumber;
-    
-    @Column(name = "BEREI", length = 1)
-    private String area;
-    
-    @Column(name = "WT", length = 1)
-    private String workshopType;
-    
-    @Column(name = "SPL", length = 2)
-    private String split;
-    
-    @Column(name = "AUFDAT", length = 8)
-    private String jobDate;
-    
-    @Column(name = "POS.", precision = 3, scale = 0)
-    private Integer position;
-    
-    @Column(name = "ERL-GRP", length = 2)
-    private String revenueGroup;
-    
-    @Column(name = "RECNR", length = 5)
-    private String invoiceNumber;
-    
-    @Column(name = "RECDAT", length = 8)
-    private String invoiceDate;
-    
-    @Column(name = "STATUS", length = 1)
-    private String status;
-    
-    @Column(name = "SDPS JOB UUID", length = 40)
-    private String sdpsJobUuid;
-    
-    @Column(name = "SDPS FLA UUID", length = 40)
-    private String sdpsFlaUuid;
+    @Column(name = "PKZ", length = 3, nullable = false)
+    private String pkz; // @rpg-trace: schema
+
+    @Id
+    @Column(name = "BES-DAT", length = 8, nullable = false)
+    private String besDate; // @rpg-trace: schema
+
+    @Id
+    @Column(name = "BES-NR", length = 5, nullable = false)
+    private String besNr; // @rpg-trace: schema
+
+    @Id
+    @Column(name = "LNR-FL", precision = 3, scale = 0, nullable = false)
+    private Integer lnrFl; // @rpg-trace: schema
+
+    @Column(name = "KEN-FL", length = 8, nullable = false)
+    private String kenFl; // @rpg-trace: schema
+
+    @Column(name = "LNR", precision = 3, scale = 0, nullable = false)
+    private Integer lnr; // @rpg-trace: schema
+
+    @Column(name = "BESCHREIBUNG", length = 40, nullable = false)
+    private String beschreibung; // @rpg-trace: schema
+
+    @Column(name = "TEXTZEILEN", precision = 3, scale = 0, nullable = false)
+    private Integer textzeilen; // @rpg-trace: schema
+
+    @Column(name = "EK-PREIS", precision = 7, scale = 2, nullable = false)
+    private BigDecimal ekPreis; // @rpg-trace: schema
+
+    @Column(name = "MENGE", precision = 5, scale = 0, nullable = false)
+    private Integer menge; // @rpg-trace: schema
+
+    @Column(name = "EK-RENR", length = 10, nullable = false)
+    private String ekRenr; // @rpg-trace: schema
+
+    @Column(name = "EK-REDAT", length = 8, nullable = false)
+    private String ekRedat; // @rpg-trace: schema
+
+    @Column(name = "EK BEMERKUNGEN 1", length = 60, nullable = false)
+    private String ekBemerkungen1; // @rpg-trace: schema
+
+    @Column(name = "EK BEMERKUNGEN 2", length = 60, nullable = false)
+    private String ekBemerkungen2; // @rpg-trace: schema
+
+    @Column(name = "EK-WERT", precision = 9, scale = 2, nullable = false)
+    private BigDecimal ekWert; // @rpg-trace: schema
+
+    @Column(name = "ZUS %", length = 3, nullable = false)
+    private String zusPercent; // @rpg-trace: schema
+
+    @Column(name = "VK-WERT", precision = 9, scale = 2, nullable = false)
+    private BigDecimal vkWert; // @rpg-trace: schema
+
+    @Column(name = "AUFNR", length = 5, nullable = false)
+    private String aufnr; // @rpg-trace: schema
+
+    @Column(name = "BEREI", length = 1, nullable = false)
+    private String berei; // @rpg-trace: schema
+
+    @Column(name = "WT", length = 1, nullable = false)
+    private String wt; // @rpg-trace: schema
+
+    @Column(name = "SPL", length = 2, nullable = false)
+    private String spl; // @rpg-trace: schema
+
+    @Column(name = "AUFDAT", length = 8, nullable = false)
+    private String aufdat; // @rpg-trace: schema
+
+    @Column(name = "POS.", precision = 3, scale = 0, nullable = false)
+    private Integer pos; // @rpg-trace: schema
+
+    @Column(name = "ERL-GRP", length = 2, nullable = false)
+    private String erlGrp; // @rpg-trace: schema
+
+    @Column(name = "RECNR", length = 5, nullable = false)
+    private String recnr; // @rpg-trace: schema
+
+    @Column(name = "RECDAT", length = 8, nullable = false)
+    private String recdat; // @rpg-trace: schema
+
+    @Column(name = "STATUS", length = 1, nullable = false)
+    private String status; // @rpg-trace: schema
+
+    @Column(name = "SDPS JOB UUID", length = 40, nullable = false)
+    private String sdpsJobUuid; // @rpg-trace: schema
+
+    @Column(name = "SDPS FLA UUID", length = 40, nullable = false)
+    private String sdpsFlaUuid; // @rpg-trace: schema
 
     // Constructors
     public ExternalService() {
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public String getPkz() {
+        return pkz;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPkz(String pkz) {
+        this.pkz = pkz;
     }
 
-    public String getCompanyCode() {
-        return companyCode;
+    public String getBesDate() {
+        return besDate;
     }
 
-    public void setCompanyCode(String companyCode) {
-        this.companyCode = companyCode;
+    public void setBesDate(String besDate) {
+        this.besDate = besDate;
     }
 
-    public String getOrderDate() {
-        return orderDate;
+    public String getBesNr() {
+        return besNr;
     }
 
-    public void setOrderDate(String orderDate) {
-        this.orderDate = orderDate;
+    public void setBesNr(String besNr) {
+        this.besNr = besNr;
     }
 
-    public String getOrderNumber() {
-        return orderNumber;
+    public Integer getLnrFl() {
+        return lnrFl;
     }
 
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
+    public void setLnrFl(Integer lnrFl) {
+        this.lnrFl = lnrFl;
     }
 
-    public Integer getLineNumberExternal() {
-        return lineNumberExternal;
+    public String getKenFl() {
+        return kenFl;
     }
 
-    public void setLineNumberExternal(Integer lineNumberExternal) {
-        this.lineNumberExternal = lineNumberExternal;
+    public void setKenFl(String kenFl) {
+        this.kenFl = kenFl;
     }
 
-    public String getExternalServiceId() {
-        return externalServiceId;
+    public Integer getLnr() {
+        return lnr;
     }
 
-    public void setExternalServiceId(String externalServiceId) {
-        this.externalServiceId = externalServiceId;
+    public void setLnr(Integer lnr) {
+        this.lnr = lnr;
     }
 
-    public Integer getLineNumber() {
-        return lineNumber;
+    public String getBeschreibung() {
+        return beschreibung;
     }
 
-    public void setLineNumber(Integer lineNumber) {
-        this.lineNumber = lineNumber;
+    public void setBeschreibung(String beschreibung) {
+        this.beschreibung = beschreibung;
     }
 
-    public String getDescription() {
-        return description;
+    public Integer getTextzeilen() {
+        return textzeilen;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTextzeilen(Integer textzeilen) {
+        this.textzeilen = textzeilen;
     }
 
-    public Integer getTextLines() {
-        return textLines;
+    public BigDecimal getEkPreis() {
+        return ekPreis;
     }
 
-    public void setTextLines(Integer textLines) {
-        this.textLines = textLines;
+    public void setEkPreis(BigDecimal ekPreis) {
+        this.ekPreis = ekPreis;
     }
 
-    public BigDecimal getPurchasePrice() {
-        return purchasePrice;
+    public Integer getMenge() {
+        return menge;
     }
 
-    public void setPurchasePrice(BigDecimal purchasePrice) {
-        this.purchasePrice = purchasePrice;
+    public void setMenge(Integer menge) {
+        this.menge = menge;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public String getEkRenr() {
+        return ekRenr;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setEkRenr(String ekRenr) {
+        this.ekRenr = ekRenr;
     }
 
-    public String getPurchaseInvoiceNumber() {
-        return purchaseInvoiceNumber;
+    public String getEkRedat() {
+        return ekRedat;
     }
 
-    public void setPurchaseInvoiceNumber(String purchaseInvoiceNumber) {
-        this.purchaseInvoiceNumber = purchaseInvoiceNumber;
+    public void setEkRedat(String ekRedat) {
+        this.ekRedat = ekRedat;
     }
 
-    public String getPurchaseInvoiceDate() {
-        return purchaseInvoiceDate;
+    public String getEkBemerkungen1() {
+        return ekBemerkungen1;
     }
 
-    public void setPurchaseInvoiceDate(String purchaseInvoiceDate) {
-        this.purchaseInvoiceDate = purchaseInvoiceDate;
+    public void setEkBemerkungen1(String ekBemerkungen1) {
+        this.ekBemerkungen1 = ekBemerkungen1;
     }
 
-    public String getPurchaseRemarks1() {
-        return purchaseRemarks1;
+    public String getEkBemerkungen2() {
+        return ekBemerkungen2;
     }
 
-    public void setPurchaseRemarks1(String purchaseRemarks1) {
-        this.purchaseRemarks1 = purchaseRemarks1;
+    public void setEkBemerkungen2(String ekBemerkungen2) {
+        this.ekBemerkungen2 = ekBemerkungen2;
     }
 
-    public String getPurchaseRemarks2() {
-        return purchaseRemarks2;
+    public BigDecimal getEkWert() {
+        return ekWert;
     }
 
-    public void setPurchaseRemarks2(String purchaseRemarks2) {
-        this.purchaseRemarks2 = purchaseRemarks2;
+    public void setEkWert(BigDecimal ekWert) {
+        this.ekWert = ekWert;
     }
 
-    public BigDecimal getPurchaseValue() {
-        return purchaseValue;
+    public String getZusPercent() {
+        return zusPercent;
     }
 
-    public void setPurchaseValue(BigDecimal purchaseValue) {
-        this.purchaseValue = purchaseValue;
+    public void setZusPercent(String zusPercent) {
+        this.zusPercent = zusPercent;
     }
 
-    public String getSurchargePercent() {
-        return surchargePercent;
+    public BigDecimal getVkWert() {
+        return vkWert;
     }
 
-    public void setSurchargePercent(String surchargePercent) {
-        this.surchargePercent = surchargePercent;
+    public void setVkWert(BigDecimal vkWert) {
+        this.vkWert = vkWert;
     }
 
-    public BigDecimal getSalesValue() {
-        return salesValue;
+    public String getAufnr() {
+        return aufnr;
     }
 
-    public void setSalesValue(BigDecimal salesValue) {
-        this.salesValue = salesValue;
+    public void setAufnr(String aufnr) {
+        this.aufnr = aufnr;
     }
 
-    public String getJobNumber() {
-        return jobNumber;
+    public String getBerei() {
+        return berei;
     }
 
-    public void setJobNumber(String jobNumber) {
-        this.jobNumber = jobNumber;
+    public void setBerei(String berei) {
+        this.berei = berei;
     }
 
-    public String getArea() {
-        return area;
+    public String getWt() {
+        return wt;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setWt(String wt) {
+        this.wt = wt;
     }
 
-    public String getWorkshopType() {
-        return workshopType;
+    public String getSpl() {
+        return spl;
     }
 
-    public void setWorkshopType(String workshopType) {
-        this.workshopType = workshopType;
+    public void setSpl(String spl) {
+        this.spl = spl;
     }
 
-    public String getSplit() {
-        return split;
+    public String getAufdat() {
+        return aufdat;
     }
 
-    public void setSplit(String split) {
-        this.split = split;
+    public void setAufdat(String aufdat) {
+        this.aufdat = aufdat;
     }
 
-    public String getJobDate() {
-        return jobDate;
+    public Integer getPos() {
+        return pos;
     }
 
-    public void setJobDate(String jobDate) {
-        this.jobDate = jobDate;
+    public void setPos(Integer pos) {
+        this.pos = pos;
     }
 
-    public Integer getPosition() {
-        return position;
+    public String getErlGrp() {
+        return erlGrp;
     }
 
-    public void setPosition(Integer position) {
-        this.position = position;
+    public void setErlGrp(String erlGrp) {
+        this.erlGrp = erlGrp;
     }
 
-    public String getRevenueGroup() {
-        return revenueGroup;
+    public String getRecnr() {
+        return recnr;
     }
 
-    public void setRevenueGroup(String revenueGroup) {
-        this.revenueGroup = revenueGroup;
+    public void setRecnr(String recnr) {
+        this.recnr = recnr;
     }
 
-    public String getInvoiceNumber() {
-        return invoiceNumber;
+    public String getRecdat() {
+        return recdat;
     }
 
-    public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
-
-    public String getInvoiceDate() {
-        return invoiceDate;
-    }
-
-    public void setInvoiceDate(String invoiceDate) {
-        this.invoiceDate = invoiceDate;
+    public void setRecdat(String recdat) {
+        this.recdat = recdat;
     }
 
     public String getStatus() {
@@ -342,5 +344,18 @@ public class ExternalService {
 
     public void setSdpsFlaUuid(String sdpsFlaUuid) {
         this.sdpsFlaUuid = sdpsFlaUuid;
+    }
+
+    // Convenience methods for services
+    public String getIndicatorExternal() {
+        return kenFl;
+    }
+
+    public String getDescription() {
+        return beschreibung;
+    }
+
+    public BigDecimal getSalesValue() {
+        return vkWert;
     }
 }

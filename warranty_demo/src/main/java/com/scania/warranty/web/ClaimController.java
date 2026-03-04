@@ -1,86 +1,83 @@
+/**
+ * REST controller for warranty claim APIs.
+ * <p>
+ * Generated from RPG: unit {@code HS1210}, node {@code n404}.
+ */
+
 package com.scania.warranty.web;
 
 import com.scania.warranty.domain.Claim;
 import com.scania.warranty.domain.ClaimSearchCriteria;
-import com.scania.warranty.dto.ClaimCreationRequestDto;
-import com.scania.warranty.dto.ClaimSearchResultDto;
+import com.scania.warranty.dto.ClaimListItemDto;
 import com.scania.warranty.service.ClaimCreationService;
+import com.scania.warranty.service.ClaimManagementService;
 import com.scania.warranty.service.ClaimSearchService;
+import com.scania.warranty.service.ClaimStatusService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+/**
+ * REST controller for claim operations.
+ */
 @RestController
 @RequestMapping("/api/claims")
 public class ClaimController {
-    
+
     private final ClaimSearchService claimSearchService;
     private final ClaimCreationService claimCreationService;
+    private final ClaimManagementService claimManagementService;
+    private final ClaimStatusService claimStatusService;
 
+    @Autowired
     public ClaimController(ClaimSearchService claimSearchService,
-                          ClaimCreationService claimCreationService) {
+                          ClaimCreationService claimCreationService,
+                          ClaimManagementService claimManagementService,
+                          ClaimStatusService claimStatusService) {
         this.claimSearchService = claimSearchService;
         this.claimCreationService = claimCreationService;
+        this.claimManagementService = claimManagementService;
+        this.claimStatusService = claimStatusService;
     }
 
     @PostMapping("/search")
-    public ResponseEntity<ClaimSearchResultDto> searchClaims(
-            @RequestBody ClaimSearchCriteria criteria,
-            @RequestParam(defaultValue = "true") boolean ascending) {
-        ClaimSearchResultDto result = claimSearchService.searchClaims(criteria, ascending);
-        return ResponseEntity.ok(result);
+    public ResponseEntity<List<ClaimListItemDto>> searchClaims(@RequestBody ClaimSearchCriteria criteria) {
+        List<ClaimListItemDto> results = claimSearchService.searchClaims(criteria);
+        return ResponseEntity.ok(results);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<ClaimSearchResultDto> searchClaimsGet(
-            @RequestParam(required = false) String companyCode,
-            @RequestParam(required = false) String statusFilter,
-            @RequestParam(required = false) String statusOperator,
-            @RequestParam(required = false) String vehicleNumber,
-            @RequestParam(required = false) String customerNumber,
-            @RequestParam(required = false) String claimNumberSde,
-            @RequestParam(required = false) String claimType,
-            @RequestParam(defaultValue = "false") boolean openClaimsOnly,
-            @RequestParam(defaultValue = "false") boolean minimumOnly,
-            @RequestParam(required = false) Integer claimAgeDays,
-            @RequestParam(required = false) String searchText,
-            @RequestParam(defaultValue = "true") boolean ascending) {
-        // Build criteria from query parameters
-        ClaimSearchCriteria criteria = new ClaimSearchCriteria(
-            companyCode != null ? companyCode : "",
-            statusFilter,
-            statusOperator != null ? statusOperator : "=",
-            vehicleNumber,
-            customerNumber,
-            claimNumberSde,
-            claimType,
-            openClaimsOnly,
-            minimumOnly,
-            claimAgeDays,
-            searchText
-        );
-        ClaimSearchResultDto result = claimSearchService.searchClaims(criteria, ascending);
-        return ResponseEntity.ok(result);
+    @PostMapping("/create")
+    public ResponseEntity<String> createClaim(@RequestParam String companyCode,
+                                             @RequestParam String invoiceNumber,
+                                             @RequestParam String invoiceDate,
+                                             @RequestParam String orderNumber,
+                                             @RequestParam String workshopType) {
+        Claim claim = claimManagementService.createClaimFromInvoice(companyCode, invoiceNumber, invoiceDate,
+                                                                         orderNumber, workshopType);
+        return ResponseEntity.ok(claim.getClaimNumber());
     }
 
-    @GetMapping
-    public ResponseEntity<String> getClaimsInfo() {
-        return ResponseEntity.ok("Warranty Claims API\n\n" +
-            "Endpoints:\n" +
-            "  GET  /api/claims/search?companyCode=XXX - Search claims\n" +
-            "  POST /api/claims/search - Search claims (with JSON body)\n" +
-            "  POST /api/claims - Create claim\n\n" +
-            "Example: GET /api/claims/search?companyCode=001");
+    @PutMapping("/{companyCode}/{claimNumber}/status")
+    public ResponseEntity<Void> updateStatus(@PathVariable String companyCode,
+                                            @PathVariable String claimNumber,
+                                            @RequestParam int newStatus) {
+        claimStatusService.updateClaimStatus(companyCode, claimNumber, newStatus);
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping
-    public ResponseEntity<Claim> createClaim(@RequestBody ClaimCreationRequestDto request) {
-        Claim claim = claimCreationService.createClaimFromInvoice(
-            request.companyCode(),
-            request.invoiceNumber(),
-            request.invoiceDate(),
-            request.jobNumber(),
-            request.workshopType()
-        );
-        return ResponseEntity.ok(claim);
+    @DeleteMapping("/{companyCode}/{claimNumber}")
+    public ResponseEntity<Void> deleteClaim(@PathVariable String companyCode,
+                                           @PathVariable String claimNumber) {
+        claimStatusService.deleteClaimAndErrors(companyCode, claimNumber);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{companyCode}/{claimNumber}/post-minimum")
+    public ResponseEntity<Void> postMinimum(@PathVariable String companyCode,
+                                           @PathVariable String claimNumber) {
+        claimStatusService.postMinimumClaim(companyCode, claimNumber);
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,256 +1,408 @@
+/**
+ * Domain entity or value object for the warranty claims model.
+ * <p>
+ * Generated from RPG: unit {@code HS1210}, node {@code n1779}.
+ */
+
 package com.scania.warranty.domain;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
+/**
+ * JPA entity for claim header (HSG71PF).
+ */
 @Entity
-@Table(name = "HSG71LF2")
+@Table(name = "HSG71PF")
+@IdClass(ClaimId.class)
 public class Claim {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "PAKZ", length = 3, nullable = false)
+    private String pakz;
     
-    @Column(name = "PAKZ", length = 3)
-    private String companyCode;
+    @Id
+    @Column(name = "RECH.-NR.", length = 5, nullable = false)
+    private String rechNr;
     
-    @Column(name = "RECH.-NR.", length = 5)
-    private String invoiceNumber;
+    @Column(name = "RECH.-DATUM", length = 8, nullable = false)
+    private String rechDatum;
     
-    @Column(name = "RECH.-DATUM", length = 8)
-    private String invoiceDate;
+    @Column(name = "AUFTRAGS-NR.", length = 5, nullable = false)
+    private String auftragsNr;
     
-    @Column(name = "AUFTRAGS-NR.", length = 5)
-    private String jobNumber;
+    @Column(name = "WETE", length = 1, nullable = false)
+    private String wete;
     
-    @Column(name = "WETE", length = 1)
-    private String workshopType;
+    @Column(name = "CLAIM-NR.", length = 8, nullable = false)
+    private String claimNr;
     
-    @Column(name = "CLAIM-NR.", length = 8)
-    private String claimNumber;
+    @Column(name = "CHASSIS-NR.", length = 7, nullable = false)
+    private String chassisNr;
     
-    @Column(name = "CHASSIS-NR.", length = 7)
-    private String chassisNumber;
+    @Column(name = "KENNZEICHEN", length = 10, nullable = false)
+    private String kennzeichen;
     
-    @Column(name = "KENNZEICHEN", length = 10)
-    private String licensePlate;
+    @Column(name = "ZUL.-DATUM", precision = 8, scale = 0, nullable = false)
+    private BigDecimal zulDatum;
     
-    @Column(name = "ZUL.-DATUM", precision = 8, scale = 0)
-    private Integer registrationDate;
+    @Column(name = "REP.-DATUM", precision = 8, scale = 0, nullable = false)
+    private BigDecimal repDatum;
     
-    @Column(name = "REP.-DATUM", precision = 8, scale = 0)
-    private Integer repairDate;
+    @Column(name = "KM-STAND", precision = 3, scale = 0, nullable = false)
+    private BigDecimal kmStand;
     
-    @Column(name = "KM-STAND", precision = 3, scale = 0)
-    private Integer mileage;
+    @Column(name = "PRODUKT-TYP", precision = 1, scale = 0, nullable = false)
+    private BigDecimal produktTyp;
     
-    @Column(name = "PRODUKT-TYP", precision = 1, scale = 0)
-    private Integer productType;
+    @Column(name = "ANHANG", length = 1, nullable = false)
+    private String anhang;
     
-    @Column(name = "ANHANG", length = 1)
-    private String attachment;
+    @Column(name = "AUSL#NDER", length = 1, nullable = false)
+    private String auslaender;
     
-    @Column(name = "AUSL#NDER", length = 1)
-    private String foreigner;
+    @Column(name = "KD-NR.", length = 6, nullable = false)
+    private String kdNr;
     
-    @Column(name = "KD-NR.", length = 6)
-    private String customerNumber;
+    @Column(name = "KD-NAME", length = 30, nullable = false)
+    private String kdName;
     
-    @Column(name = "KD-NAME", length = 30)
-    private String customerName;
+    @Column(name = "CLAIM-NR. SDE", length = 8, nullable = false)
+    private String claimNrSde;
     
-    @Column(name = "CLAIM-NR. SDE", length = 8)
-    private String claimNumberSde;
+    @Column(name = "STATUS CODE SDE", precision = 2, scale = 0, nullable = false)
+    private BigDecimal statusCodeSde;
     
-    @Column(name = "STATUS CODE SDE", precision = 2, scale = 0)
-    private Integer statusCodeSde;
+    @Column(name = "ANZ. FEHLER", precision = 2, scale = 0, nullable = false)
+    private BigDecimal anzFehler;
     
-    @Column(name = "ANZ. FEHLER", precision = 2, scale = 0)
-    private Integer numberOfFailures;
+    @Column(name = "BEREICH", length = 1, nullable = false)
+    private String bereich;
     
-    @Column(name = "BEREICH", length = 1)
-    private String area;
-    
-    @Column(name = "AUF.NR.", length = 10)
-    private String jobNumberSdps;
+    @Column(name = "AUF.NR.", length = 10, nullable = false)
+    private String aufNr;
 
-    // Constructors
     public Claim() {
     }
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    public String getPakz() {
+        return pakz;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPakz(String pakz) {
+        this.pakz = pakz;
     }
 
-    public String getCompanyCode() {
-        return companyCode;
+    public String getRechNr() {
+        return rechNr;
     }
 
-    public void setCompanyCode(String companyCode) {
-        this.companyCode = companyCode;
+    public void setRechNr(String rechNr) {
+        this.rechNr = rechNr;
     }
 
-    public String getInvoiceNumber() {
-        return invoiceNumber;
+    public String getRechDatum() {
+        return rechDatum;
     }
 
-    public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
+    public void setRechDatum(String rechDatum) {
+        this.rechDatum = rechDatum;
     }
 
-    public String getInvoiceDate() {
-        return invoiceDate;
+    public String getAuftragsNr() {
+        return auftragsNr;
     }
 
-    public void setInvoiceDate(String invoiceDate) {
-        this.invoiceDate = invoiceDate;
+    public void setAuftragsNr(String auftragsNr) {
+        this.auftragsNr = auftragsNr;
     }
 
-    public String getJobNumber() {
-        return jobNumber;
+    public String getWete() {
+        return wete;
     }
 
-    public void setJobNumber(String jobNumber) {
-        this.jobNumber = jobNumber;
+    public void setWete(String wete) {
+        this.wete = wete;
     }
 
-    public String getWorkshopType() {
-        return workshopType;
+    public String getClaimNr() {
+        return claimNr;
     }
 
-    public void setWorkshopType(String workshopType) {
-        this.workshopType = workshopType;
+    public void setClaimNr(String claimNr) {
+        this.claimNr = claimNr;
     }
 
-    public String getClaimNumber() {
-        return claimNumber;
+    public String getChassisNr() {
+        return chassisNr;
     }
 
-    public void setClaimNumber(String claimNumber) {
-        this.claimNumber = claimNumber;
+    public void setChassisNr(String chassisNr) {
+        this.chassisNr = chassisNr;
     }
 
-    public String getChassisNumber() {
-        return chassisNumber;
+    public String getKennzeichen() {
+        return kennzeichen;
     }
 
-    public void setChassisNumber(String chassisNumber) {
-        this.chassisNumber = chassisNumber;
+    public void setKennzeichen(String kennzeichen) {
+        this.kennzeichen = kennzeichen;
     }
 
-    public String getLicensePlate() {
-        return licensePlate;
+    public BigDecimal getZulDatum() {
+        return zulDatum;
     }
 
-    public void setLicensePlate(String licensePlate) {
-        this.licensePlate = licensePlate;
+    public void setZulDatum(BigDecimal zulDatum) {
+        this.zulDatum = zulDatum;
     }
 
-    public Integer getRegistrationDate() {
-        return registrationDate;
+    public BigDecimal getRepDatum() {
+        return repDatum;
     }
 
-    public void setRegistrationDate(Integer registrationDate) {
-        this.registrationDate = registrationDate;
+    public void setRepDatum(BigDecimal repDatum) {
+        this.repDatum = repDatum;
     }
 
-    public Integer getRepairDate() {
-        return repairDate;
+    public BigDecimal getKmStand() {
+        return kmStand;
     }
 
-    public void setRepairDate(Integer repairDate) {
-        this.repairDate = repairDate;
+    public void setKmStand(BigDecimal kmStand) {
+        this.kmStand = kmStand;
     }
 
-    public Integer getMileage() {
-        return mileage;
+    public BigDecimal getProduktTyp() {
+        return produktTyp;
     }
 
-    public void setMileage(Integer mileage) {
-        this.mileage = mileage;
+    public void setProduktTyp(BigDecimal produktTyp) {
+        this.produktTyp = produktTyp;
     }
 
-    public Integer getProductType() {
-        return productType;
+    public String getAnhang() {
+        return anhang;
     }
 
-    public void setProductType(Integer productType) {
-        this.productType = productType;
+    public void setAnhang(String anhang) {
+        this.anhang = anhang;
     }
 
-    public String getAttachment() {
-        return attachment;
+    public String getAuslaender() {
+        return auslaender;
     }
 
-    public void setAttachment(String attachment) {
-        this.attachment = attachment;
+    public void setAuslaender(String auslaender) {
+        this.auslaender = auslaender;
     }
 
-    public String getForeigner() {
-        return foreigner;
+    public String getKdNr() {
+        return kdNr;
     }
 
-    public void setForeigner(String foreigner) {
-        this.foreigner = foreigner;
+    public void setKdNr(String kdNr) {
+        this.kdNr = kdNr;
     }
 
-    public String getCustomerNumber() {
-        return customerNumber;
+    public String getKdName() {
+        return kdName;
     }
 
-    public void setCustomerNumber(String customerNumber) {
-        this.customerNumber = customerNumber;
+    public void setKdName(String kdName) {
+        this.kdName = kdName;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getClaimNrSde() {
+        return claimNrSde;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setClaimNrSde(String claimNrSde) {
+        this.claimNrSde = claimNrSde;
     }
 
-    public String getClaimNumberSde() {
-        return claimNumberSde;
-    }
-
-    public void setClaimNumberSde(String claimNumberSde) {
-        this.claimNumberSde = claimNumberSde;
-    }
-
-    public Integer getStatusCodeSde() {
+    public BigDecimal getStatusCodeSde() {
         return statusCodeSde;
     }
 
-    public void setStatusCodeSde(Integer statusCodeSde) {
+    public void setStatusCodeSde(BigDecimal statusCodeSde) {
         this.statusCodeSde = statusCodeSde;
     }
-
-    public Integer getNumberOfFailures() {
-        return numberOfFailures;
+    
+    public void setStatusCodeSde(int statusCodeSde) {
+        this.statusCodeSde = BigDecimal.valueOf(statusCodeSde);
     }
 
-    public void setNumberOfFailures(Integer numberOfFailures) {
-        this.numberOfFailures = numberOfFailures;
+    public BigDecimal getAnzFehler() {
+        return anzFehler;
     }
 
+    public void setAnzFehler(BigDecimal anzFehler) {
+        this.anzFehler = anzFehler;
+    }
+    
+    public void setAnzFehler(int anzFehler) {
+        this.anzFehler = BigDecimal.valueOf(anzFehler);
+    }
+
+    public String getBereich() {
+        return bereich;
+    }
+
+    public void setBereich(String bereich) {
+        this.bereich = bereich;
+    }
+
+    public String getAufNr() {
+        return aufNr;
+    }
+
+    public void setAufNr(String aufNr) {
+        this.aufNr = aufNr;
+    }
+    
+    // Convenience getters for compatibility
+    public String getCompanyCode() {
+        return pakz;
+    }
+    
+    public void setCompanyCode(String companyCode) {
+        this.pakz = companyCode;
+    }
+    
+    public String getClaimNumber() {
+        return claimNr;
+    }
+    
+    public void setClaimNumber(String claimNumber) {
+        this.claimNr = claimNumber;
+    }
+    
+    public String getChassisNumber() {
+        return chassisNr;
+    }
+    
+    public void setChassisNumber(String chassisNumber) {
+        this.chassisNr = chassisNumber;
+    }
+    
+    public String getCustomerNumber() {
+        return kdNr;
+    }
+    
+    public void setCustomerNumber(String customerNumber) {
+        this.kdNr = customerNumber;
+    }
+    
+    public String getCustomerName() {
+        return kdName;
+    }
+    
+    public void setCustomerName(String customerName) {
+        this.kdName = customerName;
+    }
+    
+    public String getClaimNumberSde() {
+        return claimNrSde;
+    }
+    
+    public void setClaimNumberSde(String claimNumberSde) {
+        this.claimNrSde = claimNumberSde;
+    }
+    
+    public String getInvoiceNumber() {
+        return rechNr;
+    }
+    
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.rechNr = invoiceNumber;
+    }
+    
+    public String getInvoiceDate() {
+        return rechDatum;
+    }
+    
+    public void setInvoiceDate(String invoiceDate) {
+        this.rechDatum = invoiceDate;
+    }
+    
+    public String getOrderNumber() {
+        return auftragsNr;
+    }
+    
+    public void setOrderNumber(String orderNumber) {
+        this.auftragsNr = orderNumber;
+    }
+    
+    public String getLicensePlate() {
+        return kennzeichen;
+    }
+    
+    public void setLicensePlate(String licensePlate) {
+        this.kennzeichen = licensePlate;
+    }
+    
+    public String getRepairDate() {
+        return repDatum != null ? repDatum.toBigInteger().toString() : "0";
+    }
+    
+    public void setRepairDate(int repairDate) {
+        this.repDatum = BigDecimal.valueOf(repairDate);
+    }
+    
+    public int getErrorCount() {
+        return anzFehler != null ? anzFehler.intValue() : 0;
+    }
+    
+    public void setErrorCount(int errorCount) {
+        this.anzFehler = BigDecimal.valueOf(errorCount);
+    }
+    
+    public String getWorkshopType() {
+        return wete;
+    }
+    
+    public void setWorkshopType(String workshopType) {
+        this.wete = workshopType;
+    }
+    
+    public void setRegistrationDate(Integer registrationDate) {
+        this.zulDatum = registrationDate != null ? BigDecimal.valueOf(registrationDate) : BigDecimal.ZERO;
+    }
+    
+    public void setMileage(Integer mileage) {
+        this.kmStand = mileage != null ? BigDecimal.valueOf(mileage) : BigDecimal.ZERO;
+    }
+    
+    public void setProductType(Integer productType) {
+        this.produktTyp = productType != null ? BigDecimal.valueOf(productType) : BigDecimal.ONE;
+    }
+    
+    public void setAttachment(String attachment) {
+        this.anhang = attachment;
+    }
+    
+    public void setForeigner(String foreigner) {
+        this.auslaender = foreigner;
+    }
+    
     public String getArea() {
-        return area;
+        return bereich;
     }
-
+    
     public void setArea(String area) {
-        this.area = area;
+        this.bereich = area;
     }
-
-    public String getJobNumberSdps() {
-        return jobNumberSdps;
+    
+    public void setDepartment(String department) {
+        this.bereich = department;
     }
-
-    public void setJobNumberSdps(String jobNumberSdps) {
-        this.jobNumberSdps = jobNumberSdps;
+    
+    public void setWorkshopTheke(String workshopTheke) {
+        this.wete = workshopTheke;
+    }
+    
+    public void setSdpsOrderNumber(String sdpsOrderNumber) {
+        this.aufNr = sdpsOrderNumber;
     }
 }

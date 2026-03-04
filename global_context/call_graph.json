@@ -1,0 +1,741 @@
+{
+  "programs": [
+    {
+      "programId": "HS1210",
+      "unitId": "qsys:HSSRC/QRPGLESRC/HS1210",
+      "astPath": "/Users/fkhan/Documents/ScaniaRPG2JavaRevisedDesign/JSON_ast/JSON_20260227/HS1210-ast.json",
+      "callCount": 48,
+      "calls": [
+        {
+          "callNodeId": "n280",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 543
+        },
+        {
+          "callNodeId": "n312",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 690
+        },
+        {
+          "callNodeId": "n328",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 718
+        },
+        {
+          "callNodeId": "n330",
+          "opcode": "CALLP",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 721
+        },
+        {
+          "callNodeId": "n331",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 723
+        },
+        {
+          "callNodeId": "n332",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 724
+        },
+        {
+          "callNodeId": "n333",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 726
+        },
+        {
+          "callNodeId": "n334",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 729
+        },
+        {
+          "callNodeId": "n335",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 731
+        },
+        {
+          "callNodeId": "n336",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 733
+        },
+        {
+          "callNodeId": "n337",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 736
+        },
+        {
+          "callNodeId": "n343",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 747
+        },
+        {
+          "callNodeId": "n346",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 752
+        },
+        {
+          "callNodeId": "n348",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 755
+        },
+        {
+          "callNodeId": "n350",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 758
+        },
+        {
+          "callNodeId": "n352",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 761
+        },
+        {
+          "callNodeId": "n354",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 764
+        },
+        {
+          "callNodeId": "n357",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 768
+        },
+        {
+          "callNodeId": "n361",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 773
+        },
+        {
+          "callNodeId": "n363",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 775
+        },
+        {
+          "callNodeId": "n367",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 783
+        },
+        {
+          "callNodeId": "n448",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 895
+        },
+        {
+          "callNodeId": "n472",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 926
+        },
+        {
+          "callNodeId": "n473",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 934
+        },
+        {
+          "callNodeId": "n499",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 973
+        },
+        {
+          "callNodeId": "n507",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 985
+        },
+        {
+          "callNodeId": "n508",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 986
+        },
+        {
+          "callNodeId": "n558",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 1084
+        },
+        {
+          "callNodeId": "n565",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 1097
+        },
+        {
+          "callNodeId": "n584",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 1125
+        },
+        {
+          "callNodeId": "n603",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 1151
+        },
+        {
+          "callNodeId": "n790",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 1426
+        },
+        {
+          "callNodeId": "n846",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 1543
+        },
+        {
+          "callNodeId": "n879",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 1614
+        },
+        {
+          "callNodeId": "n884",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 1620
+        },
+        {
+          "callNodeId": "n892",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 1630
+        },
+        {
+          "callNodeId": "n905",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 1652
+        },
+        {
+          "callNodeId": "n950",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 1709
+        },
+        {
+          "callNodeId": "n1374",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 2242
+        },
+        {
+          "callNodeId": "n1376",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 2244
+        },
+        {
+          "callNodeId": "n1389",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 2266
+        },
+        {
+          "callNodeId": "n1399",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 2285
+        },
+        {
+          "callNodeId": "n1462",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 2366
+        },
+        {
+          "callNodeId": "n1466",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 2372
+        },
+        {
+          "callNodeId": "n1503",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 2438
+        },
+        {
+          "callNodeId": "n1530",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 2485
+        },
+        {
+          "callNodeId": "n1557",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 2525
+        },
+        {
+          "callNodeId": "n1680",
+          "opcode": "EXSR",
+          "callerNodeId": "n404",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1210",
+          "line": 2674
+        }
+      ]
+    },
+    {
+      "programId": "HS1212",
+      "unitId": "qsys:HSSRC/QRPGLESRC/HS1212",
+      "astPath": "/Users/fkhan/Documents/ScaniaRPG2JavaRevisedDesign/JSON_ast/JSON_20260227/HS1212-ast.json",
+      "callCount": 55,
+      "calls": [
+        {
+          "callNodeId": "n330",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 853
+        },
+        {
+          "callNodeId": "n331",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 856
+        },
+        {
+          "callNodeId": "n389",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 929
+        },
+        {
+          "callNodeId": "n404",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 949
+        },
+        {
+          "callNodeId": "n405",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 950
+        },
+        {
+          "callNodeId": "n407",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 953
+        },
+        {
+          "callNodeId": "n408",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 954
+        },
+        {
+          "callNodeId": "n416",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 962
+        },
+        {
+          "callNodeId": "n421",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 968
+        },
+        {
+          "callNodeId": "n424",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 971
+        },
+        {
+          "callNodeId": "n448",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 994
+        },
+        {
+          "callNodeId": "n452",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1000
+        },
+        {
+          "callNodeId": "n453",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1001
+        },
+        {
+          "callNodeId": "n464",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1024
+        },
+        {
+          "callNodeId": "n469",
+          "opcode": "CALLP",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1030
+        },
+        {
+          "callNodeId": "n471",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1034
+        },
+        {
+          "callNodeId": "n472",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1035
+        },
+        {
+          "callNodeId": "n473",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1038
+        },
+        {
+          "callNodeId": "n474",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1039
+        },
+        {
+          "callNodeId": "n476",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1043
+        },
+        {
+          "callNodeId": "n480",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1050
+        },
+        {
+          "callNodeId": "n484",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1056
+        },
+        {
+          "callNodeId": "n490",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1078
+        },
+        {
+          "callNodeId": "n494",
+          "opcode": "EXSR",
+          "callerNodeId": null,
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1085
+        },
+        {
+          "callNodeId": "n526",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1149
+        },
+        {
+          "callNodeId": "n527",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1150
+        },
+        {
+          "callNodeId": "n528",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1151
+        },
+        {
+          "callNodeId": "n573",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1214
+        },
+        {
+          "callNodeId": "n585",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1231
+        },
+        {
+          "callNodeId": "n592",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1243
+        },
+        {
+          "callNodeId": "n599",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1257
+        },
+        {
+          "callNodeId": "n636",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1315
+        },
+        {
+          "callNodeId": "n658",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1339
+        },
+        {
+          "callNodeId": "n672",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1355
+        },
+        {
+          "callNodeId": "n683",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1370
+        },
+        {
+          "callNodeId": "n865",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1562
+        },
+        {
+          "callNodeId": "n883",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1573
+        },
+        {
+          "callNodeId": "n893",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1579
+        },
+        {
+          "callNodeId": "n951",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1627
+        },
+        {
+          "callNodeId": "n1223",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1929
+        },
+        {
+          "callNodeId": "n1225",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 1931
+        },
+        {
+          "callNodeId": "n1392",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 2141
+        },
+        {
+          "callNodeId": "n1395",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 2144
+        },
+        {
+          "callNodeId": "n1646",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 2373
+        },
+        {
+          "callNodeId": "n1662",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 2390
+        },
+        {
+          "callNodeId": "n1715",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 2440
+        },
+        {
+          "callNodeId": "n1757",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 2513
+        },
+        {
+          "callNodeId": "n1773",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 2540
+        },
+        {
+          "callNodeId": "n1779",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 2555
+        },
+        {
+          "callNodeId": "n1850",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 2633
+        },
+        {
+          "callNodeId": "n1916",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 2772
+        },
+        {
+          "callNodeId": "n2236",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 3118
+        },
+        {
+          "callNodeId": "n2299",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 3206
+        },
+        {
+          "callNodeId": "n2349",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 3271
+        },
+        {
+          "callNodeId": "n2393",
+          "opcode": "EXSR",
+          "callerNodeId": "n498",
+          "fileId": "qsys:HSSRC/QRPGLESRC/HS1212",
+          "line": 3325
+        }
+      ]
+    }
+  ]
+}

@@ -29,6 +29,9 @@ ROOT_DIR = Path(__file__).resolve().parent
 CONTEXT_DIR = ROOT_DIR / "context_index"
 MANIFEST_PATH = CONTEXT_DIR / "manifest.json"
 
+# Module-level: running Spring Boot process (for /api/run-application)
+_app_process = None
+
 
 def find_rpg_files(directory: Path):
     """
@@ -288,9 +291,72 @@ class MigrationHandler(SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(content)
             return
+        
+        if parsed.path == "/ui_global_context.html" or parsed.path == "/global-context":
+            # Serve the Global Context / Knowledge Graph builder UI
+            ui_path = ROOT_DIR / "ui_global_context.html"
+            if not ui_path.exists():
+                self.send_error(404, "ui_global_context.html not found")
+                return
+            content = ui_path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
+            return
 
         if parsed.path == "/api/ping":
             self._send_json({"status": "ok", "message": "UI server is running"})
+            return
+
+        if parsed.path == "/api/build-context":
+            project_dir = "warranty_demo"
+            proj_path = ROOT_DIR / project_dir
+            java_count = 0
+            if proj_path.is_dir():
+                java_root = proj_path / "src" / "main" / "java"
+                if java_root.is_dir():
+                    java_count = len(list(java_root.rglob("*.java")))
+            last_migrated = None
+            migrations_dir = ROOT_DIR / "global_context" / "migrations"
+            if migrations_dir.is_dir():
+                manifests = list(migrations_dir.glob("*.json"))
+                if manifests:
+                    latest = max(manifests, key=lambda p: p.stat().st_mtime)
+                    try:
+                        mf = json.loads(latest.read_text(encoding="utf-8", errors="ignore"))
+                        last_migrated = {
+                            "programId": mf.get("programId"),
+                            "entryNodeId": mf.get("entryNodeId"),
+                            "generatedCount": len(mf.get("generatedFiles") or []),
+                            "timestamp": latest.stem.split("_")[-1] if "_" in latest.stem else latest.name,
+                        }
+                    except Exception:
+                        pass
+            self._send_json({
+                "projectDir": project_dir,
+                "javaFileCount": java_count,
+                "lastMigrated": last_migrated,
+            })
+            return
+
+        if parsed.path == "/api/customize-guide":
+            customize_path = ROOT_DIR / "CUSTOMIZE.md"
+            if customize_path.is_file():
+                content = customize_path.read_text(encoding="utf-8", errors="replace")
+                escaped = content.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+                html = f"""<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Customize Guide</title>
+<style>body{{font-family:system-ui;max-width:720px;margin:24px auto;padding:0 16px;color:#e5e7eb;background:#0f172a;}}
+pre{{background:#1e293b;padding:12px;border-radius:6px;overflow:auto;}} code{{background:#1e293b;padding:2px 6px;border-radius:4px;}}
+a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{escaped}</pre></body></html>"""
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(html.encode("utf-8"))))
+                self.end_headers()
+                self.wfile.write(html.encode("utf-8"))
+            else:
+                self.send_error(404, "CUSTOMIZE.md not found")
             return
 
         # Proxy /api/demo/* to Spring Boot backend (must be before any fallback to file serving)
@@ -361,6 +427,83 @@ class MigrationHandler(SimpleHTTPRequestHandler):
                 "sourceFileId": source_id,
                 "rpgSnippet": ctx.get("rpgSnippet", ""),
             })
+            return
+
+        if parsed.path == "/api/pure-java-source":
+            # Traceability endpoint: show generated Java for a migrated node (cause → effect)
+            params = parse_qs(parsed.query)
+            unit_id = params.get("unitId", [None])[0]
+            node_id = params.get("nodeId", [None])[0]
+            rel_path = params.get("path", [None])[0]
+
+            if not unit_id or not node_id:
+                self._send_json({"error": "unitId and nodeId are required"}, status=400)
+                return
+
+            output_path = ROOT_DIR / f"{unit_id}_{node_id}_pure_java"
+            if not output_path.exists() or not output_path.is_dir():
+                self._send_json(
+                    {
+                        "error": f"Pure Java output directory not found for {unit_id}_{node_id}. "
+                                 "Run /api/migrate-pure-java first.",
+                        "outputDir": str(output_path),
+                    },
+                    status=404,
+                )
+                return
+
+            target_file = None
+            if rel_path:
+                candidate = (output_path / rel_path).resolve()
+                try:
+                    candidate.relative_to(output_path)
+                except ValueError:
+                    self._send_json({"error": "Requested path is outside of output directory"}, status=400)
+                    return
+                if candidate.is_file():
+                    target_file = candidate
+            else:
+                # Heuristic: prefer service classes, then controllers, then any Java file
+                java_files = sorted(output_path.rglob("*.java"))
+                if not java_files:
+                    self._send_json(
+                        {
+                            "error": "No Java files found in output directory",
+                            "outputDir": str(output_path),
+                        },
+                        status=404,
+                    )
+                    return
+
+                def score(p: Path) -> int:
+                    s = 0
+                    parts = {part.lower() for part in p.parts}
+                    name = p.name.lower()
+                    if "service" in parts or "service" in name:
+                        s += 3
+                    if "web" in parts or "controller" in name:
+                        s += 2
+                    if "domain" in parts or "repository" in parts:
+                        s += 1
+                    return s
+
+                target_file = max(java_files, key=score)
+
+            try:
+                code = target_file.read_text(encoding="utf-8")
+            except Exception as e:
+                self._send_json({"error": f"Failed to read Java source: {e}"}, status=500)
+                return
+
+            self._send_json(
+                {
+                    "unitId": unit_id,
+                    "nodeId": node_id,
+                    "outputDir": str(output_path),
+                    "path": str(target_file.relative_to(output_path)),
+                    "javaSource": code,
+                }
+            )
             return
 
         if parsed.path == "/api/migrate-stream":
@@ -945,7 +1088,9 @@ class MigrationHandler(SimpleHTTPRequestHandler):
                         ]
                         if dds_ast_path and dds_ast_path.is_dir():
                             enricher_cmd.extend(["--ddsAstDir", str(dds_ast_path)])
-                        if rpg_path and rpg_path.is_dir():
+                            # Same folder usually contains raw DDS (e.g. HS1210D.DSPF) → attach ddsSource too
+                            enricher_cmd.extend(["--ddsDir", str(dds_ast_path)])
+                        elif rpg_path and rpg_path.is_dir():
                             enricher_cmd.extend(["--ddsDir", str(rpg_path)])
                         enricher_proc = subprocess.run(
                             enricher_cmd,
@@ -959,6 +1104,7 @@ class MigrationHandler(SimpleHTTPRequestHandler):
                             enricher_output = f"(enricher warning: {enricher_proc.returncode})\n{enricher_output}"
                     except Exception as e:
                         enricher_output = f"(enricher skipped: {e})"
+
                     self._send_json({
                         "success": True,
                         "message": "Context packages built successfully" + (" (enricher run with DDS AST)" if dds_ast_path else ""),
@@ -975,6 +1121,92 @@ class MigrationHandler(SimpleHTTPRequestHandler):
                 self._send_json({"error": "Context building timed out"}, status=500)
             except Exception as e:
                 self._send_json({"error": str(e)}, status=500)
+            return
+        
+        if parsed.path == "/api/build-global-context":
+            # Build persistent global context (DB registry, program context, call graph) from ASTs and RPG dir
+            content_length = int(self.headers.get("Content-Length", 0))
+            if content_length > 0:
+                body = json.loads(self.rfile.read(content_length).decode("utf-8"))
+                ast_dir = body.get("astDir", "JSON_ast/JSON_20260211")
+                rpg_dir = body.get("rpgDir", "")
+            else:
+                params = parse_qs(parsed.query)
+                ast_dir = params.get("astDir", ["JSON_ast/JSON_20260211"])[0]
+                rpg_dir = params.get("rpgDir", [""])[0]
+
+            # Resolve RPG directory similarly to /api/build-context
+            rpg_path = None
+            rpg_dir_clean = (rpg_dir or "").strip()
+            original_path = rpg_dir_clean
+            if rpg_dir_clean.startswith('Users/') or rpg_dir_clean.startswith('home/'):
+                rpg_dir_clean = '/' + rpg_dir_clean
+                print(f"[Global Context] Normalized path: '{original_path}' -> '{rpg_dir_clean}'", flush=True)
+
+            if Path(rpg_dir_clean).is_absolute():
+                rpg_path = Path(rpg_dir_clean)
+                if not (rpg_path.exists() and rpg_path.is_dir()):
+                    print(f"[Global Context] ✗ Path does not exist: {rpg_path}", flush=True)
+                    rpg_path = None
+            if not rpg_path and rpg_dir_clean:
+                test_path = ROOT_DIR / rpg_dir_clean
+                if test_path.exists():
+                    rpg_path = test_path
+
+            global_ctx_output = ""
+            try:
+                # 1) DB registry
+                db_proc = subprocess.run(
+                    [sys.executable, str(ROOT_DIR / "global_context" / "build_db_registry.py")],
+                    capture_output=True,
+                    text=True,
+                    timeout=120,
+                    cwd=str(ROOT_DIR),
+                )
+                global_ctx_output += (db_proc.stdout or "") + (db_proc.stderr or "")
+                # 2) Program-level context
+                prog_proc = subprocess.run(
+                    [sys.executable, str(ROOT_DIR / "global_context" / "build_program_context.py")],
+                    capture_output=True,
+                    text=True,
+                    timeout=120,
+                    cwd=str(ROOT_DIR),
+                )
+                global_ctx_output += (prog_proc.stdout or "") + (prog_proc.stderr or "")
+                # 3) AST-based call graph
+                call_proc = subprocess.run(
+                    [sys.executable, str(ROOT_DIR / "global_context" / "build_call_graph.py")],
+                    capture_output=True,
+                    text=True,
+                    timeout=120,
+                    cwd=str(ROOT_DIR),
+                )
+                global_ctx_output += (call_proc.stdout or "") + (call_proc.stderr or "")
+                # 4) Enrich call graph with RPG callee names (only if RPG dir is known)
+                if rpg_path and rpg_path.is_dir():
+                    call_rpg_proc = subprocess.run(
+                        [
+                            sys.executable,
+                            str(ROOT_DIR / "global_context" / "build_call_graph_with_rpg.py"),
+                            "--rpgDir",
+                            str(rpg_path),
+                        ],
+                        capture_output=True,
+                        text=True,
+                        timeout=180,
+                        cwd=str(ROOT_DIR),
+                    )
+                    global_ctx_output += (call_rpg_proc.stdout or "") + (call_rpg_proc.stderr or "")
+                else:
+                    global_ctx_output += "\n(Global context: RPG directory not found or not provided; enriched call graph skipped.)"
+            except Exception as e:
+                global_ctx_output += f"\n(Global context build failed: {e})"
+
+            self._send_json({
+                "success": True,
+                "message": "Global context built (DB registry, program context, call graph).",
+                "output": global_ctx_output,
+            })
             return
         
         if parsed.path == "/api/migrate-pure-java":
@@ -1061,6 +1293,8 @@ class MigrationHandler(SimpleHTTPRequestHandler):
                         for i in range(1, len(path_parts)):
                             dirs.add("/".join(path_parts[:i]))
                 
+                is_maven_project = (output_path / "pom.xml").is_file() if output_path.exists() else False
+
                 result = {
                     "success": proc.returncode == 0,
                     "output": proc.stdout,
@@ -1070,7 +1304,8 @@ class MigrationHandler(SimpleHTTPRequestHandler):
                     "files": files,
                     "fileCount": len(files),
                     "directories": sorted(list(dirs)),
-                    "exists": output_path.exists()
+                    "exists": output_path.exists(),
+                    "isMavenProject": is_maven_project,
                 }
                 
                 # Enforce logic completeness after generation: run validator with context
@@ -1250,6 +1485,100 @@ class MigrationHandler(SimpleHTTPRequestHandler):
                 self._send_json({"error": str(e), "traceback": traceback.format_exc(), "success": False}, status=500)
             return
         
+        if parsed.path == "/api/run-application":
+            global _app_process
+            proj_path = ROOT_DIR / "warranty_demo"
+            if not proj_path.is_dir():
+                self._send_json({"started": False, "error": "warranty_demo not found. Build the application first."}, status=400)
+                return
+            if _app_process is not None and _app_process.poll() is None:
+                self._send_json({"started": True, "message": "Application already running."})
+                return
+            try:
+                _app_process = subprocess.Popen(
+                    ["mvn", "spring-boot:run", "-DskipTests"],
+                    cwd=str(proj_path),
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    start_new_session=True,
+                )
+                self._send_json({"started": True, "message": "Application starting. Check status in 30-60 seconds."})
+            except Exception as e:
+                self._send_json({"started": False, "error": str(e)}, status=500)
+            return
+
+        if parsed.path == "/api/validate":
+            # Global Context Validation API (projectDir + programId + entryNodeId)
+            content_length = int(self.headers.get("Content-Length", 0))
+            project_dir = "warranty_demo"
+            program_id = None
+            entry_node_id = None
+            if content_length > 0:
+                try:
+                    body = json.loads(self.rfile.read(content_length).decode("utf-8"))
+                    project_dir = (body.get("projectDir") or project_dir).strip() or project_dir
+                    program_id = body.get("programId")
+                    entry_node_id = body.get("entryNodeId")
+                except Exception:
+                    pass
+
+            proj_path = ROOT_DIR / project_dir
+            if not proj_path.is_dir():
+                self._send_json({"success": False, "error": f"Project directory not found: {project_dir}"}, status=400)
+                return
+
+            context_path = None
+            if program_id and entry_node_id:
+                cf = ROOT_DIR / "context_index" / f"{program_id}_{entry_node_id}.json"
+                if cf.exists():
+                    context_path = cf
+
+            try:
+                from validate_pure_java import PureJavaValidator
+                validator = PureJavaValidator(proj_path, context_path)
+                results = validator.validate_all()
+
+                generated_files_data = []
+                rpg_snippet = None
+                rpg_start_line = 1
+                if program_id and entry_node_id:
+                    try:
+                        migrations_dir = ROOT_DIR / "global_context" / "migrations"
+                        if migrations_dir.is_dir():
+                            pattern = f"{program_id}_{entry_node_id}_*.json"
+                            latest = None
+                            for p in migrations_dir.glob(pattern):
+                                if latest is None or p.stat().st_mtime > latest.stat().st_mtime:
+                                    latest = p
+                            if latest:
+                                mf = json.loads(latest.read_text(encoding="utf-8", errors="ignore"))
+                                rpg_snippet = mf.get("rpgSnippet")
+                                nodes = mf.get("nodesInSlice") or []
+                                if nodes and nodes[0].get("range"):
+                                    rpg_start_line = nodes[0]["range"].get("startLine", 1)
+                                java_root = proj_path / "src" / "main" / "java"
+                                for rel in mf.get("generatedFiles") or []:
+                                    fp = java_root / rel
+                                    if fp.is_file():
+                                        try:
+                                            content = fp.read_text(encoding="utf-8", errors="ignore")
+                                            generated_files_data.append({"path": rel, "content": content[:15000]})
+                                        except Exception:
+                                            pass
+                    except Exception:
+                        pass
+
+                self._send_json({
+                    "success": True,
+                    "validation": results,
+                    "generatedFiles": generated_files_data,
+                    "rpgSnippet": rpg_snippet,
+                    "rpgStartLine": rpg_start_line,
+                })
+            except Exception as e:
+                self._send_json({"success": False, "error": str(e)}, status=500)
+            return
+
         if parsed.path == "/api/validate-pure-java":
             # Validate Pure Java application
             content_length = int(self.headers.get("Content-Length", 0))
@@ -1912,6 +2241,7 @@ def main():
     print("  POST /api/migrate-pure-java - Run Track B migration (Pure Java)")
     print("  POST /api/fix-logic-gaps   - Fix logic completeness gaps with LLM (appDir + contextFile)")
     print("  POST /api/build-context   - Build context packages from ASTs")
+    print("  POST /api/validate          - Global Context validation (projectDir, programId, entryNodeId)")
     print("  POST /api/validate-pure-java - Validate Pure Java application")
     print("  POST /api/build-project   - Build Maven project")
     print("")

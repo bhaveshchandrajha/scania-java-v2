@@ -1,8 +1,17 @@
+/**
+ * Domain entity or value object for the warranty claims model.
+ * <p>
+ * Generated from RPG: unit {@code HS1210}, node {@code n404}.
+ */
+
 package com.scania.warranty.domain;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
+/**
+ * JPA entity for external service line items (HSFLALF1).
+ */
 @Entity
 @Table(name = "HSFLALF1")
 public class HSFLALF1 {
@@ -15,16 +24,16 @@ public class HSFLALF1 {
     private String pkz;
     
     @Column(name = "BES-DAT", length = 8)
-    private String besdat;
+    private String besDat;
     
     @Column(name = "BES-NR", length = 5)
-    private String besnr;
+    private String besNr;
     
     @Column(name = "LNR-FL", precision = 3, scale = 0)
-    private Integer lnrfl;
+    private Integer lnrFl;
     
     @Column(name = "KEN-FL", length = 8)
-    private String kenfl;
+    private String kenFl;
     
     @Column(name = "LNR", precision = 3, scale = 0)
     private Integer lnr;
@@ -36,31 +45,31 @@ public class HSFLALF1 {
     private Integer textzeilen;
     
     @Column(name = "EK-PREIS", precision = 7, scale = 2)
-    private BigDecimal ekpreis;
+    private BigDecimal ekPreis;
     
     @Column(name = "MENGE", precision = 5, scale = 0)
     private Integer menge;
     
     @Column(name = "EK-RENR", length = 10)
-    private String ekrenr;
+    private String ekRenr;
     
     @Column(name = "EK-REDAT", length = 8)
-    private String ekredat;
+    private String ekRedat;
     
     @Column(name = "EK BEMERKUNGEN 1", length = 60)
-    private String ekbemerkungen1;
+    private String ekBemerkungen1;
     
     @Column(name = "EK BEMERKUNGEN 2", length = 60)
-    private String ekbemerkungen2;
+    private String ekBemerkungen2;
     
     @Column(name = "EK-WERT", precision = 9, scale = 2)
-    private BigDecimal ekwert;
+    private BigDecimal ekWert;
     
     @Column(name = "ZUS %", length = 3)
-    private String zuspercent;
+    private String zusPercent;
     
     @Column(name = "VK-WERT", precision = 9, scale = 2)
-    private BigDecimal vkwert;
+    private BigDecimal vkWert;
     
     @Column(name = "AUFNR", length = 5)
     private String aufnr;
@@ -81,7 +90,7 @@ public class HSFLALF1 {
     private Integer pos;
     
     @Column(name = "ERL-GRP", length = 2)
-    private String erlgrp;
+    private String erlGrp;
     
     @Column(name = "RECNR", length = 5)
     private String recnr;
@@ -99,247 +108,96 @@ public class HSFLALF1 {
     private String sdpsFlaUuid;
 
     // Constructors
-    public HSFLALF1() {
-    }
+    public HSFLALF1() {}
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getPkz() { return pkz; }
+    public void setPkz(String pkz) { this.pkz = pkz; }
 
-    public String getPkz() {
-        return pkz;
-    }
+    public String getBesDat() { return besDat; }
+    public void setBesDat(String besDat) { this.besDat = besDat; }
 
-    public void setPkz(String pkz) {
-        this.pkz = pkz;
-    }
+    public String getBesNr() { return besNr; }
+    public void setBesNr(String besNr) { this.besNr = besNr; }
 
-    public String getBesdat() {
-        return besdat;
-    }
+    public Integer getLnrFl() { return lnrFl; }
+    public void setLnrFl(Integer lnrFl) { this.lnrFl = lnrFl; }
 
-    public void setBesdat(String besdat) {
-        this.besdat = besdat;
-    }
+    public String getKenFl() { return kenFl; }
+    public void setKenFl(String kenFl) { this.kenFl = kenFl; }
 
-    public String getBesnr() {
-        return besnr;
-    }
+    public Integer getLnr() { return lnr; }
+    public void setLnr(Integer lnr) { this.lnr = lnr; }
 
-    public void setBesnr(String besnr) {
-        this.besnr = besnr;
-    }
+    public String getBeschreibung() { return beschreibung; }
+    public void setBeschreibung(String beschreibung) { this.beschreibung = beschreibung; }
 
-    public Integer getLnrfl() {
-        return lnrfl;
-    }
+    public Integer getTextzeilen() { return textzeilen; }
+    public void setTextzeilen(Integer textzeilen) { this.textzeilen = textzeilen; }
 
-    public void setLnrfl(Integer lnrfl) {
-        this.lnrfl = lnrfl;
-    }
+    public BigDecimal getEkPreis() { return ekPreis; }
+    public void setEkPreis(BigDecimal ekPreis) { this.ekPreis = ekPreis; }
 
-    public String getKenfl() {
-        return kenfl;
-    }
+    public Integer getMenge() { return menge; }
+    public void setMenge(Integer menge) { this.menge = menge; }
 
-    public void setKenfl(String kenfl) {
-        this.kenfl = kenfl;
-    }
+    public String getEkRenr() { return ekRenr; }
+    public void setEkRenr(String ekRenr) { this.ekRenr = ekRenr; }
 
-    public Integer getLnr() {
-        return lnr;
-    }
+    public String getEkRedat() { return ekRedat; }
+    public void setEkRedat(String ekRedat) { this.ekRedat = ekRedat; }
 
-    public void setLnr(Integer lnr) {
-        this.lnr = lnr;
-    }
+    public String getEkBemerkungen1() { return ekBemerkungen1; }
+    public void setEkBemerkungen1(String ekBemerkungen1) { this.ekBemerkungen1 = ekBemerkungen1; }
 
-    public String getBeschreibung() {
-        return beschreibung;
-    }
+    public String getEkBemerkungen2() { return ekBemerkungen2; }
+    public void setEkBemerkungen2(String ekBemerkungen2) { this.ekBemerkungen2 = ekBemerkungen2; }
 
-    public void setBeschreibung(String beschreibung) {
-        this.beschreibung = beschreibung;
-    }
+    public BigDecimal getEkWert() { return ekWert; }
+    public void setEkWert(BigDecimal ekWert) { this.ekWert = ekWert; }
 
-    public Integer getTextzeilen() {
-        return textzeilen;
-    }
+    public String getZusPercent() { return zusPercent; }
+    public void setZusPercent(String zusPercent) { this.zusPercent = zusPercent; }
 
-    public void setTextzeilen(Integer textzeilen) {
-        this.textzeilen = textzeilen;
-    }
+    public BigDecimal getVkWert() { return vkWert; }
+    public void setVkWert(BigDecimal vkWert) { this.vkWert = vkWert; }
 
-    public BigDecimal getEkpreis() {
-        return ekpreis;
-    }
+    public String getAufnr() { return aufnr; }
+    public void setAufnr(String aufnr) { this.aufnr = aufnr; }
 
-    public void setEkpreis(BigDecimal ekpreis) {
-        this.ekpreis = ekpreis;
-    }
+    public String getBerei() { return berei; }
+    public void setBerei(String berei) { this.berei = berei; }
 
-    public Integer getMenge() {
-        return menge;
-    }
+    public String getWt() { return wt; }
+    public void setWt(String wt) { this.wt = wt; }
 
-    public void setMenge(Integer menge) {
-        this.menge = menge;
-    }
+    public String getSpl() { return spl; }
+    public void setSpl(String spl) { this.spl = spl; }
 
-    public String getEkrenr() {
-        return ekrenr;
-    }
+    public String getAufdat() { return aufdat; }
+    public void setAufdat(String aufdat) { this.aufdat = aufdat; }
 
-    public void setEkrenr(String ekrenr) {
-        this.ekrenr = ekrenr;
-    }
+    public Integer getPos() { return pos; }
+    public void setPos(Integer pos) { this.pos = pos; }
 
-    public String getEkredat() {
-        return ekredat;
-    }
+    public String getErlGrp() { return erlGrp; }
+    public void setErlGrp(String erlGrp) { this.erlGrp = erlGrp; }
 
-    public void setEkredat(String ekredat) {
-        this.ekredat = ekredat;
-    }
+    public String getRecnr() { return recnr; }
+    public void setRecnr(String recnr) { this.recnr = recnr; }
 
-    public String getEkbemerkungen1() {
-        return ekbemerkungen1;
-    }
+    public String getRecdat() { return recdat; }
+    public void setRecdat(String recdat) { this.recdat = recdat; }
 
-    public void setEkbemerkungen1(String ekbemerkungen1) {
-        this.ekbemerkungen1 = ekbemerkungen1;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public String getEkbemerkungen2() {
-        return ekbemerkungen2;
-    }
+    public String getSdpsJobUuid() { return sdpsJobUuid; }
+    public void setSdpsJobUuid(String sdpsJobUuid) { this.sdpsJobUuid = sdpsJobUuid; }
 
-    public void setEkbemerkungen2(String ekbemerkungen2) {
-        this.ekbemerkungen2 = ekbemerkungen2;
-    }
-
-    public BigDecimal getEkwert() {
-        return ekwert;
-    }
-
-    public void setEkwert(BigDecimal ekwert) {
-        this.ekwert = ekwert;
-    }
-
-    public String getZuspercent() {
-        return zuspercent;
-    }
-
-    public void setZuspercent(String zuspercent) {
-        this.zuspercent = zuspercent;
-    }
-
-    public BigDecimal getVkwert() {
-        return vkwert;
-    }
-
-    public void setVkwert(BigDecimal vkwert) {
-        this.vkwert = vkwert;
-    }
-
-    public String getAufnr() {
-        return aufnr;
-    }
-
-    public void setAufnr(String aufnr) {
-        this.aufnr = aufnr;
-    }
-
-    public String getBerei() {
-        return berei;
-    }
-
-    public void setBerei(String berei) {
-        this.berei = berei;
-    }
-
-    public String getWt() {
-        return wt;
-    }
-
-    public void setWt(String wt) {
-        this.wt = wt;
-    }
-
-    public String getSpl() {
-        return spl;
-    }
-
-    public void setSpl(String spl) {
-        this.spl = spl;
-    }
-
-    public String getAufdat() {
-        return aufdat;
-    }
-
-    public void setAufdat(String aufdat) {
-        this.aufdat = aufdat;
-    }
-
-    public Integer getPos() {
-        return pos;
-    }
-
-    public void setPos(Integer pos) {
-        this.pos = pos;
-    }
-
-    public String getErlgrp() {
-        return erlgrp;
-    }
-
-    public void setErlgrp(String erlgrp) {
-        this.erlgrp = erlgrp;
-    }
-
-    public String getRecnr() {
-        return recnr;
-    }
-
-    public void setRecnr(String recnr) {
-        this.recnr = recnr;
-    }
-
-    public String getRecdat() {
-        return recdat;
-    }
-
-    public void setRecdat(String recdat) {
-        this.recdat = recdat;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getSdpsJobUuid() {
-        return sdpsJobUuid;
-    }
-
-    public void setSdpsJobUuid(String sdpsJobUuid) {
-        this.sdpsJobUuid = sdpsJobUuid;
-    }
-
-    public String getSdpsFlaUuid() {
-        return sdpsFlaUuid;
-    }
-
-    public void setSdpsFlaUuid(String sdpsFlaUuid) {
-        this.sdpsFlaUuid = sdpsFlaUuid;
-    }
+    public String getSdpsFlaUuid() { return sdpsFlaUuid; }
+    public void setSdpsFlaUuid(String sdpsFlaUuid) { this.sdpsFlaUuid = sdpsFlaUuid; }
 }

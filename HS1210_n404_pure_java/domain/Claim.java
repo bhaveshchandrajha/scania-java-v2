@@ -1,7 +1,16 @@
+/**
+ * Domain entity or value object for the warranty claims model.
+ * <p>
+ * Generated from RPG: unit {@code HS1210}, node {@code n404}.
+ */
+
 package com.scania.warranty.domain;
 
 import jakarta.persistence.*;
 
+/**
+ * JPA entity for claim header (HSG71LF2).
+ */
 @Entity
 @Table(name = "HSG71LF2")
 public class Claim {
@@ -23,7 +32,7 @@ public class Claim {
     private String orderNumber;
     
     @Column(name = "WETE", length = 1)
-    private String workshopCounter;
+    private String workshopTheke;
     
     @Column(name = "CLAIM-NR.", length = 8)
     private String claimNumber;
@@ -71,185 +80,75 @@ public class Claim {
     private String area;
     
     @Column(name = "AUF.NR.", length = 10)
-    private String jobNumber;
+    private String orderNumberSdps;
 
-    public Claim() {
-    }
+    // Constructors
+    public Claim() {}
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getCompanyCode() { return companyCode; }
+    public void setCompanyCode(String companyCode) { this.companyCode = companyCode; }
 
-    public String getCompanyCode() {
-        return companyCode;
-    }
+    public String getInvoiceNumber() { return invoiceNumber; }
+    public void setInvoiceNumber(String invoiceNumber) { this.invoiceNumber = invoiceNumber; }
 
-    public void setCompanyCode(String companyCode) {
-        this.companyCode = companyCode;
-    }
+    public String getInvoiceDate() { return invoiceDate; }
+    public void setInvoiceDate(String invoiceDate) { this.invoiceDate = invoiceDate; }
 
-    public String getInvoiceNumber() {
-        return invoiceNumber;
-    }
+    public String getOrderNumber() { return orderNumber; }
+    public void setOrderNumber(String orderNumber) { this.orderNumber = orderNumber; }
 
-    public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
+    public String getWorkshopTheke() { return workshopTheke; }
+    public void setWorkshopTheke(String workshopTheke) { this.workshopTheke = workshopTheke; }
 
-    public String getInvoiceDate() {
-        return invoiceDate;
-    }
+    public String getClaimNumber() { return claimNumber; }
+    public void setClaimNumber(String claimNumber) { this.claimNumber = claimNumber; }
 
-    public void setInvoiceDate(String invoiceDate) {
-        this.invoiceDate = invoiceDate;
-    }
+    public String getChassisNumber() { return chassisNumber; }
+    public void setChassisNumber(String chassisNumber) { this.chassisNumber = chassisNumber; }
 
-    public String getOrderNumber() {
-        return orderNumber;
-    }
+    public String getLicensePlate() { return licensePlate; }
+    public void setLicensePlate(String licensePlate) { this.licensePlate = licensePlate; }
 
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
-    }
+    public Integer getRegistrationDate() { return registrationDate; }
+    public void setRegistrationDate(Integer registrationDate) { this.registrationDate = registrationDate; }
 
-    public String getWorkshopCounter() {
-        return workshopCounter;
-    }
+    public Integer getRepairDate() { return repairDate; }
+    public void setRepairDate(Integer repairDate) { this.repairDate = repairDate; }
 
-    public void setWorkshopCounter(String workshopCounter) {
-        this.workshopCounter = workshopCounter;
-    }
+    public Integer getMileage() { return mileage; }
+    public void setMileage(Integer mileage) { this.mileage = mileage; }
 
-    public String getClaimNumber() {
-        return claimNumber;
-    }
+    public Integer getProductType() { return productType; }
+    public void setProductType(Integer productType) { this.productType = productType; }
 
-    public void setClaimNumber(String claimNumber) {
-        this.claimNumber = claimNumber;
-    }
+    public String getAttachment() { return attachment; }
+    public void setAttachment(String attachment) { this.attachment = attachment; }
 
-    public String getChassisNumber() {
-        return chassisNumber;
-    }
+    public String getForeigner() { return foreigner; }
+    public void setForeigner(String foreigner) { this.foreigner = foreigner; }
 
-    public void setChassisNumber(String chassisNumber) {
-        this.chassisNumber = chassisNumber;
-    }
+    public String getCustomerNumber() { return customerNumber; }
+    public void setCustomerNumber(String customerNumber) { this.customerNumber = customerNumber; }
 
-    public String getLicensePlate() {
-        return licensePlate;
-    }
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
 
-    public void setLicensePlate(String licensePlate) {
-        this.licensePlate = licensePlate;
-    }
+    public String getClaimNumberSde() { return claimNumberSde; }
+    public void setClaimNumberSde(String claimNumberSde) { this.claimNumberSde = claimNumberSde; }
 
-    public Integer getRegistrationDate() {
-        return registrationDate;
-    }
+    public Integer getStatusCodeSde() { return statusCodeSde; }
+    public void setStatusCodeSde(Integer statusCodeSde) { this.statusCodeSde = statusCodeSde; }
 
-    public void setRegistrationDate(Integer registrationDate) {
-        this.registrationDate = registrationDate;
-    }
+    public Integer getErrorCount() { return errorCount; }
+    public void setErrorCount(Integer errorCount) { this.errorCount = errorCount; }
 
-    public Integer getRepairDate() {
-        return repairDate;
-    }
+    public String getArea() { return area; }
+    public void setArea(String area) { this.area = area; }
 
-    public void setRepairDate(Integer repairDate) {
-        this.repairDate = repairDate;
-    }
-
-    public Integer getMileage() {
-        return mileage;
-    }
-
-    public void setMileage(Integer mileage) {
-        this.mileage = mileage;
-    }
-
-    public Integer getProductType() {
-        return productType;
-    }
-
-    public void setProductType(Integer productType) {
-        this.productType = productType;
-    }
-
-    public String getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(String attachment) {
-        this.attachment = attachment;
-    }
-
-    public String getForeigner() {
-        return foreigner;
-    }
-
-    public void setForeigner(String foreigner) {
-        this.foreigner = foreigner;
-    }
-
-    public String getCustomerNumber() {
-        return customerNumber;
-    }
-
-    public void setCustomerNumber(String customerNumber) {
-        this.customerNumber = customerNumber;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getClaimNumberSde() {
-        return claimNumberSde;
-    }
-
-    public void setClaimNumberSde(String claimNumberSde) {
-        this.claimNumberSde = claimNumberSde;
-    }
-
-    public Integer getStatusCodeSde() {
-        return statusCodeSde;
-    }
-
-    public void setStatusCodeSde(Integer statusCodeSde) {
-        this.statusCodeSde = statusCodeSde;
-    }
-
-    public Integer getErrorCount() {
-        return errorCount;
-    }
-
-    public void setErrorCount(Integer errorCount) {
-        this.errorCount = errorCount;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public String getJobNumber() {
-        return jobNumber;
-    }
-
-    public void setJobNumber(String jobNumber) {
-        this.jobNumber = jobNumber;
-    }
+    public String getOrderNumberSdps() { return orderNumberSdps; }
+    public void setOrderNumberSdps(String orderNumberSdps) { this.orderNumberSdps = orderNumberSdps; }
 }

@@ -36,19 +36,25 @@ public class ClaimCreationService {
     
     public Claim createClaimFromInvoice(String pakz, String invoiceNumber, String invoiceDate, 
                                         String orderNumber, String area) {
+        // @origin HS1210 L941-941 (CHAIN)
         Optional<Invoice> invoiceOpt = invoiceRepository.findByPakzAndRnrAndRdatAndAnrAndBereiAndWtAndSplitt(
                 pakz, invoiceNumber, invoiceDate, orderNumber, area, "1", "04");
         
+        // @origin HS1210 L830-833 (IF)
         if (invoiceOpt.isEmpty()) {
+            // @origin HS1210 L895-895 (EXSR)
             throw new IllegalArgumentException("Invoice not found");
         }
         
         Invoice invoice = invoiceOpt.get();
         
+        // @origin HS1210 L1027-1027 (CHAIN)
         List<Claim> existingClaims = claimRepository.findByPakzAndRechNrAndRechDatum(
                 pakz, invoiceNumber, invoiceDate);
         
+        // @origin HS1210 L884-1012 (DOW)
         for (Claim existing : existingClaims) {
+            // @origin HS1210 L841-844 (IF)
             if (existing.getStatusCodeSde() != null && existing.getStatusCodeSde() != 99) {
                 // Idempotent behaviour: return existing active claim instead of failing
                 return existing;
@@ -56,6 +62,7 @@ public class ClaimCreationService {
         }
         
         Claim claim = new Claim();
+        // @origin HS1210 L887-887 (EVAL)
         claim.setPakz(invoice.getPakz());
         claim.setRechNr(invoice.getRnr());
         claim.setRechDatum(invoice.getRdat());
@@ -85,6 +92,7 @@ public class ClaimCreationService {
         claim.setBereich(invoice.getBerei());
         claim.setAufNr(invoice.getAnr() + invoice.getBerei() + invoice.getWt() + invoice.getSplitt());
         
+        // @origin HS1210 L860-860 (WRITE)
         claim = claimRepository.save(claim);
         
         copyWorkPositionsToClaim(invoice, claim);
@@ -94,8 +102,10 @@ public class ClaimCreationService {
     }
     
     private String generateNextClaimNumber(String pakz) {
+        // @origin HS1210 L1035-1035 (CHAIN)
         Optional<String> maxClaimNr = claimRepository.findMaxClaimNrByPakz(pakz);
         
+        // @origin HS1210 L845-848 (IF)
         if (maxClaimNr.isPresent()) {
             try {
                 int nextNumber = Integer.parseInt(maxClaimNr.get()) + 1;
@@ -141,16 +151,20 @@ public class ClaimCreationService {
     }
     
     private void copyWorkPositionsToClaim(Invoice invoice, Claim claim) {
+        // @origin HS1210 L1100-1100 (CHAIN)
         List<WorkPosition> workPositions = workPositionRepository.findByPakzAndRnrAndRdatAndAnrAndBereiAndWtAndSplittOrderByPosAsc(
                 invoice.getPakz(), invoice.getRnr(), invoice.getRdat(), 
                 invoice.getAnr(), invoice.getBerei(), invoice.getWt(), invoice.getSplitt());
         
         int positionCounter = 1;
+        // @origin HS1210 L908-913 (DOW)
         for (WorkPosition workPosition : workPositions) {
+            // @origin HS1210 L894-896 (IF)
             if (!shouldIncludeWorkPosition(workPosition)) {
                 continue;
             }
             ClaimError claimError = new ClaimError();
+            // @origin HS1210 L1183-1183 (EVAL)
             claimError.setPakz(claim.getPakz());
             claimError.setRechNr(claim.getRechNr());
             claimError.setRechDatum(claim.getRechDatum());
@@ -169,12 +183,14 @@ public class ClaimCreationService {
             claimError.setVergMat(0);
             claimError.setVergArb(0);
             claimError.setVergSpez(0);
+            // @origin HS1210 L861-861 (WRITE)
             claimErrorRepository.save(claimError);
             positionCounter++;
         }
     }
 
     private boolean shouldIncludeWorkPosition(WorkPosition workPosition) {
+        // @origin HS1210 L899-917 (IF)
         if (workPosition.getRgNetto() == null || workPosition.getRgNetto().compareTo(BigDecimal.ZERO) == 0) {
             return false;
         }
@@ -198,12 +214,15 @@ public class ClaimCreationService {
     }
     
     private void copyExternalServicesToClaim(Invoice invoice, Claim claim) {
+        // @origin HS1210 L1106-1106 (CHAIN)
         List<HSFLALF1> externalServices = hsflalf1Repository.findByPkzAndBesNrAndBesDatAndAufnrAndBereiAndWtAndSpl(
                 invoice.getPakz(), invoice.getRnr(), invoice.getRdat(), 
                 invoice.getAnr(), invoice.getBerei(), invoice.getWt(), invoice.getSplitt());
         
         int positionCounter = claimErrorRepository.findByPakzAndClaimNr(claim.getPakz(), claim.getClaimNr()).size() + 1;
+        // @origin HS1210 L1028-1036 (DOW)
         for (HSFLALF1 service : externalServices) {
+            // @origin HS1210 L919-996 (IF)
             if (service.getStatus() == null) {
                 continue;
             }
@@ -220,6 +239,7 @@ public class ClaimCreationService {
                 continue;
             }
             ClaimError claimError = new ClaimError();
+            // @origin HS1210 L1618-1618 (EVAL)
             claimError.setPakz(claim.getPakz());
             claimError.setRechNr(claim.getRechNr());
             claimError.setRechDatum(claim.getRechDatum());
@@ -238,17 +258,22 @@ public class ClaimCreationService {
             claimError.setVergMat(0);
             claimError.setVergArb(0);
             claimError.setVergSpez(0);
+            // @origin HS1210 L989-989 (WRITE)
             claimErrorRepository.save(claimError);
             positionCounter++;
         }
     }
     
     public void updateClaimStatus(String pakz, String claimNumber, int newStatus) {
+        // @origin HS1210 L1135-1135 (CHAIN)
         Optional<Claim> claimOpt = claimRepository.findByPakzAndClaimNr(pakz, claimNumber);
         
+        // @origin HS1210 L959-970 (IF)
         if (claimOpt.isPresent()) {
             Claim claim = claimOpt.get();
+            // @origin HS1210 L1746-1746 (EVAL)
             claim.setStatusCodeSde(newStatus);
+            // @origin HS1210 L990-990 (WRITE)
             claimRepository.save(claim);
         }
     }

@@ -1,7 +1,16 @@
+/**
+ * Domain entity or value object for the warranty claims model.
+ * <p>
+ * Generated from RPG: unit {@code HS1210}, node {@code n404}.
+ */
+
 package com.scania.warranty.domain;
 
 import jakarta.persistence.*;
 
+/**
+ * JPA entity for release request (HSG70F).
+ */
 @Entity
 @Table(name = "HSG70F")
 public class ReleaseRequest {
@@ -11,112 +20,63 @@ public class ReleaseRequest {
     private Long id;
     
     @Column(name = "KZL", length = 3)
-    private String kzl;
+    private String companyCode;
     
     @Column(name = "R.NR.", length = 5)
-    private String rNr;
+    private String invoiceNumber;
     
     @Column(name = "R.DAT", length = 8)
-    private String rDat;
+    private String invoiceDate;
     
     @Column(name = "FGNR.", length = 17)
-    private String fgnr;
+    private String chassisNumber;
     
     @Column(name = "REP.DAT.", length = 8)
-    private String repDat;
+    private String repairDate;
     
     @Column(name = "STATUS", length = 1)
     private String status;
     
     @Column(name = "CUS.NO.", precision = 5, scale = 0)
-    private Integer cusNo;
+    private Integer customerNumber;
     
     @Column(name = "D.C.NO.", precision = 8, scale = 0)
-    private Integer dcNo;
+    private Integer dcNumber;
     
     @Column(name = "D.C.FN.", length = 5)
     private String dcFn;
-    
-    public ReleaseRequest() {
-    }
-    
-    public Long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public String getKzl() {
-        return kzl;
-    }
-    
-    public void setKzl(String kzl) {
-        this.kzl = kzl;
-    }
-    
-    public String getrNr() {
-        return rNr;
-    }
-    
-    public void setrNr(String rNr) {
-        this.rNr = rNr;
-    }
-    
-    public String getrDat() {
-        return rDat;
-    }
-    
-    public void setrDat(String rDat) {
-        this.rDat = rDat;
-    }
-    
-    public String getFgnr() {
-        return fgnr;
-    }
-    
-    public void setFgnr(String fgnr) {
-        this.fgnr = fgnr;
-    }
-    
-    public String getRepDat() {
-        return repDat;
-    }
-    
-    public void setRepDat(String repDat) {
-        this.repDat = repDat;
-    }
-    
-    public String getStatus() {
-        return status;
-    }
-    
-    public void setStatus(String status) {
-        this.status = status;
-    }
-    
-    public Integer getCusNo() {
-        return cusNo;
-    }
-    
-    public void setCusNo(Integer cusNo) {
-        this.cusNo = cusNo;
-    }
-    
-    public Integer getDcNo() {
-        return dcNo;
-    }
-    
-    public void setDcNo(Integer dcNo) {
-        this.dcNo = dcNo;
-    }
-    
-    public String getDcFn() {
-        return dcFn;
-    }
-    
-    public void setDcFn(String dcFn) {
-        this.dcFn = dcFn;
-    }
+
+    // Constructors
+    public ReleaseRequest() {}
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getCompanyCode() { return companyCode; }
+    public void setCompanyCode(String companyCode) { this.companyCode = companyCode; }
+
+    public String getInvoiceNumber() { return invoiceNumber; }
+    public void setInvoiceNumber(String invoiceNumber) { this.invoiceNumber = invoiceNumber; }
+
+    public String getInvoiceDate() { return invoiceDate; }
+    public void setInvoiceDate(String invoiceDate) { this.invoiceDate = invoiceDate; }
+
+    public String getChassisNumber() { return chassisNumber; }
+    public void setChassisNumber(String chassisNumber) { this.chassisNumber = chassisNumber; }
+
+    public String getRepairDate() { return repairDate; }
+    public void setRepairDate(String repairDate) { this.repairDate = repairDate; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public Integer getCustomerNumber() { return customerNumber; }
+    public void setCustomerNumber(Integer customerNumber) { this.customerNumber = customerNumber; }
+
+    public Integer getDcNumber() { return dcNumber; }
+    public void setDcNumber(Integer dcNumber) { this.dcNumber = dcNumber; }
+
+    public String getDcFn() { return dcFn; }
+    public void setDcFn(String dcFn) { this.dcFn = dcFn; }
 }

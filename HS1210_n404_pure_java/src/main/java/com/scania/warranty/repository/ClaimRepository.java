@@ -27,6 +27,7 @@ public interface ClaimRepository extends JpaRepository<Claim, Long> {
     
     List<Claim> findByPakzAndRechNrAndRechDatum(String pakz, String rechNr, String rechDatum);
     
+    // @origin HS1210 L941-941 (CHAIN)
     @Query("SELECT c FROM Claim c WHERE c.pakz = :pakz AND c.statusCodeSde <> 99")
     List<Claim> findActiveClaimsByPakz(@Param("pakz") String pakz);
     

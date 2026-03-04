@@ -44,15 +44,19 @@ public class ClaimSearchService {
         List<Claim> claims;
         
         // If pakz is provided, filter by pakz; otherwise get all claims
+        // @origin HS1210 L830-833 (IF)
         if (criteria.pakz() != null && !criteria.pakz().isBlank()) {
             if (ascending) {
+                // @origin HS1210 L941-941 (CHAIN)
                 claims = claimRepository.findByPakzOrderByClaimNrAsc(criteria.pakz());
             } else {
                 claims = claimRepository.findByPakzOrderByClaimNrDesc(criteria.pakz());
             }
         } else {
             // Get all claims when pakz is not specified
+            // @origin HS1210 L845-848 (IF)
             if (ascending) {
+                // @origin HS1210 L1035-1035 (CHAIN)
                 claims = claimRepository.findAllOrderByClaimNrAsc();
             } else {
                 claims = claimRepository.findAllOrderByClaimNrDesc();
@@ -67,7 +71,9 @@ public class ClaimSearchService {
     
     public List<ClaimListItemDto> getAllClaims(boolean ascending) {
         List<Claim> claims;
+        // @origin HS1210 L864-883 (IF)
         if (ascending) {
+            // @origin HS1210 L1106-1106 (CHAIN)
             claims = claimRepository.findAllOrderByClaimNrAsc();
         } else {
             claims = claimRepository.findAllOrderByClaimNrDesc();
@@ -79,6 +85,7 @@ public class ClaimSearchService {
     }
     
     private boolean applyFilters(Claim claim, ClaimSearchCriteria criteria) {
+        // @origin HS1210 L886-892 (IF)
         if (criteria.filterDays() != null && criteria.filterDays() > 0) {
             if (!checkClaimAge(claim, criteria.filterDays())) {
                 return false;
@@ -142,10 +149,13 @@ public class ClaimSearchService {
     }
     
     private boolean checkClaimType(Claim claim, String claimType) {
+        // @origin HS1210 L1135-1135 (CHAIN)
         List<ClaimError> errors = claimErrorRepository.findByPakzAndClaimNr(claim.getPakz(), claim.getClaimNr());
         
+        // @origin HS1210 L884-1012 (DOW)
         for (ClaimError error : errors) {
             String scope = determineScope(error);
+            // @origin HS1210 L975-995 (IF)
             if (claimType.equals(scope)) {
                 return true;
             }
@@ -174,13 +184,17 @@ public class ClaimSearchService {
             return true;
         }
         
+        // @origin HS1210 L1141-1141 (CHAIN)
         List<ClaimError> errors = claimErrorRepository.findByPakzAndClaimNr(claim.getPakz(), claim.getClaimNr());
         
+        // @origin HS1210 L1000-1011 (IF)
         if (errors.isEmpty()) {
             return true;
         }
         
+        // @origin HS1210 L908-913 (DOW)
         for (ClaimError error : errors) {
+            // @origin HS1210 L1014-1023 (IF)
             if (error.getStatusCode() == null || error.getStatusCode() == 0) {
                 return true;
             }
@@ -253,15 +267,18 @@ public class ClaimSearchService {
     }
     
     private String determineColorIndicator(Claim claim) {
+        // @origin HS1210 L1154-1154 (CHAIN)
         List<ClaimError> errors = claimErrorRepository.findByPakzAndClaimNr(claim.getPakz(), claim.getClaimNr());
         
         boolean hasError = false;
         boolean hasWarning = false;
         boolean hasInfo = false;
         
+        // @origin HS1210 L1028-1036 (DOW)
         for (ClaimError error : errors) {
             Integer statusCode = error.getStatusCode();
             
+            // @origin HS1210 L1098-1110 (IF)
             if (statusCode != null) {
                 if (statusCode == 16 || statusCode == 30 || statusCode == 0) {
                     hasError = true;
@@ -300,6 +317,7 @@ public class ClaimSearchService {
     }
     
     public Optional<Claim> findClaimByNumber(String pakz, String claimNumber) {
+        // @origin HS1210 L1159-1159 (CHAIN)
         return claimRepository.findByPakzAndClaimNr(pakz, claimNumber);
     }
     
@@ -307,9 +325,12 @@ public class ClaimSearchService {
     public void deleteClaim(String pakz, String claimNumber) {
         Optional<Claim> claimOpt = claimRepository.findByPakzAndClaimNr(pakz, claimNumber);
         
+        // @origin HS1210 L1152-1162 (IF)
         if (claimOpt.isPresent()) {
             Claim claim = claimOpt.get();
+            // @origin HS1210 L887-887 (EVAL)
             claim.setStatusCodeSde(99);
+            // @origin HS1210 L860-860 (WRITE)
             claimRepository.save(claim);
             
             claimErrorRepository.deleteByPakzAndClaimNr(pakz, claimNumber);

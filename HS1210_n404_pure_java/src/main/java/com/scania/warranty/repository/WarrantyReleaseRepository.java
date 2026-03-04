@@ -10,6 +10,7 @@ import java.util.Optional;
 @Repository
 public interface WarrantyReleaseRepository extends JpaRepository<WarrantyRelease, Long> {
     
+    // @origin HS1210 L941-941 (CHAIN)
     @Query("SELECT w FROM WarrantyRelease w WHERE w.kzl = :kzl AND w.rNr = :rNr AND w.rDat = :rDat")
     Optional<WarrantyRelease> findByKzlAndRNrAndRDat(@Param("kzl") String kzl, @Param("rNr") String rNr, @Param("rDat") String rDat);
 }

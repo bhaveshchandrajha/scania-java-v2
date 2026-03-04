@@ -1,0 +1,38 @@
+# Build outputs
+target/
+*.class
+*.jar
+*.jar.original
+*.war
+*.ear
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+.eggs/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Archives (large zip files)
+*.zip
+
+# Backup/checkpoint folders
+backup_*/
+*_checkpoint_*/
+
+# Optional: exclude large generated data
+# context_index_old_*/
+# JSON_ast/
