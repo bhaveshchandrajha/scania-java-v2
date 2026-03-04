@@ -1278,6 +1278,32 @@ def write_multi_file_output(
     return output_dir, written_files
 
 
+def _run_generate_tests(project_root: Path) -> None:
+    """Run generate_test_cases.py after successful migration."""
+    import subprocess
+    script = Path(__file__).resolve().parent / "generate_test_cases.py"
+    if not script.exists():
+        print("// ⚠️  generate_test_cases.py not found; skipping test generation", file=sys.stderr)
+        return
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(script), str(project_root)],
+            capture_output=True,
+            text=True,
+            timeout=300,
+            cwd=str(Path(__file__).resolve().parent),
+        )
+        if proc.stderr:
+            for line in proc.stderr.splitlines():
+                print(line, file=sys.stderr)
+        if proc.returncode != 0:
+            print(f"// ⚠️  Test generation exited with code {proc.returncode}", file=sys.stderr)
+    except subprocess.TimeoutExpired:
+        print("// ⚠️  Test generation timed out", file=sys.stderr)
+    except Exception as e:
+        print(f"// ⚠️  Test generation failed: {e}", file=sys.stderr)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Track B: Migrate RPG to Pure Java with layered architecture",
@@ -1342,6 +1368,11 @@ def main():
         "--no-inline-origin",
         action="store_true",
         help="Do not inject // @origin RPG line annotations into generated Java (traceability in IDE).",
+    )
+    parser.add_argument(
+        "--generate-tests",
+        action="store_true",
+        help="After generating Java code, run generate_test_cases.py to create JUnit 5 integration tests based on the warranty claim workflow spec.",
     )
     args = parser.parse_args()
 
@@ -1495,8 +1526,12 @@ def main():
                             print(f"// ⚠️  Inline origin injection skipped: {e}", file=sys.stderr)
                     if integration_mode:
                         print(f"// ✅ Migration complete! Files integrated into project: {output_dir.parent.parent}", file=sys.stderr)
+                        if args.generate_tests:
+                            _run_generate_tests(output_dir.parent.parent)
                     else:
                         print(f"// ✅ Migration complete! Files written to: {output_dir}", file=sys.stderr)
+                        if args.generate_tests:
+                            _run_generate_tests(output_dir)
                 else:
                     print("// ⚠️  WARNING: No files extracted from output. Check parser logic.", file=sys.stderr)
         else:
@@ -1568,8 +1603,12 @@ def main():
                         print(f"// ⚠️  Inline origin injection skipped: {e}", file=sys.stderr)
                 if integration_mode:
                     print(f"// ✅ Migration complete! Files integrated into project: {output_dir.parent.parent}", file=sys.stderr)
+                    if args.generate_tests:
+                        _run_generate_tests(output_dir.parent.parent)
                 else:
                     print(f"// ✅ Migration complete! Files written to: {output_dir}", file=sys.stderr)
+                    if args.generate_tests:
+                        _run_generate_tests(output_dir)
             else:
                 print("// ⚠️  WARNING: No files extracted from output. Check parser logic.", file=sys.stderr)
                 print("// Output preview (first 500 chars):", file=sys.stderr)

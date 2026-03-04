@@ -255,6 +255,95 @@ class MigrationHandler(SimpleHTTPRequestHandler):
 
         return result
 
+    def _handle_discover_directories(self):
+        """Discover available AST and RPG directories (shared by GET and POST)."""
+        ast_dirs = []
+        rpg_dirs = []
+        seen_ast_paths = set()
+
+        def add_ast_dir(item_path: Path, label: Optional[str] = None, allow_empty: bool = False):
+            try:
+                rel = str(item_path.relative_to(ROOT_DIR))
+            except ValueError:
+                return
+            if rel in seen_ast_paths:
+                return
+            ast_files = list(item_path.glob("*-ast.json"))
+            if ast_files or allow_empty:
+                seen_ast_paths.add(rel)
+                ast_dirs.append({
+                    "path": rel,
+                    "fileCount": len(ast_files),
+                    "files": [f.name for f in ast_files[:5]],
+                    "label": label,
+                })
+        try:
+            ast_base = ROOT_DIR / "JSON_ast"
+            if ast_base.exists():
+                for item in sorted(ast_base.iterdir(), key=lambda p: p.name):
+                    if item.is_dir():
+                        add_ast_dir(item, allow_empty=True)
+            for item in sorted(ROOT_DIR.iterdir(), key=lambda p: p.name):
+                if item.is_dir() and not item.name.startswith("."):
+                    ast_files = list(item.glob("*-ast.json"))
+                    label = "DDS" if "D_" in item.name or any(f.name.endswith("D-ast.json") for f in ast_files) else None
+                    add_ast_dir(item, label=label)
+        except OSError:
+            pass
+        dds_fallback_name = "HS1210D_20260216"
+        dds_fallback_path = ROOT_DIR / dds_fallback_name
+        if dds_fallback_name not in seen_ast_paths and dds_fallback_path.is_dir():
+            if list(dds_fallback_path.glob("*-ast.json")):
+                add_ast_dir(dds_fallback_path, label="DDS")
+        ast_dirs.sort(key=lambda d: (0 if d["path"].startswith("JSON_ast/") else 1, d["path"]))
+        dds_ast_dirs = [d for d in ast_dirs if d.get("label") == "DDS"]
+        if not dds_ast_dirs:
+            for candidate in ["HS1210D_20260216"]:
+                p = ROOT_DIR / candidate
+                if p.is_dir() and list(p.glob("*-ast.json")):
+                    dds_ast_dirs.append({
+                        "path": candidate,
+                        "fileCount": len(list(p.glob("*-ast.json"))),
+                        "files": [f.name for f in p.glob("*-ast.json")][:5],
+                        "label": "DDS",
+                    })
+                    break
+        for item in ROOT_DIR.iterdir():
+            if item.is_dir() and (item.name.startswith("PoC_") or item.name.startswith("HS12")):
+                rpg_files = find_rpg_files(item)
+                if rpg_files or item.name.startswith("PoC_"):
+                    rel_path = str(item.relative_to(ROOT_DIR))
+                    rpg_dirs.append(rel_path)
+        for item in ROOT_DIR.iterdir():
+            if item.is_dir():
+                for subdir in item.iterdir():
+                    if subdir.is_dir() and (subdir.name.startswith("PoC_") or subdir.name.startswith("HS12")):
+                        rpg_files = find_rpg_files(subdir)
+                        if rpg_files or subdir.name.startswith("PoC_"):
+                            rel_path = str(subdir.relative_to(ROOT_DIR))
+                            if rel_path not in rpg_dirs:
+                                rpg_dirs.append(rel_path)
+        zip_files = []
+        for item in ROOT_DIR.iterdir():
+            if item.is_file() and item.suffix == ".zip" and item.name.startswith("PoC_"):
+                zip_files.append({
+                    "path": str(item.name),
+                    "extracted": False,
+                    "suggestion": f"Extract {item.name} to create RPG directory"
+                })
+        result = {
+            "astDirs": ast_dirs,
+            "ddsAstDirs": dds_ast_dirs,
+            "rpgDirs": rpg_dirs,
+            "defaultAstDir": ast_dirs[0]["path"] if ast_dirs else "JSON_ast/JSON_20260211",
+            "defaultRpgDir": rpg_dirs[0] if rpg_dirs else None
+        }
+        if zip_files:
+            result["zipFiles"] = zip_files
+            if not rpg_dirs:
+                result["suggestion"] = f"Found {zip_files[0]['path']} - extract it to create RPG directory"
+        self._send_json(result)
+
     def do_GET(self):
         parsed = urlparse(self.path)
         if parsed.path == "/":
@@ -393,6 +482,10 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                 }, status=503)
             except Exception as e:
                 self._send_json({"error": str(e)}, status=500)
+            return
+
+        if parsed.path == "/api/discover-directories":
+            self._handle_discover_directories()
             return
 
         if parsed.path == "/api/manifest":
@@ -691,115 +784,9 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
             return
         
         if parsed.path == "/api/discover-directories":
-            # Discover available AST and RPG directories
-            ast_dirs = []
-            rpg_dirs = []
-            seen_ast_paths = set()
-
-            def add_ast_dir(item_path: Path, label: str | None = None, allow_empty: bool = False):
-                try:
-                    rel = str(item_path.relative_to(ROOT_DIR))
-                except ValueError:
-                    return
-                if rel in seen_ast_paths:
-                    return
-                ast_files = list(item_path.glob("*-ast.json"))
-                if ast_files or allow_empty:
-                    seen_ast_paths.add(rel)
-                    ast_dirs.append({
-                        "path": rel,
-                        "fileCount": len(ast_files),
-                        "files": [f.name for f in ast_files[:5]],
-                        "label": label,
-                    })
-            try:
-                # 1) AST directories under JSON_ast (RPG program ASTs); include even if empty so user can add new ASTs
-                ast_base = ROOT_DIR / "JSON_ast"
-                if ast_base.exists():
-                    for item in sorted(ast_base.iterdir(), key=lambda p: p.name):
-                        if item.is_dir():
-                            add_ast_dir(item, allow_empty=True)
-
-                # 2) Root-level directories that contain *-ast.json (e.g. HS1210D_20260216 DDS AST)
-                for item in sorted(ROOT_DIR.iterdir(), key=lambda p: p.name):
-                    if item.is_dir() and not item.name.startswith("."):
-                        ast_files = list(item.glob("*-ast.json"))
-                        label = "DDS" if "D_" in item.name or any(f.name.endswith("D-ast.json") for f in ast_files) else None
-                        add_ast_dir(item, label=label)
-            except OSError:
-                pass  # e.g. permission denied on iterdir
-
-            # 3) Explicit fallback: ensure known DDS AST folder appears if it exists (avoids iterdir/order issues)
-            dds_fallback_name = "HS1210D_20260216"
-            dds_fallback_path = ROOT_DIR / dds_fallback_name
-            if dds_fallback_name not in seen_ast_paths and dds_fallback_path.is_dir():
-                if list(dds_fallback_path.glob("*-ast.json")):
-                    add_ast_dir(dds_fallback_path, label="DDS")
-
-            # Prefer JSON_ast subdirs first, then others (by path)
-            ast_dirs.sort(key=lambda d: (0 if d["path"].startswith("JSON_ast/") else 1, d["path"]))
-
-            # Build dedicated ddsAstDirs list so UI can show DDS options even if astDirs was filtered
-            dds_ast_dirs = [d for d in ast_dirs if d.get("label") == "DDS"]
-            if not dds_ast_dirs:
-                # Explicit check: add known DDS folder by path so it always appears when present
-                for candidate in ["HS1210D_20260216"]:
-                    p = ROOT_DIR / candidate
-                    if p.is_dir() and list(p.glob("*-ast.json")):
-                        dds_ast_dirs.append({
-                            "path": candidate,
-                            "fileCount": len(list(p.glob("*-ast.json"))),
-                            "files": [f.name for f in p.glob("*-ast.json")][:5],
-                            "label": "DDS",
-                        })
-                        break
-
-            # Find RPG directories
-            for item in ROOT_DIR.iterdir():
-                if item.is_dir() and (item.name.startswith("PoC_") or item.name.startswith("HS12")):
-                    # Check if it looks like an RPG source directory (has .rpgle or .sqlrpgle files)
-                    rpg_files = find_rpg_files(item)
-                    if rpg_files or item.name.startswith("PoC_"):
-                        # Use relative path from project root
-                        rel_path = str(item.relative_to(ROOT_DIR))
-                        rpg_dirs.append(rel_path)
-            
-            # Also check nested directories (e.g., PoC_HS1210/PoC_HS1210/)
-            for item in ROOT_DIR.iterdir():
-                if item.is_dir():
-                    for subdir in item.iterdir():
-                        if subdir.is_dir() and (subdir.name.startswith("PoC_") or subdir.name.startswith("HS12")):
-                            rpg_files = find_rpg_files(subdir)
-                            if rpg_files or subdir.name.startswith("PoC_"):
-                                rel_path = str(subdir.relative_to(ROOT_DIR))
-                                if rel_path not in rpg_dirs:
-                                    rpg_dirs.append(rel_path)
-            
-            # Zip files that might need extraction
-            zip_files = []
-            for item in ROOT_DIR.iterdir():
-                if item.is_file() and item.suffix == ".zip" and item.name.startswith("PoC_"):
-                    zip_files.append({
-                        "path": str(item.name),
-                        "extracted": False,
-                        "suggestion": f"Extract {item.name} to create RPG directory"
-                    })
-
-            result = {
-                "astDirs": ast_dirs,
-                "ddsAstDirs": dds_ast_dirs,
-                "rpgDirs": rpg_dirs,
-                "defaultAstDir": ast_dirs[0]["path"] if ast_dirs else "JSON_ast/JSON_20260211",
-                "defaultRpgDir": rpg_dirs[0] if rpg_dirs else None
-            }
-            if zip_files:
-                result["zipFiles"] = zip_files
-                if not rpg_dirs:
-                    result["suggestion"] = f"Found {zip_files[0]['path']} - extract it to create RPG directory"
-
-            self._send_json(result)
+            self._handle_discover_directories()
             return
-        
+
         if parsed.path == "/api/build-context":
             # Build context packages from ASTs
             content_length = int(self.headers.get("Content-Length", 0))
@@ -1038,30 +1025,15 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                 return
             
             try:
-                # Find Java executable
-                java_home = os.environ.get("JAVA_HOME")
-                if not java_home:
-                    # Try to find Java 17+
-                    import shutil
-                    java_path = shutil.which("java")
-                    if java_path:
-                        java_home = str(Path(java_path).parent.parent)
-                
-                if not java_home or not Path(java_home).exists():
-                    self._send_json({"error": "JAVA_HOME not set or invalid"}, status=400)
+                # Use Python build_context_index.py (replacement for Java IndexAll)
+                build_script = ROOT_DIR / "build_context_index.py"
+                if not build_script.exists():
+                    self._send_json({"error": f"build_context_index.py not found: {build_script}"}, status=404)
                     return
-                
-                java_exe = Path(java_home) / "bin" / "java"
-                jar_file = ROOT_DIR / "target" / "pks-ast-migration-pipeline-0.1.0-SNAPSHOT.jar"
-                
-                if not jar_file.exists():
-                    self._send_json({"error": f"JAR not found: {jar_file}. Run 'mvn clean package' first."}, status=404)
-                    return
-                
+
                 cmd = [
-                    str(java_exe),
-                    "-cp", str(jar_file),
-                    "com.pks.migration.IndexAll",
+                    sys.executable,
+                    str(build_script),
                     "--astDir", str(ast_path),
                     "--rpgDir", str(rpg_path),
                     "--outputDir", str(ROOT_DIR)
@@ -1239,7 +1211,8 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                     str(migrate_script),
                     str(ctx_file),
                     "--output-dir", output_dir,
-                    "--model", model
+                    "--model", model,
+                    "--generate-tests",
                 ]
                 
                 print(f"[Pure Java Migration] Starting {unit_id}_{node_id}...", flush=True)

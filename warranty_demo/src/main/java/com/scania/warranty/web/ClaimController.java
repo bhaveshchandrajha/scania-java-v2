@@ -42,6 +42,15 @@ public class ClaimController {
         this.claimStatusService = claimStatusService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<ClaimListItemDto>> listClaims(
+            @RequestParam(required = false, defaultValue = "001") String companyCode) {
+        ClaimSearchCriteria criteria = new ClaimSearchCriteria(
+                companyCode, null, null, null, null, null, null, null, false, null, true, null, null, null, false);
+        List<ClaimListItemDto> results = claimSearchService.searchClaims(criteria);
+        return ResponseEntity.ok(results);
+    }
+
     @PostMapping("/search")
     public ResponseEntity<List<ClaimListItemDto>> searchClaims(@RequestBody ClaimSearchCriteria criteria) {
         List<ClaimListItemDto> results = claimSearchService.searchClaims(criteria);

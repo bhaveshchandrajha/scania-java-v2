@@ -1565,6 +1565,7 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                     cf,
                     "--target-project",
                     target_project,
+                    "--generate-tests",
                 ]
                 if rpg_file_path:
                     cmd.extend(["--rpg-file", str(rpg_file_path)])
