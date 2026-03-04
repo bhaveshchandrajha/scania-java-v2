@@ -1,0 +1,125 @@
+/**
+ * Domain entity or value object for the warranty claims model.
+ * <p>
+ * Generated from RPG: unit {@code HS1210}, node {@code n404}.
+ */
+
+package com.scania.warranty.domain;
+
+import jakarta.persistence.*;
+
+/**
+ * JPA entity for warranty release requests (HSG70F).
+ */
+@Entity
+@Table(name = "HSG70F")
+@IdClass(WarrantyReleaseId.class)
+public class WarrantyRelease {
+
+    @Id
+    @Column(name = "KZL", length = 3, nullable = false)
+    private String kzl; // @rpg-trace: schema
+
+    @Id
+    @Column(name = "R.NR.", length = 5, nullable = false)
+    private String rNr; // @rpg-trace: schema
+
+    @Id
+    @Column(name = "R.DAT", length = 8, nullable = false)
+    private String rDat; // @rpg-trace: schema
+
+    @Column(name = "FGNR.", length = 17, nullable = false)
+    private String fgnr; // @rpg-trace: schema
+
+    @Column(name = "REP.DAT.", length = 8, nullable = false)
+    private String repDat; // @rpg-trace: schema
+
+    @Column(name = "STATUS", length = 1, nullable = false)
+    private String status; // @rpg-trace: schema
+
+    @Column(name = "CUS.NO.", precision = 5, scale = 0, nullable = false)
+    private Integer cusNo; // @rpg-trace: schema
+
+    @Column(name = "D.C.NO.", precision = 8, scale = 0, nullable = false)
+    private Integer dcNo; // @rpg-trace: schema
+
+    @Column(name = "D.C.FN.", length = 5, nullable = false)
+    private String dcFn; // @rpg-trace: schema
+
+    // Constructors
+    public WarrantyRelease() {
+    }
+
+    // Getters and Setters
+    public String getKzl() {
+        return kzl;
+    }
+
+    public void setKzl(String kzl) {
+        this.kzl = kzl;
+    }
+
+    public String getrNr() {
+        return rNr;
+    }
+
+    public void setrNr(String rNr) {
+        this.rNr = rNr;
+    }
+
+    public String getrDat() {
+        return rDat;
+    }
+
+    public void setrDat(String rDat) {
+        this.rDat = rDat;
+    }
+
+    public String getFgnr() {
+        return fgnr;
+    }
+
+    public void setFgnr(String fgnr) {
+        this.fgnr = fgnr;
+    }
+
+    public String getRepDat() {
+        return repDat;
+    }
+
+    public void setRepDat(String repDat) {
+        this.repDat = repDat;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getCusNo() {
+        return cusNo;
+    }
+
+    public void setCusNo(Integer cusNo) {
+        this.cusNo = cusNo;
+    }
+
+    public Integer getDcNo() {
+        return dcNo;
+    }
+
+    public void setDcNo(Integer dcNo) {
+        this.dcNo = dcNo;
+    }
+
+    public String getDcFn() {
+        return dcFn;
+    }
+
+    public void setDcFn(String dcFn) {
+        this.dcFn = dcFn;
+    }
+}
