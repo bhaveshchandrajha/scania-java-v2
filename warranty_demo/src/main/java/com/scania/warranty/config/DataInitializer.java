@@ -1,8 +1,10 @@
 package com.scania.warranty.config;
 
 import com.scania.warranty.domain.Claim;
+import com.scania.warranty.domain.ClaimError;
 import com.scania.warranty.domain.ClaimStatus;
 import com.scania.warranty.domain.Invoice;
+import com.scania.warranty.repository.ClaimErrorRepository;
 import com.scania.warranty.repository.ClaimRepository;
 import com.scania.warranty.repository.InvoiceRepository;
 import org.springframework.boot.ApplicationArguments;
@@ -28,12 +30,18 @@ public class DataInitializer implements ApplicationRunner {
     private static final String SEED_AREA = "1";
     private static final String SEED_SPLIT = "04";
 
+    private static final String SEED_FEHLER_NR = "01";
+    private static final String SEED_FOLGE_NR = "01";
+
     private final InvoiceRepository invoiceRepository;
     private final ClaimRepository claimRepository;
+    private final ClaimErrorRepository claimErrorRepository;
 
-    public DataInitializer(InvoiceRepository invoiceRepository, ClaimRepository claimRepository) {
+    public DataInitializer(InvoiceRepository invoiceRepository, ClaimRepository claimRepository,
+                           ClaimErrorRepository claimErrorRepository) {
         this.invoiceRepository = invoiceRepository;
         this.claimRepository = claimRepository;
+        this.claimErrorRepository = claimErrorRepository;
     }
 
     @Override
@@ -134,6 +142,63 @@ public class DataInitializer implements ApplicationRunner {
             claim.setBereich(SEED_AREA);
             claim.setAufNr(SEED_JOB_NUMBER + SEED_WORKSHOP_TYPE + SEED_AREA + SEED_SPLIT);
             claimRepository.save(claim);
+
+            // Seed ClaimError (HSG73PF) - one failure detail for the demo claim
+            ClaimError err = new ClaimError();
+            err.setPakz(SEED_COMPANY);
+            err.setRechNr(SEED_INVOICE_NUMBER);
+            err.setRechDatum(SEED_INVOICE_DATE);
+            err.setAuftragsNr(SEED_JOB_NUMBER);
+            err.setBereich(SEED_AREA);
+            err.setClaimNr("00000001");
+            err.setFehlerNr(SEED_FEHLER_NR);
+            err.setFolgeNr(SEED_FOLGE_NR);
+            err.setFehlerTeil("");
+            err.setHauptgruppe("01");
+            err.setNebengruppe("01");
+            err.setSchadC1("");
+            err.setSchadC2("");
+            err.setText1("Demo failure description");
+            err.setText2("");
+            err.setSteuerCode("");
+            err.setBewCode1("");
+            err.setBewCode2(BigDecimal.ZERO);
+            err.setBewDatum(BigDecimal.ZERO);
+            err.setVergMat(BigDecimal.ZERO);
+            err.setVergArb(BigDecimal.ZERO);
+            err.setVergSpez(BigDecimal.ZERO);
+            err.setBeantrMat(BigDecimal.ZERO);
+            err.setBeantrArb(BigDecimal.ZERO);
+            err.setBeantrSpez(BigDecimal.ZERO);
+            err.setClaimArt(BigDecimal.ZERO);
+            err.setvRepDatum(BigDecimal.ZERO);
+            err.setvKmStand(BigDecimal.ZERO);
+            err.setFeldtestNr(BigDecimal.ZERO);
+            err.setKampagnenNr("");
+            err.setEps("");
+            err.setStatusCode(BigDecimal.ZERO);
+            err.setVariantCode(BigDecimal.ZERO);
+            err.setActionCode(BigDecimal.ZERO);
+            err.setText3("");
+            err.setText4("");
+            err.setFehlerNrSde("");
+            err.setAnhang("");
+            err.setSource("");
+            err.setComplain("");
+            err.setSymptom("");
+            err.setFailure("");
+            err.setLocation("");
+            err.setRepair("");
+            err.setErgCode("");
+            err.setResult1("");
+            err.setResult2("");
+            err.setFault1("");
+            err.setFault2("");
+            err.setReply1("");
+            err.setReply2("");
+            err.setExplanation1("");
+            err.setExplanation2("");
+            claimErrorRepository.save(err);
         }
     }
 }
