@@ -14,15 +14,15 @@
   },
   "columns": [
     {
-      "id": "claimNr",
+      "id": "claimNumber",
       "label": "Claim Nr.",
-      "dtoField": "claimNr",
+      "dtoField": "claimNumber",
       "width": 10
     },
     {
-      "id": "invoiceNr",
+      "id": "invoiceNumber",
       "label": "Invoice",
-      "dtoField": "invoiceNr",
+      "dtoField": "invoiceNumber",
       "width": 10
     },
     {
@@ -32,16 +32,16 @@
       "width": 12
     },
     {
-      "id": "chassisNr",
+      "id": "chassisNumber",
       "label": "Chassis",
-      "dtoField": "chassisNr",
+      "dtoField": "chassisNumber",
       "width": 12
     },
     {
-      "id": "customerNr",
-      "label": "Customer Nr.",
-      "dtoField": "customerNr",
-      "width": 10
+      "id": "licensePlate",
+      "label": "License Plate",
+      "dtoField": "licensePlate",
+      "width": 12
     },
     {
       "id": "customerName",
@@ -50,15 +50,15 @@
       "width": 16
     },
     {
-      "id": "statusCodeSde",
+      "id": "statusDescription",
       "label": "Status",
-      "dtoField": "statusCodeSde",
-      "width": 6
+      "dtoField": "statusDescription",
+      "width": 14
     },
     {
-      "id": "errorCount",
+      "id": "numberOfFailures",
       "label": "Errors",
-      "dtoField": "errorCount",
+      "dtoField": "numberOfFailures",
       "width": 6
     }
   ],
