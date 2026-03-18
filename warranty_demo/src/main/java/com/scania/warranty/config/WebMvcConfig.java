@@ -1,31 +1,37 @@
 package com.scania.warranty.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.PathResourceResolver;
+
+import java.io.IOException;
+import java.util.Objects;
 
 /**
- * Exposes static resources under /static/* so that
- * http://localhost:8081/static/hs1210d.html works (in addition to /hs1210d.html).
+ * Web MVC configuration for static resources and SPA support.
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        // Allow pipeline UI (localhost:8003) and demo to access API and static resources
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*");
-    }
-
-    @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**")
-                .addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("/angular/**")
-                .addResourceLocations("classpath:/static/angular/");
+        // Angular SPA: serve /angular/** from static/angular/, fallback to index.html for client-side routing
+        registry.addResourceHandler("/angular", "/angular/", "/angular/**")
+                .addResourceLocations("classpath:/static/angular/")
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver() {
+                    @Override
+                    protected Resource getResource(String resourcePath, Resource location) throws IOException {
+                        // Handle empty path or "." (from /angular/ or /angular)
+                        if (resourcePath == null || resourcePath.isEmpty() || ".".equals(resourcePath)) {
+                            return super.getResource("index.html", location);
+                        }
+                        Resource resource = super.getResource(resourcePath, location);
+                        return Objects.isNull(resource) ? super.getResource("index.html", location) : resource;
+                    }
+                });
     }
 }

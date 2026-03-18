@@ -7,11 +7,11 @@
 package com.scania.warranty.domain;
 
 public enum ClaimStatus {
-    EXCLUDED(99),
-    APPROVED(20),
-    REJECTED(11),
     PENDING(0),
-    MINIMUM(5);
+    MINIMUM(5),
+    REJECTED(11),
+    APPROVED(20),
+    EXCLUDED(99);
 
     private final int code;
 
@@ -23,11 +23,9 @@ public enum ClaimStatus {
         return code;
     }
 
-    public static ClaimStatus fromCode(int code) { // @rpg-trace: n408
-        for (ClaimStatus status : values()) {
-            if (status.code == code) {
-                return status;
-            }
+    public static ClaimStatus fromCode(int code) {
+        for (ClaimStatus s : values()) {
+            if (s.code == code) return s;
         }
         return PENDING;
     }

@@ -1,63 +1,45 @@
+/**
+ * Domain entity or value object for the warranty claims model.
+ * <p>
+ * Generated from RPG: unit {@code HS1210}, node {@code n404}.
+ */
+
 package com.scania.warranty.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * Composite primary key for {@link Invoice} (HSAHKLF3).
- * Field names must match the @Id property names in Invoice.
- */
 public class InvoiceId implements Serializable {
+    private String ahk000;
+    private String ahk040;
+    private String ahk050;
+    private String ahk060;
+    private String ahk070;
+    private String ahk080;
 
-    private String pakz;
-    private String rnr;
-    private String rdat;
-    private String anr;
-    private String berei;
-    private String wt;
-    private String splitt;
+    public InvoiceId() {}
 
-    public InvoiceId() {
+    public InvoiceId(String ahk000, String ahk040, String ahk050, String ahk060, String ahk070, String ahk080) {
+        this.ahk000 = ahk000;
+        this.ahk040 = ahk040;
+        this.ahk050 = ahk050;
+        this.ahk060 = ahk060;
+        this.ahk070 = ahk070;
+        this.ahk080 = ahk080;
     }
-
-    public InvoiceId(String pakz, String rnr, String rdat, String anr, String berei, String wt, String splitt) {
-        this.pakz = pakz;
-        this.rnr = rnr;
-        this.rdat = rdat;
-        this.anr = anr;
-        this.berei = berei;
-        this.wt = wt;
-        this.splitt = splitt;
-    }
-
-    public String getPakz() { return pakz; }
-    public void setPakz(String pakz) { this.pakz = pakz; }
-    public String getRnr() { return rnr; }
-    public void setRnr(String rnr) { this.rnr = rnr; }
-    public String getRdat() { return rdat; }
-    public void setRdat(String rdat) { this.rdat = rdat; }
-    public String getAnr() { return anr; }
-    public void setAnr(String anr) { this.anr = anr; }
-    public String getBerei() { return berei; }
-    public void setBerei(String berei) { this.berei = berei; }
-    public String getWt() { return wt; }
-    public void setWt(String wt) { this.wt = wt; }
-    public String getSplitt() { return splitt; }
-    public void setSplitt(String splitt) { this.splitt = splitt; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InvoiceId that = (InvoiceId) o;
-        return Objects.equals(pakz, that.pakz) && Objects.equals(rnr, that.rnr)
-                && Objects.equals(rdat, that.rdat) && Objects.equals(anr, that.anr)
-                && Objects.equals(berei, that.berei) && Objects.equals(wt, that.wt)
-                && Objects.equals(splitt, that.splitt);
+        return Objects.equals(ahk000, that.ahk000) && Objects.equals(ahk040, that.ahk040) &&
+               Objects.equals(ahk050, that.ahk050) && Objects.equals(ahk060, that.ahk060) &&
+               Objects.equals(ahk070, that.ahk070) && Objects.equals(ahk080, that.ahk080);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pakz, rnr, rdat, anr, berei, wt, splitt);
+        return Objects.hash(ahk000, ahk040, ahk050, ahk060, ahk070, ahk080);
     }
 }

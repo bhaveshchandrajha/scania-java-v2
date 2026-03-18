@@ -23,6 +23,8 @@ export interface UiSchemaAction {
   action?: string;
   /** When true, re-execute dataSource instead of a separate API call */
   reuseDataSource?: boolean;
+  /** When true, action requires a selected row (e.g. delete) */
+  requiresSelection?: boolean;
 }
 
 export interface UiSchemaFilter {

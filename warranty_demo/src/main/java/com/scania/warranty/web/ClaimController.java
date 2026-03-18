@@ -6,89 +6,83 @@
 
 package com.scania.warranty.web;
 
-import com.scania.warranty.domain.Claim;
 import com.scania.warranty.domain.ClaimSearchCriteria;
-import com.scania.warranty.dto.ClaimListItemDto;
-import com.scania.warranty.service.ClaimCreationService;
-import com.scania.warranty.service.ClaimManagementService;
+import com.scania.warranty.domain.SortDirection;
+import com.scania.warranty.dto.*;
 import com.scania.warranty.service.ClaimSearchService;
-import com.scania.warranty.service.ClaimStatusService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * REST controller for claim operations.
- */
 @RestController
 @RequestMapping("/api/claims")
 public class ClaimController {
 
     private final ClaimSearchService claimSearchService;
-    private final ClaimCreationService claimCreationService;
-    private final ClaimManagementService claimManagementService;
-    private final ClaimStatusService claimStatusService;
 
-    @Autowired
-    public ClaimController(ClaimSearchService claimSearchService,
-                          ClaimCreationService claimCreationService,
-                          ClaimManagementService claimManagementService,
-                          ClaimStatusService claimStatusService) {
+    public ClaimController(ClaimSearchService claimSearchService) {
         this.claimSearchService = claimSearchService;
-        this.claimCreationService = claimCreationService;
-        this.claimManagementService = claimManagementService;
-        this.claimStatusService = claimStatusService;
     }
 
-    @GetMapping
-    public ResponseEntity<Object> getClaimsInfo() {
-        return ResponseEntity.ok(java.util.Map.of(
-            "message", "Use POST /api/claims/search to search, POST /api/claims/create to create",
-            "endpoints", java.util.List.of(
-                "POST /api/claims/search",
-                "POST /api/claims/create?companyCode=&invoiceNumber=&invoiceDate=&orderNumber=&workshopType="
-            )
-        ));
-    }
-
-    @PostMapping("/search")
-    public ResponseEntity<List<ClaimListItemDto>> searchClaims(@RequestBody ClaimSearchCriteria criteria) {
+    /** GET search for screen.html and simple clients; companyCode defaults to 001 */
+    @GetMapping("/search")
+    public ResponseEntity<List<ClaimListItemDto>> searchClaimsGet(
+            @RequestParam(defaultValue = "001") String companyCode) {
+        ClaimSearchCriteria criteria = new ClaimSearchCriteria(
+            companyCode, null, null, null, null, null, null,
+            0, false, false, null, true, com.scania.warranty.domain.SortDirection.ASCENDING);
         List<ClaimListItemDto> results = claimSearchService.searchClaims(criteria);
         return ResponseEntity.ok(results);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<String> createClaim(@RequestParam String companyCode,
-                                             @RequestParam String invoiceNumber,
-                                             @RequestParam String invoiceDate,
-                                             @RequestParam String orderNumber,
-                                             @RequestParam String workshopType) {
-        Claim claim = claimManagementService.createClaimFromInvoice(companyCode, invoiceNumber, invoiceDate,
-                                                                         orderNumber, workshopType);
-        return ResponseEntity.ok(claim.getClaimNr());
+    @PostMapping("/search")
+    public ResponseEntity<List<ClaimListItemDto>> searchClaims(@RequestBody ClaimSearchRequestDto request) {
+        String company = request.companyCode() != null ? request.companyCode() : "001";
+        ClaimSearchCriteria criteria = new ClaimSearchCriteria( // @rpg-trace: n422
+            company,
+            request.status(),
+            request.statusCompareSign(),
+            request.filterBranch(),
+            request.filterCustomer(),
+            request.filterSde(),
+            request.filterArt(),
+            request.filterAgeDaysResolved(),
+            request.filterOpenOnlyResolved(),
+            request.filterMinimumOnlyResolved(),
+            request.searchString(),
+            Boolean.TRUE.equals(request.sortByClaimNr()),
+            request.sortDirection()
+        );
+        List<ClaimListItemDto> results = claimSearchService.searchClaims(criteria); // @rpg-trace: n436
+        return ResponseEntity.ok(results);
     }
 
-    @PutMapping("/{companyCode}/{claimNumber}/status")
-    public ResponseEntity<Void> updateStatus(@PathVariable String companyCode,
-                                            @PathVariable String claimNumber,
-                                            @RequestParam int newStatus) {
-        claimStatusService.updateClaimStatus(companyCode, claimNumber, newStatus);
+    @PostMapping("/delete")
+    public ResponseEntity<Void> deleteClaim(@RequestBody ClaimDeleteRequestDto request) {
+        claimSearchService.deleteClaim(request.companyCode(), request.claimNr()); // @rpg-trace: n587
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{companyCode}/{claimNumber}")
-    public ResponseEntity<Void> deleteClaim(@PathVariable String companyCode,
-                                           @PathVariable String claimNumber) {
-        claimStatusService.deleteClaimAndErrors(companyCode, claimNumber);
-        return ResponseEntity.ok().build();
+    @PostMapping("/update-status")
+    public ResponseEntity<Boolean> updateStatus(@RequestBody ClaimStatusUpdateDto request) {
+        boolean updated = claimSearchService.updateClaimStatus( // @rpg-trace: n653
+            request.companyCode(), request.claimNr(), 2, request.newStatus()
+        );
+        return ResponseEntity.ok(updated);
     }
 
-    @PostMapping("/{companyCode}/{claimNumber}/post-minimum")
-    public ResponseEntity<Void> postMinimum(@PathVariable String companyCode,
-                                           @PathVariable String claimNumber) {
-        claimStatusService.postMinimumClaim(companyCode, claimNumber);
+    @PostMapping("/book-minimum")
+    public ResponseEntity<Boolean> bookMinimumClaim(@RequestBody MinimumClaimBookingDto request) {
+        boolean booked = claimSearchService.bookMinimumClaim(request.companyCode(), request.claimNr()); // @rpg-trace: n1663
+        return ResponseEntity.ok(booked);
+    }
+
+    @PostMapping("/release-request")
+    public ResponseEntity<Void> createReleaseRequest(@RequestParam String companyCode,
+                                                      @RequestParam String invoiceNr,
+                                                      @RequestParam String invoiceDate) {
+        claimSearchService.createClaimReleaseRequest(companyCode, invoiceNr, invoiceDate); // @rpg-trace: n1706
         return ResponseEntity.ok().build();
     }
 }

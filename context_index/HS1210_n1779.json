@@ -29,8 +29,8 @@
       "endColumn": 24
     }
   },
-  "narrative": "### Node n1779: Procedure `CreateClaim`\n\nThis procedure references symbols derived from its semantic block and symbol table.\n\n- **Files / DB Contracts**:\n  - HSG71PF (columns: PAKZ CHAR, RECH.-NR. CHAR, RECH.-DATUM CHAR, AUFTRAGS-NR. CHAR, WETE CHAR, CLAIM-NR. CHAR, CHASSIS-NR. CHAR, KENNZEICHEN CHAR, ZUL.-DATUM DECIMAL, REP.-DATUM DECIMAL, KM-STAND DECIMAL, PRODUKT-TYP DECIMAL, ANHANG CHAR, AUSL#NDER CHAR, KD-NR. CHAR, KD-NAME CHAR, CLAIM-NR. SDE CHAR, STATUS CODE SDE DECIMAL, ANZ. FEHLER DECIMAL, BEREICH CHAR +1 more)\n  - HSG73PF (columns: PAKZ CHAR, RECH.-NR. CHAR, RECH.-DATUM CHAR, AUFTRAGS-NR. CHAR, BEREICH CHAR, CLAIM-NR. CHAR, FEHLER-NR. CHAR, FOLGE-NR. CHAR, FEHLER-TEIL CHAR, HAUPTGRUPPE CHAR, NEBENGRUPPE CHAR, SCHAD.-C1 CHAR, SCHAD.-C2 CHAR, TEXT1 CHAR, TEXT2 CHAR, STEUER CODE CHAR, BEW. CODE1 CHAR, BEW. CODE2 DECIMAL, BEW. DATUM DECIMAL, VERG. MAT. DECIMAL +33 more)\n  - HSGPSLF3 (columns: KUERZEL CHAR, CLAIM-NR. CHAR, FEHLER-NR. CHAR, FOLGE-NR. CHAR, ZEILE DECIMAL, AUFTEILUNG DECIMAL, SATZART CHAR, NR. CHAR, MENGE DECIMAL, WERT DECIMAL, STEUER-CODE CHAR, HAUPTGRUPPE CHAR, ZEIT DECIMAL, GRUND DECIMAL, VERGÜTUNG DECIMAL, MANUELL CHAR, KAMPAGNE DECIMAL, POS.-NR. DECIMAL, RESULTCODE CHAR, CODE TYPE CHAR +10 more)\n\n- **Variables**:\n  - KEY_GPS (type: t.klist.KEY_GPS)\n  - create\n  - failureNo (type: t.dec2_0)\n  - groups (type: t.char.4)\n  - lineNo (type: t.dec1_0)\n  - maintenance\n  - partNo (type: t.char.7)\n  - partValue (type: t.dec11_2)\n  - text (type: t.char.65)\n  - valueLab (type: t.dec11_2)\n  - valueMat (type: t.dec11_2)\n  - valueSpe (type: t.dec11_2)\n\n- **Raw sem JSON**:\n```json\n{\n  \"sym.file.HSG71PF\": {\n    \"refersTo\": \"sym.file.HSG71PF\"\n  },\n  \"sym.file.HSG73PF\": {\n    \"refersTo\": \"sym.file.HSG73PF\"\n  },\n  \"sym.file.HSGPSLF3\": {\n    \"refersTo\": \"sym.file.HSGPSLF3\"\n  },\n  \"sym.var.KEY_GPS\": {\n    \"refersTo\": \"sym.var.KEY_GPS\"\n  },\n  \"sym.var.create\": {\n    \"refersTo\": \"sym.var.create\"\n  },\n  \"sym.var.maintenance\": {\n    \"refersTo\": \"sym.var.maintenance\"\n  },\n  \"sym.var.groups\": {\n    \"refersTo\": \"sym.var.groups\"\n  },\n  \"sym.var.partNo\": {\n    \"refersTo\": \"sym.var.partNo\"\n  },\n  \"sym.var.partValue\": {\n    \"refersTo\": \"sym.var.partValue\"\n  },\n  \"sym.var.text\": {\n    \"refersTo\": \"sym.var.text\"\n  },\n  \"sym.var.failureNo\": {\n    \"refersTo\": \"sym.var.failureNo\"\n  },\n  \"sym.var.lineNo\": {\n    \"refersTo\": \"sym.var.lineNo\"\n  },\n  \"sym.var.valueMat\": {\n    \"refersTo\": \"sym.var.valueMat\"\n  },\n  \"sym.var.valueLab\": {\n    \"refersTo\": \"sym.var.valueLab\"\n  },\n  \"sym.var.valueSpe\": {\n    \"refersTo\": \"sym.var.valueSpe\"\n  }\n}\n```",
-  "rpgSnippet": "",
+  "narrative": "### Node n1779: Procedure `CreateClaim`\n\nThis procedure references symbols derived from its semantic block and symbol table.\n\n- **Files / DB Contracts**:\n  - HSG71PF (columns: G71000 CHAR, G71010 CHAR, G71020 CHAR, G71030 CHAR, G71040 CHAR, G71050 CHAR, G71060 CHAR, G71070 CHAR, G71080 DECIMAL, G71090 DECIMAL, G71100 DECIMAL, G71110 DECIMAL, G71120 CHAR, G71130 CHAR, G71140 CHAR, G71150 CHAR, G71160 CHAR, G71170 DECIMAL, G71180 DECIMAL, G71190 CHAR +1 more)\n  - HSG73PF (columns: G73000 CHAR, G73010 CHAR, G73020 CHAR, G73030 CHAR, G73040 CHAR, G73050 CHAR, G73060 CHAR, G73065 CHAR, G73070 CHAR, G73080 CHAR, G73090 CHAR, G73100 CHAR, G73110 CHAR, G73120 CHAR, G73130 CHAR, G73140 CHAR, G73150 CHAR, G73160 DECIMAL, G73170 DECIMAL, G73180 DECIMAL +33 more)\n  - HSGPSLF3 (columns: GPS000 CHAR, GPS010 CHAR, GPS020 CHAR, GPS025 CHAR, GPS030 DECIMAL, GPS035 DECIMAL, GPS040 CHAR, GPS050 CHAR, GPS060 DECIMAL, GPS070 DECIMAL, GPS080 CHAR, GPS090 CHAR, GPS100 DECIMAL, GPS110 DECIMAL, GPS120 DECIMAL, GPS130 CHAR, GPS140 DECIMAL, GPS150 DECIMAL, GPS160 CHAR, GPS161 CHAR +10 more)\n\n- **Variables**:\n  - KEY_GPS (type: t.klist.KEY_GPS)\n  - create\n  - failureNo (type: t.dec2_0)\n  - groups (type: t.char.4)\n  - lineNo (type: t.dec1_0)\n  - maintenance\n  - partNo (type: t.char.7)\n  - partValue (type: t.dec11_2)\n  - text (type: t.char.65)\n  - valueLab (type: t.dec11_2)\n  - valueMat (type: t.dec11_2)\n  - valueSpe (type: t.dec11_2)\n\n- **Raw sem JSON**:\n```json\n{\n  \"sym.file.HSG71PF\": {\n    \"refersTo\": \"sym.file.HSG71PF\"\n  },\n  \"sym.file.HSG73PF\": {\n    \"refersTo\": \"sym.file.HSG73PF\"\n  },\n  \"sym.file.HSGPSLF3\": {\n    \"refersTo\": \"sym.file.HSGPSLF3\"\n  },\n  \"sym.var.KEY_GPS\": {\n    \"refersTo\": \"sym.var.KEY_GPS\"\n  },\n  \"sym.var.create\": {\n    \"refersTo\": \"sym.var.create\"\n  },\n  \"sym.var.maintenance\": {\n    \"refersTo\": \"sym.var.maintenance\"\n  },\n  \"sym.var.groups\": {\n    \"refersTo\": \"sym.var.groups\"\n  },\n  \"sym.var.partNo\": {\n    \"refersTo\": \"sym.var.partNo\"\n  },\n  \"sym.var.partValue\": {\n    \"refersTo\": \"sym.var.partValue\"\n  },\n  \"sym.var.text\": {\n    \"refersTo\": \"sym.var.text\"\n  },\n  \"sym.var.failureNo\": {\n    \"refersTo\": \"sym.var.failureNo\"\n  },\n  \"sym.var.lineNo\": {\n    \"refersTo\": \"sym.var.lineNo\"\n  },\n  \"sym.var.valueMat\": {\n    \"refersTo\": \"sym.var.valueMat\"\n  },\n  \"sym.var.valueLab\": {\n    \"refersTo\": \"sym.var.valueLab\"\n  },\n  \"sym.var.valueSpe\": {\n    \"refersTo\": \"sym.var.valueSpe\"\n  }\n}\n```",
+  "rpgSnippet": "     P CreateClaim     B\n     D CreateClaim     PI\n     D*----------------------------------------------------------------\n     D create          S               N   Inz(*Off)\n     D maintenance     S               N   Inz(*Off)\n     D groups          S              4A   Inz(*Blanks)\n     D partNo          S              7A   Inz(*Blanks)\n     D partValue       S             11  2 Inz(0)\n     D text            S             65A   Dim(4) Inz(*Blanks)\n     D failureNo       S              2  0 Inz(0)\n     D lineNo          S              1  0 Inz(0)\n     D valueMat        S             11  2 Inz(0)\n     D valueLab        S             11  2 Inz(0)\n     D valueSpe        S             11  2 Inz(0)\n     D*****************************************************************\n      /free\n        FailureNo = 1;\n        SetLl Key_GPS HSGPSLF3;\n        ReadE Key_GPS HSGPSLF3;\n        DoW Not %Eof(HSGPSLF3);\n           If GPS150 > failureNo;\n              createFail(failureNo:groups:partNo:maintenance:text:\n                         valueMat:valueLab:valueSpe);\n              FailureNo = GPS150;\n              Maintenance = *Off;\n              clear text;\n              lineNo = 0;\n              valueMat = 0;\n              valueLab = 0;\n              valueSpe = 0;\n              groups = *Blanks;\n              partNo = *Blanks;\n              partValue = 0;\n           EndIf;\n           If GPS150 > 0;\n              create = *On;\n              GPS020 = %Subst(%EditC(GPS150:'X'):2:2);\n              GPS025 = '00';\n              //Check if Maintenance Standard time\n              If GPS040 = 'MAT';\n                 Chain GPS050 ITLSMF3;\n                 If %Found(ITLSMF3) And SFRAN = 'SC';\n                    If GPS070 > partValue;\n                       partNo = GPS050;\n                       partValue = GPS070;\n                    EndIf;\n                 EndIf;\n              EndIf;\n              Exec SQL Set :GPS080U = Upper(:GPS080);\n              If GPS040 = 'ARB' And %Scan('WARTUNG':GPS080U) > 0;\n                 Maintenance = *On;\n                 groups = %Subst(GPS050:1:4);\n              EndIf;\n              //Retrieve Main and Subgroup\n              If GPS040 = 'ARB' And Groups = *Blanks;\n                 groups = %Subst(GPS050:1:4);\n              EndIf;\n              If GPS040 = 'TXT' And %Subst(GPS080:1:1) <> '+' and lineNo < 4;\n                 lineNo +=1;\n                 text(lineNo) = GPS080;\n              EndIf;\n              Select;\n              When GPS040 = 'ARB';\n                 valueLab += GPS060 * GPS070;\n              When GPS040 = 'MAT';\n                 valueMat += GPS060 * GPS070;\n              When GPS040 = 'TXT';\n              Other;\n                 valueSpe += GPS070;\n              EndSl;\n           EndIf;\n           ReadE Key_GPS HSGPSLF3;\n        EndDo;\n        If create;\n           createFail(failureNo:groups:partNo:maintenance:text:\n                      valueMat:valueLab:valueSpe);\n           Chain (G71000:G71050:G71060) HSG71LF2;\n           If %Found(HSG71LF2);\n              G71170 = 3;\n              Update HSG71LR2;\n           EndIf;\n           If PKZ = 'SNF';\n              //sendClaim(G71000:G71050:*Blanks:*Blanks);\n           EndIf;\n        EndIf;\n        Unlock HSG71PF;\n        Unlock HSG73PF;\n       Return;\n      /end-free\n     P                 E",
   "dbContracts": [
     {
       "name": "HSG71PF",
@@ -64,62 +64,62 @@
       "description": null,
       "columns": [
         {
-          "name": "PAKZ",
+          "name": "G71000",
           "description": null,
           "type": "CHAR",
           "length": 3,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.3",
           "sqlType": "CHAR(3)",
           "nullable": false
         },
         {
-          "name": "RECH.-NR.",
+          "name": "G71010",
           "description": null,
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.5",
           "sqlType": "CHAR(5)",
           "nullable": false
         },
         {
-          "name": "RECH.-DATUM",
+          "name": "G71020",
           "description": null,
           "type": "CHAR",
           "length": 8,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.8",
           "sqlType": "CHAR(8)",
           "nullable": false
         },
         {
-          "name": "AUFTRAGS-NR.",
+          "name": "G71030",
           "description": null,
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.5",
           "sqlType": "CHAR(5)",
           "nullable": false
         },
         {
-          "name": "WETE",
+          "name": "G71040",
           "description": null,
           "type": "CHAR",
           "length": 1,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.1",
           "sqlType": "CHAR(1)",
           "nullable": false
         },
         {
-          "name": "CLAIM-NR.",
+          "name": "G71050",
           "description": null,
           "type": "CHAR",
           "length": 8,
@@ -130,7 +130,7 @@
           "nullable": false
         },
         {
-          "name": "CHASSIS-NR.",
+          "name": "G71060",
           "description": null,
           "type": "CHAR",
           "length": 7,
@@ -141,7 +141,7 @@
           "nullable": false
         },
         {
-          "name": "KENNZEICHEN",
+          "name": "G71070",
           "description": null,
           "type": "CHAR",
           "length": 10,
@@ -152,7 +152,7 @@
           "nullable": false
         },
         {
-          "name": "ZUL.-DATUM",
+          "name": "G71080",
           "description": null,
           "type": "DECIMAL",
           "length": 8,
@@ -163,7 +163,7 @@
           "nullable": false
         },
         {
-          "name": "REP.-DATUM",
+          "name": "G71090",
           "description": null,
           "type": "DECIMAL",
           "length": 8,
@@ -174,7 +174,7 @@
           "nullable": false
         },
         {
-          "name": "KM-STAND",
+          "name": "G71100",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
@@ -185,7 +185,7 @@
           "nullable": false
         },
         {
-          "name": "PRODUKT-TYP",
+          "name": "G71110",
           "description": null,
           "type": "DECIMAL",
           "length": 1,
@@ -196,7 +196,7 @@
           "nullable": false
         },
         {
-          "name": "ANHANG",
+          "name": "G71120",
           "description": null,
           "type": "CHAR",
           "length": 1,
@@ -207,7 +207,7 @@
           "nullable": false
         },
         {
-          "name": "AUSL#NDER",
+          "name": "G71130",
           "description": null,
           "type": "CHAR",
           "length": 1,
@@ -218,7 +218,7 @@
           "nullable": false
         },
         {
-          "name": "KD-NR.",
+          "name": "G71140",
           "description": null,
           "type": "CHAR",
           "length": 6,
@@ -229,7 +229,7 @@
           "nullable": false
         },
         {
-          "name": "KD-NAME",
+          "name": "G71150",
           "description": null,
           "type": "CHAR",
           "length": 30,
@@ -240,7 +240,7 @@
           "nullable": false
         },
         {
-          "name": "CLAIM-NR. SDE",
+          "name": "G71160",
           "description": null,
           "type": "CHAR",
           "length": 8,
@@ -251,7 +251,7 @@
           "nullable": false
         },
         {
-          "name": "STATUS CODE SDE",
+          "name": "G71170",
           "description": null,
           "type": "DECIMAL",
           "length": 2,
@@ -262,7 +262,7 @@
           "nullable": false
         },
         {
-          "name": "ANZ. FEHLER",
+          "name": "G71180",
           "description": null,
           "type": "DECIMAL",
           "length": 2,
@@ -273,7 +273,7 @@
           "nullable": false
         },
         {
-          "name": "BEREICH",
+          "name": "G71190",
           "description": null,
           "type": "CHAR",
           "length": 1,
@@ -284,7 +284,7 @@
           "nullable": false
         },
         {
-          "name": "AUF.NR.",
+          "name": "G71200",
           "description": null,
           "type": "CHAR",
           "length": 10,
@@ -340,73 +340,84 @@
       "description": null,
       "columns": [
         {
-          "name": "PAKZ",
+          "name": "G73000",
           "description": null,
           "type": "CHAR",
           "length": 3,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.3",
           "sqlType": "CHAR(3)",
           "nullable": false
         },
         {
-          "name": "RECH.-NR.",
+          "name": "G73010",
           "description": null,
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.5",
           "sqlType": "CHAR(5)",
           "nullable": false
         },
         {
-          "name": "RECH.-DATUM",
+          "name": "G73020",
           "description": null,
           "type": "CHAR",
           "length": 8,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.8",
           "sqlType": "CHAR(8)",
           "nullable": false
         },
         {
-          "name": "AUFTRAGS-NR.",
+          "name": "G73030",
           "description": null,
           "type": "CHAR",
           "length": 5,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.5",
           "sqlType": "CHAR(5)",
           "nullable": false
         },
         {
-          "name": "BEREICH",
+          "name": "G73040",
           "description": null,
           "type": "CHAR",
           "length": 1,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.1",
           "sqlType": "CHAR(1)",
           "nullable": false
         },
         {
-          "name": "CLAIM-NR.",
+          "name": "G73050",
           "description": null,
           "type": "CHAR",
           "length": 8,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.8",
           "sqlType": "CHAR(8)",
           "nullable": false
         },
         {
-          "name": "FEHLER-NR.",
+          "name": "G73060",
+          "description": null,
+          "type": "CHAR",
+          "length": 2,
+          "scale": null,
+          "key": true,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
+        },
+        {
+          "name": "G73065",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -417,18 +428,7 @@
           "nullable": false
         },
         {
-          "name": "FOLGE-NR.",
-          "description": null,
-          "type": "CHAR",
-          "length": 2,
-          "scale": null,
-          "key": false,
-          "typeId": "t.char.2",
-          "sqlType": "CHAR(2)",
-          "nullable": false
-        },
-        {
-          "name": "FEHLER-TEIL",
+          "name": "G73070",
           "description": null,
           "type": "CHAR",
           "length": 18,
@@ -439,7 +439,7 @@
           "nullable": false
         },
         {
-          "name": "HAUPTGRUPPE",
+          "name": "G73080",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -450,7 +450,7 @@
           "nullable": false
         },
         {
-          "name": "NEBENGRUPPE",
+          "name": "G73090",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -461,7 +461,7 @@
           "nullable": false
         },
         {
-          "name": "SCHAD.-C1",
+          "name": "G73100",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -472,7 +472,7 @@
           "nullable": false
         },
         {
-          "name": "SCHAD.-C2",
+          "name": "G73110",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -483,7 +483,7 @@
           "nullable": false
         },
         {
-          "name": "TEXT1",
+          "name": "G73120",
           "description": null,
           "type": "CHAR",
           "length": 65,
@@ -494,7 +494,7 @@
           "nullable": false
         },
         {
-          "name": "TEXT2",
+          "name": "G73130",
           "description": null,
           "type": "CHAR",
           "length": 65,
@@ -505,7 +505,7 @@
           "nullable": false
         },
         {
-          "name": "STEUER CODE",
+          "name": "G73140",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -516,7 +516,7 @@
           "nullable": false
         },
         {
-          "name": "BEW. CODE1",
+          "name": "G73150",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -527,7 +527,7 @@
           "nullable": false
         },
         {
-          "name": "BEW. CODE2",
+          "name": "G73160",
           "description": null,
           "type": "DECIMAL",
           "length": 4,
@@ -538,7 +538,7 @@
           "nullable": false
         },
         {
-          "name": "BEW. DATUM",
+          "name": "G73170",
           "description": null,
           "type": "DECIMAL",
           "length": 8,
@@ -549,7 +549,7 @@
           "nullable": false
         },
         {
-          "name": "VERG. MAT.",
+          "name": "G73180",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
@@ -560,7 +560,7 @@
           "nullable": false
         },
         {
-          "name": "VERG. ARB.",
+          "name": "G73190",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
@@ -571,7 +571,7 @@
           "nullable": false
         },
         {
-          "name": "VERG. SPEZ.",
+          "name": "G73200",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
@@ -582,7 +582,7 @@
           "nullable": false
         },
         {
-          "name": "BEANTR. MAT.",
+          "name": "G73210",
           "description": null,
           "type": "DECIMAL",
           "length": 11,
@@ -593,7 +593,7 @@
           "nullable": false
         },
         {
-          "name": "BEANTRG. ARB.",
+          "name": "G73220",
           "description": null,
           "type": "DECIMAL",
           "length": 11,
@@ -604,7 +604,7 @@
           "nullable": false
         },
         {
-          "name": "BEANTRG. SPEZ.",
+          "name": "G73230",
           "description": null,
           "type": "DECIMAL",
           "length": 11,
@@ -615,7 +615,7 @@
           "nullable": false
         },
         {
-          "name": "CLAIM-ART",
+          "name": "G73240",
           "description": null,
           "type": "DECIMAL",
           "length": 1,
@@ -626,7 +626,7 @@
           "nullable": false
         },
         {
-          "name": "V.-REP.-DATUM",
+          "name": "G73250",
           "description": null,
           "type": "DECIMAL",
           "length": 8,
@@ -637,7 +637,7 @@
           "nullable": false
         },
         {
-          "name": "V.-KM-STAND",
+          "name": "G73260",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
@@ -648,7 +648,7 @@
           "nullable": false
         },
         {
-          "name": "FELDTEST-NR.",
+          "name": "G73270",
           "description": null,
           "type": "DECIMAL",
           "length": 6,
@@ -659,7 +659,7 @@
           "nullable": false
         },
         {
-          "name": "KAMPAGNEN-NR.",
+          "name": "G73280",
           "description": null,
           "type": "CHAR",
           "length": 8,
@@ -670,7 +670,7 @@
           "nullable": false
         },
         {
-          "name": "EPS",
+          "name": "G73285",
           "description": null,
           "type": "CHAR",
           "length": 20,
@@ -681,7 +681,7 @@
           "nullable": false
         },
         {
-          "name": "STATUS CODE",
+          "name": "G73290",
           "description": null,
           "type": "DECIMAL",
           "length": 2,
@@ -692,7 +692,7 @@
           "nullable": false
         },
         {
-          "name": "VARIANT CODE",
+          "name": "G73300",
           "description": null,
           "type": "DECIMAL",
           "length": 2,
@@ -703,7 +703,7 @@
           "nullable": false
         },
         {
-          "name": "ACTION CODE",
+          "name": "G73310",
           "description": null,
           "type": "DECIMAL",
           "length": 2,
@@ -714,7 +714,7 @@
           "nullable": false
         },
         {
-          "name": "TEXT3",
+          "name": "G73320",
           "description": null,
           "type": "CHAR",
           "length": 65,
@@ -725,7 +725,7 @@
           "nullable": false
         },
         {
-          "name": "TEXT4",
+          "name": "G73330",
           "description": null,
           "type": "CHAR",
           "length": 65,
@@ -736,7 +736,7 @@
           "nullable": false
         },
         {
-          "name": "FEHLER-NR. SDE",
+          "name": "G73340",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -747,7 +747,7 @@
           "nullable": false
         },
         {
-          "name": "ANHANG",
+          "name": "G73350",
           "description": null,
           "type": "CHAR",
           "length": 1,
@@ -758,7 +758,7 @@
           "nullable": false
         },
         {
-          "name": "SOURCE",
+          "name": "G73360",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -769,7 +769,7 @@
           "nullable": false
         },
         {
-          "name": "COMPLAIN",
+          "name": "G73370",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -780,7 +780,7 @@
           "nullable": false
         },
         {
-          "name": "SYMPTOM",
+          "name": "G73380",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -791,7 +791,7 @@
           "nullable": false
         },
         {
-          "name": "FAILURE",
+          "name": "G73390",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -802,7 +802,7 @@
           "nullable": false
         },
         {
-          "name": "LOCATION",
+          "name": "G73400",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -813,7 +813,7 @@
           "nullable": false
         },
         {
-          "name": "REPAIR",
+          "name": "G73410",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -824,7 +824,7 @@
           "nullable": false
         },
         {
-          "name": "ERG.CODE",
+          "name": "G73420",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -835,7 +835,7 @@
           "nullable": false
         },
         {
-          "name": "RESULT1",
+          "name": "G73430",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -846,7 +846,7 @@
           "nullable": false
         },
         {
-          "name": "RESULT2",
+          "name": "G73440",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -857,7 +857,7 @@
           "nullable": false
         },
         {
-          "name": "FAULT1",
+          "name": "G73450",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -868,7 +868,7 @@
           "nullable": false
         },
         {
-          "name": "FAULT2",
+          "name": "G73460",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -879,7 +879,7 @@
           "nullable": false
         },
         {
-          "name": "REPLY1",
+          "name": "G73470",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -890,7 +890,7 @@
           "nullable": false
         },
         {
-          "name": "REPLY2",
+          "name": "G73480",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -901,7 +901,7 @@
           "nullable": false
         },
         {
-          "name": "EXPLANATION1",
+          "name": "G73490",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -912,7 +912,7 @@
           "nullable": false
         },
         {
-          "name": "EXPLANATION2",
+          "name": "G73500",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -964,51 +964,62 @@
       "description": null,
       "columns": [
         {
-          "name": "KUERZEL",
+          "name": "GPS000",
           "description": null,
           "type": "CHAR",
           "length": 3,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.3",
           "sqlType": "CHAR(3)",
           "nullable": false
         },
         {
-          "name": "CLAIM-NR.",
+          "name": "GPS010",
           "description": null,
           "type": "CHAR",
           "length": 8,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.8",
           "sqlType": "CHAR(8)",
           "nullable": false
         },
         {
-          "name": "FEHLER-NR.",
+          "name": "GPS020",
           "description": null,
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.2",
           "sqlType": "CHAR(2)",
           "nullable": false
         },
         {
-          "name": "FOLGE-NR.",
+          "name": "GPS025",
           "description": null,
           "type": "CHAR",
           "length": 2,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.2",
           "sqlType": "CHAR(2)",
           "nullable": false
         },
         {
-          "name": "ZEILE",
+          "name": "GPS030",
+          "description": null,
+          "type": "DECIMAL",
+          "length": 3,
+          "scale": 0,
+          "key": true,
+          "typeId": "t.dec3_0",
+          "sqlType": "DECIMAL(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "GPS035",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
@@ -1019,18 +1030,7 @@
           "nullable": false
         },
         {
-          "name": "AUFTEILUNG",
-          "description": null,
-          "type": "DECIMAL",
-          "length": 3,
-          "scale": 0,
-          "key": false,
-          "typeId": "t.dec3_0",
-          "sqlType": "DECIMAL(3,0)",
-          "nullable": false
-        },
-        {
-          "name": "SATZART",
+          "name": "GPS040",
           "description": null,
           "type": "CHAR",
           "length": 3,
@@ -1041,7 +1041,7 @@
           "nullable": false
         },
         {
-          "name": "NR.",
+          "name": "GPS050",
           "description": null,
           "type": "CHAR",
           "length": 18,
@@ -1052,7 +1052,7 @@
           "nullable": false
         },
         {
-          "name": "MENGE",
+          "name": "GPS060",
           "description": null,
           "type": "DECIMAL",
           "length": 5,
@@ -1063,7 +1063,7 @@
           "nullable": false
         },
         {
-          "name": "WERT",
+          "name": "GPS070",
           "description": null,
           "type": "DECIMAL",
           "length": 11,
@@ -1074,7 +1074,7 @@
           "nullable": false
         },
         {
-          "name": "STEUER-CODE",
+          "name": "GPS080",
           "description": null,
           "type": "CHAR",
           "length": 40,
@@ -1085,7 +1085,7 @@
           "nullable": false
         },
         {
-          "name": "HAUPTGRUPPE",
+          "name": "GPS090",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -1096,7 +1096,7 @@
           "nullable": false
         },
         {
-          "name": "ZEIT",
+          "name": "GPS100",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
@@ -1107,7 +1107,7 @@
           "nullable": false
         },
         {
-          "name": "GRUND",
+          "name": "GPS110",
           "description": null,
           "type": "DECIMAL",
           "length": 4,
@@ -1118,7 +1118,7 @@
           "nullable": false
         },
         {
-          "name": "VERGÜTUNG",
+          "name": "GPS120",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
@@ -1129,7 +1129,7 @@
           "nullable": false
         },
         {
-          "name": "MANUELL",
+          "name": "GPS130",
           "description": null,
           "type": "CHAR",
           "length": 1,
@@ -1140,7 +1140,7 @@
           "nullable": false
         },
         {
-          "name": "KAMPAGNE",
+          "name": "GPS140",
           "description": null,
           "type": "DECIMAL",
           "length": 8,
@@ -1151,18 +1151,18 @@
           "nullable": false
         },
         {
-          "name": "POS.-NR.",
+          "name": "GPS150",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
           "scale": 0,
-          "key": false,
+          "key": true,
           "typeId": "t.dec3_0",
           "sqlType": "DECIMAL(3,0)",
           "nullable": false
         },
         {
-          "name": "RESULTCODE",
+          "name": "GPS160",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -1173,7 +1173,7 @@
           "nullable": false
         },
         {
-          "name": "CODE TYPE",
+          "name": "GPS161",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -1184,7 +1184,7 @@
           "nullable": false
         },
         {
-          "name": "CODE ID",
+          "name": "GPS162",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -1195,7 +1195,7 @@
           "nullable": false
         },
         {
-          "name": "COMPFAC.",
+          "name": "GPS170",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
@@ -1206,7 +1206,7 @@
           "nullable": false
         },
         {
-          "name": "GROSSPRICE",
+          "name": "GPS180",
           "description": null,
           "type": "DECIMAL",
           "length": 13,
@@ -1217,7 +1217,7 @@
           "nullable": false
         },
         {
-          "name": "DISCOUNT",
+          "name": "GPS190",
           "description": null,
           "type": "DECIMAL",
           "length": 5,
@@ -1228,7 +1228,7 @@
           "nullable": false
         },
         {
-          "name": "COMPAMOUNT",
+          "name": "GPS200",
           "description": null,
           "type": "DECIMAL",
           "length": 15,
@@ -1239,7 +1239,7 @@
           "nullable": false
         },
         {
-          "name": "COMPQTY",
+          "name": "GPS210",
           "description": null,
           "type": "DECIMAL",
           "length": 7,
@@ -1250,7 +1250,7 @@
           "nullable": false
         },
         {
-          "name": "TYPE",
+          "name": "GPS220",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -1261,7 +1261,7 @@
           "nullable": false
         },
         {
-          "name": "MIA STATUS",
+          "name": "GPS230",
           "description": null,
           "type": "CHAR",
           "length": 1,
@@ -1272,7 +1272,7 @@
           "nullable": false
         },
         {
-          "name": "CATEGORYS",
+          "name": "GPS240",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -1283,7 +1283,7 @@
           "nullable": false
         },
         {
-          "name": "TEXT",
+          "name": "GPS250",
           "description": null,
           "type": "CHAR",
           "length": 2000,
@@ -1383,6 +1383,40 @@
       "typeId": "t.dec11_2",
       "scopeId": "scope.createClaim",
       "shared": true
+    }
+  },
+  "callGraph": {
+    "calls": [],
+    "calledBy": [
+      "n1"
+    ],
+    "tableAccess": {
+      "HSGPSLF3": [
+        {
+          "nodeId": "n1784",
+          "opcode": "SETLL",
+          "line": 2815
+        }
+      ],
+      "HSG71LF2": [
+        {
+          "nodeId": "n1824",
+          "opcode": "CHAIN",
+          "line": 2874
+        },
+        {
+          "nodeId": "n1829",
+          "opcode": "UPDATE",
+          "line": 2877
+        }
+      ],
+      "ITLSMF3": [
+        {
+          "nodeId": "n1810",
+          "opcode": "CHAIN",
+          "line": 2838
+        }
+      ]
     }
   },
   "statementNodes": [

@@ -6,23 +6,18 @@
 
 package com.scania.warranty.domain;
 
-/**
- * Value object for claim search criteria.
- */
 public record ClaimSearchCriteria(
     String companyCode,
-    String filterType,
-    String searchText,
-    Integer ageFilterDays,
-    String claimTypeFilter,
-    boolean openClaimsOnly,
-    String statusFilter,
-    String statusOperator,
-    String vehicleFilter,
-    String customerFilter,
-    String sdeClaimFilter,
-    boolean minimumOnly,
-    String sortField,
-    boolean ascending
-) {
-}
+    String status,
+    String statusCompareSign,
+    String filterBranch,
+    String filterCustomer,
+    String filterSde,
+    String filterArt,
+    int filterAgeDays,
+    boolean filterOpenOnly,
+    boolean filterMinimumOnly,
+    String searchString,
+    boolean sortByClaimNr,
+    SortDirection sortDirection
+) {}

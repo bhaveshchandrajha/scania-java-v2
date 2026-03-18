@@ -5,7 +5,10 @@ error log and current file contents to the LLM and applying the corrected code.
 
 USAGE:
   export ANTHROPIC_API_KEY=sk-ant-...
-  python3 fix_compile_errors.py <project_dir> <build_log_file> [--model claude-sonnet-4-5]
+  python3 fix_compile_errors.py <project_dir> <build_log_file> [--model claude-opus-4-6]
+
+  Model: Defaults to Claude Opus if API key has access, else claude-sonnet-4-5.
+  Use --model or ANTHROPIC_MODEL to override.
 
 This is intended to be called automatically from the global-context UI server
 after a failed Maven build.
@@ -85,6 +88,88 @@ def extract_error_files(build_log: str, project_dir: Path) -> List[Path]:
     return files
 
 
+def extract_types_from_error_text(error_snippet: str, project_dir: Path) -> List[Path]:
+    """
+    When errors mention constructor/record/type mismatches, include entity and DTO files
+    so the LLM sees exact field types (e.g. Claim.getG71170() returns int, ClaimListItemDto expects int for statusCode).
+    """
+    # Match type names from "constructor X", "record X" in error messages
+    seen: Set[str] = set()
+    for pattern in [
+        r"constructor\s+([A-Za-z][A-Za-z0-9_]*)",
+        r"record\s+([A-Za-z][A-Za-z0-9_]*)",
+        r"in\s+record\s+([A-Za-z][A-Za-z0-9_]*)",
+    ]:
+        for m in re.finditer(pattern, error_snippet, re.IGNORECASE):
+            name = m.group(1).strip()
+            if len(name) > 2 and name not in seen:
+                seen.add(name)
+    if not seen:
+        return []
+
+    src_root = project_dir / "src" / "main" / "java"
+    paths: List[Path] = []
+    for java_file in src_root.rglob("*.java"):
+        try:
+            content = java_file.read_text(encoding="utf-8", errors="ignore")
+            # Match: public class X, public record X, public interface X
+            for name in seen:
+                if re.search(rf"public\s+(?:class|record|interface)\s+{name}\b", content):
+                    p = java_file.resolve()
+                    if p not in paths:
+                        paths.append(p)
+                    break
+        except Exception:
+            continue
+    return paths
+
+
+def extract_dtos_from_error_files(
+    error_files: List[Path],
+    error_snippet: str,
+    project_dir: Path,
+) -> List[Path]:
+    """
+    When errors are "incompatible types" or "bad type in conditional expression" at a call site,
+    scan the error file(s) for constructor calls like new ClaimListItemDto(...) and include
+    those record/DTO files so the LLM sees the exact parameter order.
+    """
+    # Only when error suggests constructor/argument mismatch
+    if "incompatible types" not in error_snippet.lower() and "cannot be converted to" not in error_snippet.lower():
+        return []
+
+    seen: Set[str] = set()
+    # Match: new ClaimListItemDto( or new SomeRecord(
+    constructor_re = re.compile(r"\bnew\s+([A-Za-z][A-Za-z0-9_]*)\s*\(")
+    for path in error_files:
+        try:
+            content = path.read_text(encoding="utf-8", errors="ignore")
+            for m in constructor_re.finditer(content):
+                name = m.group(1).strip()
+                if len(name) > 2 and name not in seen:
+                    seen.add(name)
+        except Exception:
+            continue
+
+    if not seen:
+        return []
+
+    src_root = project_dir / "src" / "main" / "java"
+    paths: List[Path] = []
+    for java_file in src_root.rglob("*.java"):
+        try:
+            content = java_file.read_text(encoding="utf-8", errors="ignore")
+            for name in seen:
+                if re.search(rf"public\s+(?:class|record|interface)\s+{name}\b", content):
+                    p = java_file.resolve()
+                    if p not in paths:
+                        paths.append(p)
+                    break
+        except Exception:
+            continue
+    return paths
+
+
 def extract_related_type_files(build_log: str, project_dir: Path) -> List[Path]:
     """
     From error lines like:
@@ -151,11 +236,15 @@ The build will fail again if you leave ANY error unfixed. Fix every single error
 
 2. **incompatible types (Integer vs String)**: Use the setter that matches the argument type. If you have `parseDate()` returning Integer, use `setRepDatum(Integer)` or `setZulDatum(Integer)`, NOT `setRepairDate(String)`. Check the entity for both overloads.
 
-3. **Entity files are included**: When fixing DataInitializer or a service that uses Invoice/Claim, the entity file is in the list above. Read it to see the exact setter names (e.g. setReland, setReplz, setRetele, setRgsnetto, setWktid, setFv, setFb, setKampagnenr, setSpoorder, setKenav, setKenpe, setKlrberech, setKlrbetrag).
+3. **Repository methods expect (String, String)**: `findByCompanyAndClaimNr(String pkz, String claimNr)` — pass `claim.getG71050()` or `claimNumber` directly. Do NOT use `Integer.parseInt(claim.getG71050())` — that passes int where String is required.
 
-4. **Minimal edits**: Change ONLY what is broken. Do not refactor. Preserve all other code.
+4. **Record/constructor argument order and types**: When fixing ClaimListItemDto or similar records, match the EXACT constructor parameter order and types from the record definition. Example: if the record has `int statusCode, String statusText, String demandCode, int errorCount, String colorIndicator`, pass: (int) for statusCode, (String) for statusText, (String) for demandCode, (int) for errorCount (e.g. errors.size()), (String) for colorIndicator. ALWAYS read the record definition in the files above to get the exact order — do NOT guess.
 
-5. **No new text**: Output ONLY file markers and code blocks. No explanations, no summaries. Text after ``` corrupts the file.
+5. **Entity files are included**: When fixing DataInitializer or a service that uses Invoice/Claim, the entity file is in the list above. Read it to see the exact setter names and getter return types.
+
+6. **Minimal edits**: Change ONLY what is broken. Do not refactor. Preserve all other code.
+
+7. **No new text**: Output ONLY file markers and code blocks. No explanations, no summaries. Text after ``` corrupts the file.
 
 ## Response format
 
@@ -173,7 +262,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Fix Java compilation errors using LLM")
     parser.add_argument("project_dir", type=Path, help="Project directory containing pom.xml (e.g. warranty_demo)")
     parser.add_argument("build_log_file", type=Path, help="Path to a text file with Maven build output")
-    parser.add_argument("--model", default="claude-sonnet-4-5", help="Anthropic model")
+    parser.add_argument("--model", default=None, help="Anthropic model. Default: Claude Opus if available, else claude-sonnet-4-5")
     parser.add_argument("--max-tokens", type=int, default=32000)
     parser.add_argument("--propose-only", action="store_true", help="Return suggested fixes as JSON without writing to disk (for HITL)")
     args = parser.parse_args()
@@ -197,7 +286,11 @@ def main() -> None:
     error_files = extract_error_files(build_log, project_dir)
     related_type_files = extract_related_type_files(build_log, project_dir)
 
-    all_files_set: Set[Path] = set(error_files) | set(related_type_files)
+    # Include entity/DTO types from error text (e.g. ClaimListItemDto, Claim) for type-mismatch fixes
+    entity_dto_files = extract_types_from_error_text(error_snippet, project_dir)
+    # When "incompatible types" at call site, scan error file for new XDto(...) and include that DTO
+    dto_from_error_files = extract_dtos_from_error_files(error_files, error_snippet, project_dir)
+    all_files_set: Set[Path] = set(error_files) | set(related_type_files) | set(entity_dto_files) | set(dto_from_error_files)
     all_files: List[Path] = list(all_files_set)
 
     if not all_files:
@@ -224,11 +317,27 @@ def main() -> None:
     prompt = build_fix_prompt(error_snippet, files_with_content)
     print(f"Calling LLM to fix {len(files_with_content)} file(s) based on compilation errors...", file=sys.stderr)
 
+    # Resolve model: explicit --model, else ANTHROPIC_MODEL env, else Opus if available, else Sonnet
+    model = args.model or os.environ.get("ANTHROPIC_MODEL")
+    if not model:
+        try:
+            from check_anthropic_models import check_models
+            model_info = check_models()
+            if model_info.get("opus_available") and model_info.get("opus_model"):
+                model = model_info["opus_model"]
+                print(f"Using Claude Opus ({model}) for compile error fixes", file=sys.stderr)
+            else:
+                model = "claude-sonnet-4-5"
+                print(f"Opus not available; using {model}", file=sys.stderr)
+        except Exception as e:
+            model = "claude-sonnet-4-5"
+            print(f"Model check failed ({e}); using {model}", file=sys.stderr)
+
     import anthropic
 
     client = anthropic.Anthropic(api_key=api_key)
     response = client.messages.create(
-        model=args.model,
+        model=model,
         max_tokens=args.max_tokens,
         temperature=0.0,
         messages=[{"role": "user", "content": prompt}],

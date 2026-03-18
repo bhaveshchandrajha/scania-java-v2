@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build a coarse call graph from RPG AST files.
+Build a full call graph from RPG AST files.
 
 Inputs:
   - JSON_ast/**/-ast.json           (e.g. JSON_ast/JSON_20260211/HS1210-ast.json)
@@ -11,16 +11,9 @@ Output:
 
 For each program it records:
   - programId, unitId
-  - calls: list of edges with
-      - callNodeId   (the ExSr / CallP node)
-      - opcode       (EXSR / CALLP)
-      - callerNodeId (containing Procedure/Subroutine node, best-effort)
-      - fileId, line
-
-This first version does NOT resolve callee names yet; that will require
-access to RPG source lines at the call site. It focuses on:
-  - where call sites are, and
-  - which AST node (procedure/subroutine) contains them.
+  - calls: list of procedure/subroutine call edges (ExSr, CallP)
+  - tableAccess: map of physical file/table name -> list of {nodeId, opcode, line, callerNodeId}
+    for file operations: Chain, Read, ReadE, Reade, Write, Update, Delete, SetLL, SetGT
 """
 
 from __future__ import annotations
@@ -147,8 +140,10 @@ def build_call_graph(ast_root: Path | None = None) -> Dict[str, Any]:
     # Filter out display file ASTs (*D-ast.json)
     ast_paths = sorted(p for p in ast_root.glob("**/*-ast.json") if not p.stem.endswith("D-ast"))
     if not ast_paths:
-        print(f"[call-graph] No *-ast.json files under {AST_ROOT}", file=sys.stderr)
+        print(f"[call-graph] No *-ast.json files under {ast_root}", file=sys.stderr)
         return {"programs": []}
+
+    FILE_OP_KINDS = {"Chain", "Read", "ReadE", "Reade", "Write", "Update", "Delete", "SetLL", "SetGT"}
 
     programs: List[Dict[str, Any]] = []
 
@@ -187,6 +182,33 @@ def build_call_graph(ast_root: Path | None = None) -> Dict[str, Any]:
                 )
             )
 
+        # Extract file operations (Chain, Read, Write, etc.) for tableAccess
+        table_access: Dict[str, List[Dict[str, Any]]] = {}
+        for node in root.get("nodes") or []:
+            if not isinstance(node, dict):
+                continue
+            kind = node.get("kind")
+            if kind not in FILE_OP_KINDS:
+                continue
+            props = node.get("props") or {}
+            target = props.get("target")
+            if not target or not isinstance(target, str):
+                continue
+            table_name = target.strip().upper()
+            if not table_name:
+                continue
+            rng = node.get("range") or {}
+            file_id = rng.get("fileId")
+            line = rng.get("startLine")
+            caller_node_id = _find_caller_for_line(callers, file_id, line)
+            entry = {
+                "nodeId": node.get("id"),
+                "opcode": (props.get("opcode") or kind).upper(),
+                "line": line,
+                "callerNodeId": caller_node_id,
+            }
+            table_access.setdefault(table_name, []).append(entry)
+
         programs.append(
             {
                 "programId": program_id,
@@ -194,6 +216,7 @@ def build_call_graph(ast_root: Path | None = None) -> Dict[str, Any]:
                 "astPath": str(ast_path),
                 "callCount": len(calls),
                 "calls": [asdict(c) for c in calls],
+                "tableAccess": table_access,
             }
         )
 

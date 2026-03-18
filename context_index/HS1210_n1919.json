@@ -21,8 +21,8 @@
       "endColumn": 24
     }
   },
-  "narrative": "### Node n1919: Procedure `CheckClaim`\n\nThis procedure references symbols derived from its semantic block and symbol table.\n\n- **Files / DB Contracts**:\n  - HSGPSPF (columns: KUERZEL CHAR, CLAIM-NR. CHAR, FEHLER-NR. CHAR, FOLGE-NR. CHAR, ZEILE DECIMAL, AUFTEILUNG DECIMAL, SATZART CHAR, NR. CHAR, MENGE DECIMAL, WERT DECIMAL, STEUER-CODE CHAR, HAUPTGRUPPE CHAR, ZEIT DECIMAL, GRUND DECIMAL, VERGÜTUNG DECIMAL, MANUELL CHAR, KAMPAGNE DECIMAL, POS.-NR. DECIMAL, RESULTCODE CHAR, CODE TYPE CHAR +10 more)\n\n- **Variables**:\n  - 3011 (type: t.klist.3011)\n  - G73000 (type: t.char.3)\n  - G73050 (type: t.char.8)\n  - G73060 (type: t.char.2)\n  - counter (type: t.dec1_0)\n  - error\n\n- **Raw sem JSON**:\n```json\n{\n  \"sym.file.HSGPSPF\": {\n    \"refersTo\": \"sym.file.HSGPSPF\"\n  },\n  \"sym.var.G73000\": {\n    \"refersTo\": \"sym.var.G73000\"\n  },\n  \"sym.var.G73050\": {\n    \"refersTo\": \"sym.var.G73050\"\n  },\n  \"sym.var.G73060\": {\n    \"refersTo\": \"sym.var.G73060\"\n  },\n  \"sym.var.counter\": {\n    \"refersTo\": \"sym.var.counter\"\n  },\n  \"sym.var.error\": {\n    \"refersTo\": \"sym.var.error\"\n  },\n  \"sym.var.3011\": {\n    \"refersTo\": \"sym.var.3011\"\n  }\n}\n```",
-  "rpgSnippet": "",
+  "narrative": "### Node n1919: Procedure `CheckClaim`\n\nThis procedure references symbols derived from its semantic block and symbol table.\n\n- **Files / DB Contracts**:\n  - HSGPSPF (columns: GPS000 CHAR, GPS010 CHAR, GPS020 CHAR, GPS025 CHAR, GPS030 DECIMAL, GPS035 DECIMAL, GPS040 CHAR, GPS050 CHAR, GPS060 DECIMAL, GPS070 DECIMAL, GPS080 CHAR, GPS090 CHAR, GPS100 DECIMAL, GPS110 DECIMAL, GPS120 DECIMAL, GPS130 CHAR, GPS140 DECIMAL, GPS150 DECIMAL, GPS160 CHAR, GPS161 CHAR +10 more)\n\n- **Variables**:\n  - 3011 (type: t.klist.3011)\n  - G73000 (type: t.char.3)\n  - G73050 (type: t.char.8)\n  - G73060 (type: t.char.2)\n  - counter (type: t.dec1_0)\n  - error\n\n- **Raw sem JSON**:\n```json\n{\n  \"sym.file.HSGPSPF\": {\n    \"refersTo\": \"sym.file.HSGPSPF\"\n  },\n  \"sym.var.G73000\": {\n    \"refersTo\": \"sym.var.G73000\"\n  },\n  \"sym.var.G73050\": {\n    \"refersTo\": \"sym.var.G73050\"\n  },\n  \"sym.var.G73060\": {\n    \"refersTo\": \"sym.var.G73060\"\n  },\n  \"sym.var.counter\": {\n    \"refersTo\": \"sym.var.counter\"\n  },\n  \"sym.var.error\": {\n    \"refersTo\": \"sym.var.error\"\n  },\n  \"sym.var.3011\": {\n    \"refersTo\": \"sym.var.3011\"\n  }\n}\n```",
+  "rpgSnippet": "     P CheckClaim      B\n     D CheckClaim      PI              N\n     D*----------------------------------------------------------------\n     D counter         S              1  0 Inz(0)\n     D error           S               N   Inz(*Off)\n     D*****************************************************************\n      /free\n       errorT = *Blanks;\n       If %Trim(G73360) = '3' And G73280 = *Blanks;\n          counter += 1;\n          %Subst(errorT:(counter - 1) * 70 + 1:70) = 'Ursache Kampagne aber ' +\n                 'keine Kampagnen-Nr. eingetragen.';\n          G73360 = *Blanks;\n          Update HSG73LR1;\n       EndIf;\n       If G73360 = *Blanks;\n          counter += 1;\n          %Subst(errorT:(counter - 1) * 70 + 1:70) = 'Schadenscodierung Kund' +\n                 'e ung�ltig.';\n       EndIf;\n       If %Trim(G73360) = '3' And (G73370 <> *Blanks Or G73380 <> *Blanks);\n          counter += 1;\n          %Subst(errorT:(counter - 1) * 70 + 1:70) = 'Schadenscodierung Kund' +\n                 'e ung�ltig.';\n       EndIf;\n       If G73390 = *Blanks;\n          counter += 1;\n          %Subst(errorT:(counter - 1) * 70 + 1:70) = 'Schadenscodierung Werk' +\n                 'statt ung�ltig.';\n       EndIf;\n       If %Trim(G73390) = '97' And (G73400 <> *Blanks Or G73410 <> *Blanks);\n          counter += 1;\n          %Subst(errorT:(counter - 1) * 70 + 1:70) = 'Schadenscodierung Werk' +\n                 'statt ung�ltig.';\n       EndIf;\n       If G73070 = *Blanks;\n          counter += 1;\n          %Subst(errort:(counter - 1) * 70 + 1:70) = 'Es ist keine schadens'+\n                 'verursachende Teilenummer angegeben.';\n       EndIf;\n       SetlL (G73000:G73050:G73060) HSGPSPF;\n       ReadE(N) (G73000:G73050:G73060) HSGPSPF;\n       Dow Not %Eof(HSGPSPF) And Not error;\n          If GPS040 = 'SMA' And (GPS220 = *Blanks Or GPS240 = *Blanks);\n             error = *On;\n          EndIf;\n          ReadE(N) (G73000:G73050:G73060) HSGPSPF;\n       EndDo;\n       If error;\n          counter += 1;\n          %Subst(errorT:counter * 1:60) = 'Es sind Sonderkosten '+\n                 'ohne Codierung vorhanden.';\n       EndIf;\n       If getClaimValues('Requested':G73000:G73050:G73060:G73065) = 0;\n          counter += 1;\n          %Subst(errorT:counter * 1:60) = 'Antrag mit Wert 0 kan'+\n                 'n nicht versendet werden.';\n       EndIf;\n\n       If counter > 0 And errorT <> *Blanks;\n          ExFmt HS1210WE;\n          Return *Off;\n       EndIf;\n       Return *On;\n      /end-free\n     P                 E",
   "dbContracts": [
     {
       "name": "HSGPSPF",
@@ -60,29 +60,40 @@
       "description": null,
       "columns": [
         {
-          "name": "KUERZEL",
+          "name": "GPS000",
           "description": null,
           "type": "CHAR",
           "length": 3,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.3",
           "sqlType": "CHAR(3)",
           "nullable": false
         },
         {
-          "name": "CLAIM-NR.",
+          "name": "GPS010",
           "description": null,
           "type": "CHAR",
           "length": 8,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.8",
           "sqlType": "CHAR(8)",
           "nullable": false
         },
         {
-          "name": "FEHLER-NR.",
+          "name": "GPS020",
+          "description": null,
+          "type": "CHAR",
+          "length": 2,
+          "scale": null,
+          "key": true,
+          "typeId": "t.char.2",
+          "sqlType": "CHAR(2)",
+          "nullable": false
+        },
+        {
+          "name": "GPS025",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -93,51 +104,40 @@
           "nullable": false
         },
         {
-          "name": "FOLGE-NR.",
-          "description": null,
-          "type": "CHAR",
-          "length": 2,
-          "scale": null,
-          "key": false,
-          "typeId": "t.char.2",
-          "sqlType": "CHAR(2)",
-          "nullable": false
-        },
-        {
-          "name": "ZEILE",
+          "name": "GPS030",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
           "scale": 0,
-          "key": false,
+          "key": true,
           "typeId": "t.dec3_0",
           "sqlType": "DECIMAL(3,0)",
           "nullable": false
         },
         {
-          "name": "AUFTEILUNG",
+          "name": "GPS035",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
           "scale": 0,
-          "key": false,
+          "key": true,
           "typeId": "t.dec3_0",
           "sqlType": "DECIMAL(3,0)",
           "nullable": false
         },
         {
-          "name": "SATZART",
+          "name": "GPS040",
           "description": null,
           "type": "CHAR",
           "length": 3,
           "scale": null,
-          "key": false,
+          "key": true,
           "typeId": "t.char.3",
           "sqlType": "CHAR(3)",
           "nullable": false
         },
         {
-          "name": "NR.",
+          "name": "GPS050",
           "description": null,
           "type": "CHAR",
           "length": 18,
@@ -148,7 +148,7 @@
           "nullable": false
         },
         {
-          "name": "MENGE",
+          "name": "GPS060",
           "description": null,
           "type": "DECIMAL",
           "length": 5,
@@ -159,7 +159,7 @@
           "nullable": false
         },
         {
-          "name": "WERT",
+          "name": "GPS070",
           "description": null,
           "type": "DECIMAL",
           "length": 11,
@@ -170,7 +170,7 @@
           "nullable": false
         },
         {
-          "name": "STEUER-CODE",
+          "name": "GPS080",
           "description": null,
           "type": "CHAR",
           "length": 40,
@@ -181,7 +181,7 @@
           "nullable": false
         },
         {
-          "name": "HAUPTGRUPPE",
+          "name": "GPS090",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -192,7 +192,7 @@
           "nullable": false
         },
         {
-          "name": "ZEIT",
+          "name": "GPS100",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
@@ -203,7 +203,7 @@
           "nullable": false
         },
         {
-          "name": "GRUND",
+          "name": "GPS110",
           "description": null,
           "type": "DECIMAL",
           "length": 4,
@@ -214,7 +214,7 @@
           "nullable": false
         },
         {
-          "name": "VERGÜTUNG",
+          "name": "GPS120",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
@@ -225,7 +225,7 @@
           "nullable": false
         },
         {
-          "name": "MANUELL",
+          "name": "GPS130",
           "description": null,
           "type": "CHAR",
           "length": 1,
@@ -236,7 +236,7 @@
           "nullable": false
         },
         {
-          "name": "KAMPAGNE",
+          "name": "GPS140",
           "description": null,
           "type": "DECIMAL",
           "length": 8,
@@ -247,7 +247,7 @@
           "nullable": false
         },
         {
-          "name": "POS.-NR.",
+          "name": "GPS150",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
@@ -258,7 +258,7 @@
           "nullable": false
         },
         {
-          "name": "RESULTCODE",
+          "name": "GPS160",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -269,7 +269,7 @@
           "nullable": false
         },
         {
-          "name": "CODE TYPE",
+          "name": "GPS161",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -280,7 +280,7 @@
           "nullable": false
         },
         {
-          "name": "CODE ID",
+          "name": "GPS162",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -291,7 +291,7 @@
           "nullable": false
         },
         {
-          "name": "COMPFAC.",
+          "name": "GPS170",
           "description": null,
           "type": "DECIMAL",
           "length": 3,
@@ -302,7 +302,7 @@
           "nullable": false
         },
         {
-          "name": "GROSSPRICE",
+          "name": "GPS180",
           "description": null,
           "type": "DECIMAL",
           "length": 13,
@@ -313,7 +313,7 @@
           "nullable": false
         },
         {
-          "name": "DISCOUNT",
+          "name": "GPS190",
           "description": null,
           "type": "DECIMAL",
           "length": 5,
@@ -324,7 +324,7 @@
           "nullable": false
         },
         {
-          "name": "COMPAMOUNT",
+          "name": "GPS200",
           "description": null,
           "type": "DECIMAL",
           "length": 15,
@@ -335,7 +335,7 @@
           "nullable": false
         },
         {
-          "name": "COMPQTY",
+          "name": "GPS210",
           "description": null,
           "type": "DECIMAL",
           "length": 7,
@@ -346,7 +346,7 @@
           "nullable": false
         },
         {
-          "name": "TYPE",
+          "name": "GPS220",
           "description": null,
           "type": "CHAR",
           "length": 5,
@@ -357,7 +357,7 @@
           "nullable": false
         },
         {
-          "name": "MIA STATUS",
+          "name": "GPS230",
           "description": null,
           "type": "CHAR",
           "length": 1,
@@ -368,7 +368,7 @@
           "nullable": false
         },
         {
-          "name": "CATEGORYS",
+          "name": "GPS240",
           "description": null,
           "type": "CHAR",
           "length": 2,
@@ -379,7 +379,7 @@
           "nullable": false
         },
         {
-          "name": "TEXT",
+          "name": "GPS250",
           "description": null,
           "type": "CHAR",
           "length": 2000,
@@ -437,6 +437,28 @@
       "kind": "variable",
       "typeId": "t.klist.3011",
       "scopeId": "scope.checkClaim"
+    }
+  },
+  "callGraph": {
+    "calls": [],
+    "calledBy": [
+      "n404"
+    ],
+    "tableAccess": {
+      "HSGPSPF": [
+        {
+          "nodeId": "n1958",
+          "opcode": "SETLL",
+          "line": 3008
+        }
+      ],
+      "HSG73LF1": [
+        {
+          "nodeId": "n1929",
+          "opcode": "UPDATE",
+          "line": 2981
+        }
+      ]
     }
   },
   "statementNodes": [

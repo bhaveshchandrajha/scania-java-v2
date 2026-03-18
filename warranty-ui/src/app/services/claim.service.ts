@@ -28,4 +28,8 @@ export class ClaimService {
       .set('workshopType', params.workshopType);
     return this.http.post(`${this.apiBase}/create`, null, { params: httpParams, responseType: 'text' });
   }
+
+  delete(companyCode: string, claimNumber: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiBase}/${companyCode}/${claimNumber}`);
+  }
 }

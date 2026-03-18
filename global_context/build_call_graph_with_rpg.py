@@ -12,8 +12,12 @@ Output:
 
 For each call edge it tries to add:
   - calleeName: name after EXSR / CALLP on the RPG line
-  - calleeNodeId: for EXSR, the Subroutine node whose BEGSR line
-    declares that name (best-effort, same program only)
+  - calleeNodeId: for EXSR, Subroutine or Procedure; for CALLP, Procedure
+    (best-effort, same program only)
+
+Also discovers procedure calls from free-format (procName()) and fixed-format
+(Eval x = procName()) that are not in the AST as CallP nodes, and adds them
+as synthetic call edges so BFS migration includes linked procedures.
 """
 
 from __future__ import annotations
@@ -63,6 +67,147 @@ class SubroutineDef:
     name: str
     nodeId: str
     line: int
+
+
+@dataclass
+class CallerRange:
+    nodeId: str
+    kind: str
+    fileId: Optional[str]
+    startLine: Optional[int]
+    endLine: Optional[int]
+
+
+def _build_procedure_index(program_ctx: Dict[str, Any]) -> Dict[str, str]:
+    """
+    Build name (upper) -> nodeId for Procedure nodes.
+    Uses name or procedureName from the node.
+    """
+    index: Dict[str, str] = {}
+    for node in program_ctx.get("nodes") or []:
+        if not isinstance(node, dict):
+            continue
+        if node.get("kind") != "Procedure":
+            continue
+        node_id = node.get("id")
+        name = node.get("name") or node.get("procedureName")
+        if name and isinstance(name, str):
+            index[name.strip().upper()] = node_id
+    return index
+
+
+def _build_caller_index(program_ctx: Dict[str, Any]) -> List[CallerRange]:
+    """
+    Build list of Procedure/Subroutine ranges for finding caller by line.
+    Includes CompilationUnit as fallback for main-flow lines (e.g. before first subroutine).
+    """
+    callers: List[CallerRange] = []
+    for node in program_ctx.get("nodes") or []:
+        if not isinstance(node, dict):
+            continue
+        kind = node.get("kind")
+        if kind not in ("Procedure", "Subroutine", "CompilationUnit"):
+            continue
+        node_id = node.get("id")
+        rng = node.get("range") or {}
+        callers.append(
+            CallerRange(
+                nodeId=node_id,
+                kind=kind or "",
+                fileId=rng.get("fileId"),
+                startLine=rng.get("startLine"),
+                endLine=rng.get("endLine"),
+            )
+        )
+    return callers
+
+
+def _find_caller_for_line(
+    callers: List[CallerRange],
+    file_id: Optional[str],
+    line: Optional[int],
+) -> Optional[str]:
+    """Find the innermost Procedure/Subroutine that contains the given line."""
+    if not file_id or line is None:
+        return None
+    best: Optional[CallerRange] = None
+    for c in callers:
+        if c.fileId != file_id:
+            continue
+        if c.startLine is None or c.endLine is None:
+            continue
+        if c.startLine <= line <= c.endLine:
+            if best is None or (
+                best.startLine is not None
+                and c.startLine is not None
+                and c.startLine > best.startLine
+            ):
+                best = c
+    return best.nodeId if best else None
+
+
+def _discover_procedure_calls_from_rpg(
+    rpg_lines: List[str],
+    procedure_index: Dict[str, str],
+    caller_index: List[CallerRange],
+    file_id: str,
+    program_id: str,
+) -> List[Dict[str, Any]]:
+    """
+    Scan RPG source for procedure calls not in the AST (free-format procName(),
+    fixed-format Eval x = procName()). Returns synthetic call edges.
+    """
+    synthetic: List[Dict[str, Any]] = []
+    seen: set[Tuple[int, str]] = set()
+    # Free-format: procName() or procName ( )
+    free_re = re.compile(
+        r"\b([A-Za-z][A-Za-z0-9_]*)\s*\(\s*\)",
+        re.IGNORECASE,
+    )
+    # Fixed-format: Eval x = procName()
+    eval_re = re.compile(
+        r"\bEval\s+[^=]+=\s*([A-Za-z][A-Za-z0-9_]*)\s*\(\s*\)",
+        re.IGNORECASE,
+    )
+    for i, line in enumerate(rpg_lines):
+        line_no = i + 1
+        for m in free_re.finditer(line):
+            name = m.group(1).strip().upper()
+            if name in procedure_index and (line_no, name) not in seen:
+                seen.add((line_no, name))
+                caller = _find_caller_for_line(caller_index, file_id, line_no)
+                if caller:
+                    synthetic.append(
+                        {
+                            "callNodeId": f"syn_{program_id}_{line_no}_{name}",
+                            "opcode": "CALLP",
+                            "callerNodeId": caller,
+                            "fileId": file_id,
+                            "line": line_no,
+                            "calleeName": name,
+                            "calleeNodeId": procedure_index[name],
+                            "synthetic": True,
+                        }
+                    )
+        for m in eval_re.finditer(line):
+            name = m.group(1).strip().upper()
+            if name in procedure_index and (line_no, name) not in seen:
+                seen.add((line_no, name))
+                caller = _find_caller_for_line(caller_index, file_id, line_no)
+                if caller:
+                    synthetic.append(
+                        {
+                            "callNodeId": f"syn_{program_id}_{line_no}_{name}",
+                            "opcode": "EVAL",
+                            "callerNodeId": caller,
+                            "fileId": file_id,
+                            "line": line_no,
+                            "calleeName": name,
+                            "calleeNodeId": procedure_index[name],
+                            "synthetic": True,
+                        }
+                    )
+    return synthetic
 
 
 def _program_id_from_unit(unit_id: str, ast_path: Path) -> str:
@@ -183,6 +328,8 @@ def enrich_call_graph(rpg_root: Path) -> Dict[str, Any]:
         rpg_lines = text.splitlines()
 
         subr_index = _build_subroutine_index(ctx, rpg_lines)
+        proc_index = _build_procedure_index(ctx)
+        caller_index = _build_caller_index(ctx)
 
         new_calls: List[Dict[str, Any]] = []
         for call in base_calls:
@@ -199,15 +346,36 @@ def enrich_call_graph(rpg_root: Path) -> Dict[str, Any]:
             if isinstance(line_no, int) and 1 <= line_no <= len(rpg_lines):
                 line_text = rpg_lines[line_no - 1]
                 callee_name = _parse_callee_from_line(opcode, line_text)
-                if callee_name and opcode == "EXSR":
-                    sub_def = subr_index.get(callee_name)
-                    if sub_def:
-                        callee_node_id = sub_def.nodeId
+                if callee_name:
+                    if opcode == "EXSR":
+                        sub_def = subr_index.get(callee_name)
+                        if sub_def:
+                            callee_node_id = sub_def.nodeId
+                        elif callee_name in proc_index:
+                            callee_node_id = proc_index[callee_name]
+                    elif opcode in ("CALLP", "CALL"):
+                        if callee_name in proc_index:
+                            callee_node_id = proc_index[callee_name]
 
             call_enriched = dict(call)
             call_enriched["calleeName"] = callee_name
             call_enriched["calleeNodeId"] = callee_node_id
             new_calls.append(call_enriched)
+
+        # Discover procedure calls from free-format (procName()) and Eval procName()
+        prog_file_id = (
+            (base_calls[0].get("fileId") if base_calls else None)
+            or unit_id
+            or f"qsys:HSSRC/QRPGLESRC/{program_id}"
+        )
+        synthetic = _discover_procedure_calls_from_rpg(
+            rpg_lines,
+            proc_index,
+            caller_index,
+            prog_file_id,
+            program_id,
+        )
+        new_calls.extend(synthetic)
 
         enriched_programs.append(
             {

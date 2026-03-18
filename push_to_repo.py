@@ -10,6 +10,7 @@ Environment:
   GIT_USE_TOKEN=1 - Use token for auth (required when no credential helper)
   GIT_USER_EMAIL, GIT_USER_NAME - Git identity for commits (default: pipeline@scania.local)
   PUSH_TARGET_REPO - Override default repo URL
+  CLONE_BRANCH - Branch to clone from (default: migration/HS1210_20260313_145001)
   Loads from .env in project root if present.
 """
 
@@ -39,8 +40,10 @@ def _load_env():
 
 _load_env()
 
-DEFAULT_REPO = "https://github.com/griddynamics/scania-springboot-app.git"
+DEFAULT_REPO = "https://github.com/farcaz/scania-springboot-app.git"
 BRANCH_PREFIX = "migration/"
+# Branch to clone from (repo default). Use CLONE_BRANCH env to override.
+DEFAULT_CLONE_BRANCH = "migration/HS1210_20260313_145001"
 
 # Paths to exclude when copying (like .gitignore)
 EXCLUDE_DIRS = {"target", ".git", ".idea", ".vscode", "node_modules", "__pycache__", ".push_tmp", ".venv", "venv"}
@@ -53,12 +56,12 @@ def get_token() -> str | None:
 
 def get_repo_url(repo_override: str | None) -> str:
     url = (repo_override or os.environ.get("PUSH_TARGET_REPO") or DEFAULT_REPO).strip()
-    # Prefer system git credentials (gh auth, credential helper) - they work for collaborators.
-    # Only use token if GIT_USE_TOKEN=1 (token in .env may lack repo access for collaborators).
     use_token = os.environ.get("GIT_USE_TOKEN", "").lower() in ("1", "true", "yes")
     token = get_token() if use_token else None
     if token and url.startswith("https://github.com/"):
-        url = url.replace("https://", f"https://{token}@", 1)
+        # x-access-token format is more reliable for GitHub PAT auth
+        token = token.strip()
+        url = url.replace("https://github.com/", f"https://x-access-token:{token}@github.com/", 1)
     return url
 
 
@@ -107,9 +110,10 @@ def push_to_repo(
         if clone_dir.exists():
             shutil.rmtree(clone_dir)
 
-        # Clone (same as manual_push.sh)
+        # Clone from configured branch (or repo default)
+        clone_branch = os.environ.get("CLONE_BRANCH", "").strip() or DEFAULT_CLONE_BRANCH
         proc = subprocess.run(
-            ["git", "clone", "--depth", "1", url, str(clone_dir)],
+            ["git", "clone", "-b", clone_branch, "--depth", "1", url, str(clone_dir)],
             capture_output=True,
             text=True,
             timeout=180,
@@ -158,20 +162,28 @@ def push_to_repo(
         if proc.returncode != 0 and "nothing to commit" not in (proc.stdout or "").lower():
             return {"success": False, "error": f"Git commit failed: {(proc.stderr or proc.stdout or '')[:200]}"}
 
+        # Ensure remote uses token URL and bypass credential helper (use URL auth only)
+        subprocess.run(["git", "remote", "set-url", "origin", url], capture_output=True, timeout=10, cwd=str(clone_dir))
         force = os.environ.get("PUSH_FORCE", "").lower() in ("1", "true", "yes")
-        push_cmd = ["git", "push", "-u", "origin", branch]
+        push_cmd = ["git", "-c", "credential.helper=", "push", "-u", "origin", branch]
         if force:
             push_cmd.insert(-1, "--force")
+        env = os.environ.copy()
+        env["GIT_TERMINAL_PROMPT"] = "0"
         proc = subprocess.run(
             push_cmd,
             capture_output=True,
             text=True,
             timeout=180,
             cwd=str(clone_dir),
+            env=env,
         )
         if proc.returncode != 0:
             err = (proc.stderr or proc.stdout or "").strip()
-            return {"success": False, "error": f"Git push failed: {err[:300]}"}
+            hint = ""
+            if "403" in err or "Permission" in err or "denied" in err:
+                hint = " Token tip: Use a Classic PAT (repo scope) or ensure Fine-grained token has 'farcaz/scania-springboot-app' in Repository access + Contents: Read and Write."
+            return {"success": False, "error": f"Git push failed: {err[:300]}{hint}"}
 
         return {
             "success": True,
@@ -191,13 +203,36 @@ def push_to_repo(
                 pass
 
 
+def verify_token() -> bool:
+    """Test if GITHUB_TOKEN has access to the target repo."""
+    url = get_repo_url(None)
+    proc = subprocess.run(
+        ["git", "ls-remote", url],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        cwd=str(ROOT_DIR),
+        env={**os.environ, "GIT_TERMINAL_PROMPT": "0"},
+    )
+    if proc.returncode == 0:
+        print("✓ Token verified: can access repo")
+        return True
+    err = (proc.stderr or proc.stdout or "").strip()
+    print(f"✗ Token verification failed: {err[:200]}", file=sys.stderr)
+    return False
+
+
 def main():
     parser = argparse.ArgumentParser(description="Push warranty_demo or full project to remote Git repository")
     parser.add_argument("--project-dir", default=None, help="Project directory (default: warranty_demo). Use . for full repo.")
     parser.add_argument("--full-repo", action="store_true", help="Push entire ScaniaRPG2JavaRevisedDesign project")
     parser.add_argument("--repo", default=None, help="Override repo URL")
     parser.add_argument("--branch", default=None, help="Branch name (default: migration/HS1210_<timestamp>)")
+    parser.add_argument("--verify-token", action="store_true", help="Test token access and exit")
     args = parser.parse_args()
+
+    if args.verify_token:
+        sys.exit(0 if verify_token() else 1)
 
     root = Path(__file__).resolve().parent
     if args.full_repo or (args.project_dir and args.project_dir.strip() in (".", "")):

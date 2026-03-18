@@ -294,28 +294,28 @@ create table hsahklf3 (
     );
 
     create table hsg71pf (
-        anhang varchar(1) not null,
-        "anz_ fehler" integer not null,
-        "ausl#nder" varchar(1) not null,
-        bereich varchar(1) not null,
-        "km-stand" integer not null,
-        pakz varchar(3) not null,
-        "produkt-typ" integer not null,
-        "rep_-datum" integer not null,
-        "status code sde" integer not null,
-        wete varchar(1) not null,
-        "zul_-datum" integer not null,
-        "auftrags-nr_" varchar(5) not null,
-        "rech_-nr_" varchar(5) not null,
-        "kd-nr_" varchar(6) not null,
-        "chassis-nr_" varchar(7) not null,
-        "claim-nr_" varchar(8) not null,
-        "claim-nr_ sde" varchar(8) not null,
-        "rech_-datum" varchar(8) not null,
-        "auf_nr_" varchar(10) not null,
-        kennzeichen varchar(10) not null,
-        "kd-name" varchar(30) not null,
-        primary key (bereich, pakz, "auftrags-nr_", "rech_-nr_", "rech_-datum")
+        g71000 varchar(3) not null,
+        g71010 varchar(5) not null,
+        g71020 varchar(8) not null,
+        g71030 varchar(5) not null,
+        g71040 varchar(1) not null,
+        g71050 varchar(8) not null,
+        g71060 varchar(7) not null,
+        g71070 varchar(10) not null,
+        g71080 integer not null,
+        g71090 integer not null,
+        g71100 integer not null,
+        g71110 integer not null,
+        g71120 varchar(1) not null,
+        g71130 varchar(1) not null,
+        g71140 varchar(6) not null,
+        g71150 varchar(30) not null,
+        g71160 varchar(8) not null,
+        g71170 integer not null,
+        g71180 integer not null,
+        g71190 varchar(1) not null,
+        g71200 varchar(10) not null,
+        primary key (g71000, g71010, g71020, g71030, g71040)
     );
 
     create table hsg73pf (
@@ -442,8 +442,10 @@ INSERT INTO hsahklf3 ("an-zeit", anrede, "ba-schlüssel", berei, bfort, bj, "bon
 INSERT INTO hsahklf3 ("an-zeit", anrede, "ba-schlüssel", berei, bfort, bj, "bonit#t", branch, "eg-umsatz", "f:b>0", "f:v>0", "fert-zeit", "kampagne-nr", "ken-av", "ken-pe", "kl-ausnahme idnr", "kl-erweiterung", "klr-berech", "klr-betrag", "kostencode konzint_", "kz s", land, leitzahl, "mwst %", "mwst % r_", "mwst y/n", pakz, partikelfilter, rc, "re anrede", "re bonit#t", "re land", "re rc", "re valuta", "re zart", reserve1, reserve2, reserve3, reserve4, "rgs basis at", "rgs basis mwst", "rgs ges brutto", "rgs mwst", "rgs mwst at", "rgs netto", splitt, "steuerfrei drittland", "tx_anf", "tx_ende", valuta, "verbucht?", "w/t", "wkt-id", "wrg_", zahlungsart, anr, "is-art", "kor-bez-re", "kst int auf_", "kst lohn", "kst teile", "l_rnr", match, plz, "re match", "re plz", rnr, "sto-bez-re", au, "fibu interim", "fibu mwst", "fibu mwst at", hu, "kto intauf_", "kunden-nr_", "re kunden-nr_", sp, "ktr int auf_", adat, "an-tag", "fert-tag", ga, "ga-übern_", km, "kor-bez-redat", rdat, "sto-bez-redat", tacho, "zaga-gueltig", zdat, "euro-norm", "motor-nr", "prod-code", projekt, "rg-nr_ 10a", "spez-code", "spo order", "user auftrag", "user rechnung", kz, "assi-vorgang-nr", "r&w freigabe-nr", typ, "fahrg_-nr_", "re tele_", telefon, aufbauart, berater, "besteller kunde", dokumentennummer, einsatzart, "fahrzeug-art", hersteller, "hersteller aufbau", "hersteller zusatz 1", "hersteller zusatz 2", "hersteller zusatz 3", "motor-typ", ort, "re ort", "ust-id-nr/ok", "zusatzausrüstung 1", "zusatzausrüstung 2", "zusatzausrüstung 3", branche, "re branche", "re strasse", strasse, name, "re name", atext, "kl-ausnahme klartext", "mail cc", "mail to") VALUES
   ('0000', '', '', '1', '', '', '', '', '', 0, 0, '0000', 0, '', '', '', 0, '', 0, '', '', '', '000', 0, 0, '', '001', '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '04', '', '000', '000', '', '', 'A', 0, '', '', '004', '', '', '', '', '', '', '', '12345', '', '', '77777', '', '', '', '', '', '', '', '100004', '100004', '', '', '20240115', '20240115', '20240115', '', '', '45000', '', '20240115', '', '', '', '20230101', '', '', '', '', '77777', '', '', '', '', 'ABC123', '', '', '', '00000001234567', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'City', '', '', '', '', '', '', '', '', '', 'Demo Customer 4', 'Demo Customer 4', '', '', '', '');
 
-INSERT INTO hsg71pf (anhang, "anz_ fehler", "ausl#nder", bereich, "km-stand", pakz, "produkt-typ", "rep_-datum", "status code sde", wete, "zul_-datum", "auftrags-nr_", "rech_-nr_", "kd-nr_", "chassis-nr_", "claim-nr_", "claim-nr_ sde", "rech_-datum", "auf_nr_", kennzeichen, "kd-name") VALUES
-  (' ', 0, ' ', '1', 45, '001', 1, 20240115, 0, 'A', 20230101, '001', '12345', '100001', '1234567', '00000001', '', '20240115', '001A104', 'ABC123', 'Demo Customer');
+INSERT INTO hsg71pf (g71000, g71010, g71020, g71030, g71040, g71050, g71060, g71070, g71080, g71090, g71100, g71110, g71120, g71130, g71140, g71150, g71160, g71170, g71180, g71190, g71200) VALUES
+  ('001', '12345', '20240115', '001', 'A', '00000001', '1234567', 'ABC123', 20230101, 20240115, 45, 1, ' ', ' ', '100001', 'Demo Customer', '', 0, 0, '1', '001A104'),
+  ('001', '99999', '20240115', '002', 'A', '00000002', '1234567', 'ABC123', 20230101, 20240115, 45, 1, ' ', ' ', '100002', 'Demo Customer 2', '', 0, 0, '1', '002A104');
 
 INSERT INTO hsg73pf ("action code", anhang, "beantr_ mat_", "beantrg_ arb_", "beantrg_ spez_", bereich, "bew_ code1", "bew_ code2", "bew_ datum", "claim-art", "erg_code", explanation1, fault1, "fehler-nr_", "fehler-nr_ sde", "feldtest-nr_", "folge-nr_", hauptgruppe, nebengruppe, pakz, reply1, result1, "schad_-c1", "schad_-c2", "status code", "steuer code", "v_-km-stand", "v_-rep_-datum", "variant code", "verg_ arb_", "verg_ mat_", "verg_ spez_", "auftrags-nr_", complain, explanation2, failure, fault2, location, "rech_-nr_", repair, reply2, result2, source, symptom, "claim-nr_", "kampagnen-nr_", "rech_-datum", "fehler-teil", eps, text1, text2, text3, text4) VALUES
-  (0, '', 0, 0, 0, '1', '', 0, 0, 0, '', '', '', '01', '', 0, '01', '01', '01', '001', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, '001', '', '', '', '', '', '12345', '', '', '', '', '', '00000001', '', '20240115', '', '', 'Demo failure description', '', '', '');
+  (0, '', 0, 0, 0, '1', '', 0, 0, 0, '', '', '', '01', '', 0, '01', '01', '01', '001', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, '001', '', '', '', '', '', '12345', '', '', '', '', '', '00000001', '', '20240115', '', '', 'Demo failure description', '', '', ''),
+  (0, '', 0, 0, 0, '1', '', 0, 0, 0, '', '', '', '01', '', 0, '01', '01', '01', '001', '', '', '', '', 0, '', 0, 0, 0, 0, 0, 0, '002', '', '', '', '', '', '99999', '', '', '', '', '', '00000002', '', '20240115', '', '', 'Demo failure description', '', '', '');

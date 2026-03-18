@@ -172,7 +172,12 @@ class RpgSourceProvider:
 def load_call_graph(root: Path) -> Dict[str, Dict]:
     """Load enriched call graph and build a per-program index.
 
-    Returns: {programId: {"calls": [...], "callerToCallees": {nodeId: [calleeNodeId, ...]}, "calleeToCallers": {nodeId: [callerNodeId, ...]}}}
+    Returns: {programId: {
+        "calls": [...],
+        "callerToCallees": {nodeId: [calleeNodeId, ...]},
+        "calleeToCallers": {nodeId: [callerNodeId, ...]},
+        "tableAccess": {tableName: [{nodeId, opcode, line, callerNodeId}, ...]},
+    }}
     """
     result = {}
     for name in ("call_graph_enriched.json", "call_graph.json"):
@@ -199,14 +204,15 @@ def load_call_graph(root: Path) -> Dict[str, Dict]:
         for c in calls:
             caller_id = c.get("callerNodeId")
             callee_id = c.get("calleeNodeId")
-            callee_name = c.get("calleeName")
             if caller_id and callee_id:
                 caller_to_callees.setdefault(caller_id, []).append(callee_id)
                 callee_to_callers.setdefault(callee_id, []).append(caller_id)
+        table_access = prog.get("tableAccess") or {}
         result[pid] = {
             "calls": calls,
             "callerToCallees": caller_to_callees,
             "calleeToCallers": callee_to_callers,
+            "tableAccess": table_access,
         }
     return result
 
@@ -596,16 +602,31 @@ def build_context_package(
                     "path": None,
                 })
 
-    # Call graph integration (feature-level traceability)
-    call_graph_info = {}
+    # Call graph integration (full call graph for LLM context)
+    call_graph_info: Dict[str, Any] = {}
     if call_graph_data:
         callees = call_graph_data.get("callerToCallees", {}).get(node_id, [])
         callers = call_graph_data.get("calleeToCallers", {}).get(node_id, [])
-        if callees or callers:
-            call_graph_info = {
-                "calls": callees,
-                "calledBy": callers,
-            }
+        call_graph_info["calls"] = callees
+        call_graph_info["calledBy"] = callers
+        # Subroutines/programs invoked by this node (from calls where callerNodeId == node_id)
+        subroutines_invoked: List[str] = []
+        calls_with_details: List[Dict[str, Any]] = []
+        for c in call_graph_data.get("calls", []):
+            if c.get("callerNodeId") != node_id:
+                continue
+            callee_name = c.get("calleeName")
+            if callee_name and callee_name not in subroutines_invoked:
+                subroutines_invoked.append(callee_name)
+            calls_with_details.append({
+                "calleeNodeId": c.get("calleeNodeId"),
+                "calleeName": callee_name,
+                "opcode": c.get("opcode"),
+            })
+        if subroutines_invoked:
+            call_graph_info["subroutinesInvoked"] = subroutines_invoked
+        if calls_with_details:
+            call_graph_info["callsWithDetails"] = calls_with_details
 
     # Fine-grained statement nodes for traceability (descendants of this node)
     all_nodes = ast.get("nodes") or []
@@ -615,11 +636,12 @@ def build_context_package(
     line_to_node_map: Dict[str, List] = {}
     STATEMENT_KINDS = {
         "Eval", "If", "Else", "EndIf", "DoW", "EndDo", "Select", "When",
-        "EndSelect", "Chain", "Read", "Write", "Update", "SetLL", "SetOn",
-        "SetOff", "ExSr", "Return", "Monitor", "OnError", "EndMon",
+        "EndSelect", "Chain", "Read", "ReadE", "Reade", "Write", "Update", "Delete",
+        "SetLL", "SetGT", "SetOn", "SetOff", "ExSr", "Return", "Monitor", "OnError", "EndMon",
         "Builtin", "DclF", "DclDS", "DclConst", "Assign", "Condition",
         "Procedure", "Subroutine", "Other", "Comment",
     }
+    FILE_OP_KINDS = {"Chain", "Read", "ReadE", "Reade", "Write", "Update", "Delete", "SetLL", "SetGT"}
     for did in descendant_ids:
         dnode = nodes_by_id.get(did)
         if not dnode:
@@ -653,6 +675,24 @@ def build_context_package(
             key = str(sl) if sl == el else f"{sl}-{el}"
             line_to_node_map.setdefault(key, []).append(did)
 
+    # Build tableAccess from statement_nodes (file ops in this node's scope)
+    table_access: Dict[str, List[Dict[str, Any]]] = {}
+    for sn in statement_nodes:
+        if sn.get("kind") not in FILE_OP_KINDS:
+            continue
+        target = sn.get("target")
+        if not target or not isinstance(target, str):
+            continue
+        table_name = target.strip().upper()
+        if not table_name:
+            continue
+        entry = {"nodeId": sn.get("id"), "opcode": (sn.get("opcode") or sn.get("kind", "")).upper()}
+        if sn.get("startLine"):
+            entry["line"] = sn["startLine"]
+        table_access.setdefault(table_name, []).append(entry)
+    if table_access:
+        call_graph_info["tableAccess"] = table_access
+
     # Assemble the context package
     package = {
         "astNode": {
@@ -671,8 +711,8 @@ def build_context_package(
 
     if display_files:
         package["displayFiles"] = display_files
-    if call_graph_info:
-        package["callGraph"] = call_graph_info
+    # Always include callGraph (calls, calledBy, tableAccess, subroutinesInvoked) for LLM context
+    package["callGraph"] = call_graph_info
     if statement_nodes:
         package["statementNodes"] = statement_nodes
         package["lineToNodeMap"] = line_to_node_map

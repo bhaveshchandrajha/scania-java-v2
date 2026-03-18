@@ -1,257 +1,127 @@
 /**
  * Domain entity or value object for the warranty claims model.
  * <p>
- * Generated from RPG: unit {@code HS1210}, node {@code n1779}.
+ * Generated from RPG: unit {@code HS1210}, node {@code n404}.
  */
 
 package com.scania.warranty.domain;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Entity
-@Table(name = "HSG71PF")
+@Table(name = "HSG71LF2")
 @IdClass(ClaimId.class)
 public class Claim {
-    
+
     @Id
-    @Column(name = "PAKZ", length = 3, nullable = false)
-    private String pakz; // @rpg-trace: schema
-    
+    @Column(name = "G71000", length = 3, nullable = false)
+    private String g71000; // @rpg-trace: schema
+
+    @Column(name = "G71010", length = 5, nullable = false)
+    private String g71010; // @rpg-trace: schema
+
+    @Column(name = "G71020", length = 8, nullable = false)
+    private String g71020; // @rpg-trace: schema
+
+    @Column(name = "G71030", length = 5, nullable = false)
+    private String g71030; // @rpg-trace: schema
+
+    @Column(name = "G71040", length = 1, nullable = false)
+    private String g71040; // @rpg-trace: schema
+
     @Id
-    @Column(name = "RECH.-NR.", length = 5, nullable = false)
-    private String rechNr; // @rpg-trace: schema
-    
+    @Column(name = "G71050", length = 8, nullable = false)
+    private String g71050; // @rpg-trace: schema
+
     @Id
-    @Column(name = "RECH.-DATUM", length = 8, nullable = false)
-    private String rechDatum; // @rpg-trace: schema
-    
-    @Id
-    @Column(name = "AUFTRAGS-NR.", length = 5, nullable = false)
-    private String auftragsNr; // @rpg-trace: schema
-    
-    @Id
-    @Column(name = "BEREICH", length = 1, nullable = false)
-    private String bereich; // @rpg-trace: schema
-    
-    @Column(name = "WETE", length = 1, nullable = false)
-    private String wete; // @rpg-trace: schema
-    
-    @Column(name = "CLAIM-NR.", length = 8, nullable = false)
-    private String claimNr; // @rpg-trace: schema
-    
-    @Column(name = "CHASSIS-NR.", length = 7, nullable = false)
-    private String chassisNr; // @rpg-trace: schema
-    
-    @Column(name = "KENNZEICHEN", length = 10, nullable = false)
-    private String kennzeichen; // @rpg-trace: schema
-    
-    @Column(name = "ZUL.-DATUM", precision = 8, scale = 0, nullable = false)
-    private Integer zulDatum; // @rpg-trace: schema
-    
-    @Column(name = "REP.-DATUM", precision = 8, scale = 0, nullable = false)
-    private Integer repDatum; // @rpg-trace: schema
-    
-    @Column(name = "KM-STAND", precision = 3, scale = 0, nullable = false)
-    private Integer kmStand; // @rpg-trace: schema
-    
-    @Column(name = "PRODUKT-TYP", precision = 1, scale = 0, nullable = false)
-    private Integer produktTyp; // @rpg-trace: schema
-    
-    @Column(name = "ANHANG", length = 1, nullable = false)
-    private String anhang; // @rpg-trace: schema
-    
-    @Column(name = "AUSL#NDER", length = 1, nullable = false)
-    private String auslaender; // @rpg-trace: schema
-    
-    @Column(name = "KD-NR.", length = 6, nullable = false)
-    private String kdNr; // @rpg-trace: schema
-    
-    @Column(name = "KD-NAME", length = 30, nullable = false)
-    private String kdName; // @rpg-trace: schema
-    
-    @Column(name = "CLAIM-NR. SDE", length = 8, nullable = false)
-    private String claimNrSde; // @rpg-trace: schema
-    
-    @Column(name = "STATUS CODE SDE", precision = 2, scale = 0, nullable = false)
-    private Integer statusCodeSde; // @rpg-trace: schema
-    
-    @Column(name = "ANZ. FEHLER", precision = 2, scale = 0, nullable = false)
-    private Integer anzFehler; // @rpg-trace: schema
-    
-    @Column(name = "AUF.NR.", length = 10, nullable = false)
-    private String aufNr; // @rpg-trace: schema
-    
-    public Claim() {
-    }
-    
-    // Getters and Setters
-    public String getPakz() {
-        return pakz;
-    }
-    
-    public void setPakz(String pakz) {
-        this.pakz = pakz;
-    }
-    
-    public String getRechNr() {
-        return rechNr;
-    }
-    
-    public void setRechNr(String rechNr) {
-        this.rechNr = rechNr;
-    }
-    
-    public String getRechDatum() {
-        return rechDatum;
-    }
-    
-    public void setRechDatum(String rechDatum) {
-        this.rechDatum = rechDatum;
-    }
-    
-    public String getAuftragsNr() {
-        return auftragsNr;
-    }
-    
-    public void setAuftragsNr(String auftragsNr) {
-        this.auftragsNr = auftragsNr;
-    }
-    
-    public String getBereich() {
-        return bereich;
-    }
-    
-    public void setBereich(String bereich) {
-        this.bereich = bereich;
-    }
-    
-    public String getWete() {
-        return wete;
-    }
-    
-    public void setWete(String wete) {
-        this.wete = wete;
-    }
-    
-    public String getClaimNr() {
-        return claimNr;
-    }
-    
-    public void setClaimNr(String claimNr) {
-        this.claimNr = claimNr;
-    }
-    
-    public String getChassisNr() {
-        return chassisNr;
-    }
-    
-    public void setChassisNr(String chassisNr) {
-        this.chassisNr = chassisNr;
-    }
-    
-    public String getKennzeichen() {
-        return kennzeichen;
-    }
-    
-    public void setKennzeichen(String kennzeichen) {
-        this.kennzeichen = kennzeichen;
-    }
-    
-    public Integer getZulDatum() {
-        return zulDatum;
-    }
-    
-    public void setZulDatum(Integer zulDatum) {
-        this.zulDatum = zulDatum;
-    }
-    
-    public Integer getRepDatum() {
-        return repDatum;
-    }
-    
-    public void setRepDatum(Integer repDatum) {
-        this.repDatum = repDatum;
-    }
-    
-    public Integer getKmStand() {
-        return kmStand;
-    }
-    
-    public void setKmStand(Integer kmStand) {
-        this.kmStand = kmStand;
-    }
-    
-    public Integer getProduktTyp() {
-        return produktTyp;
-    }
-    
-    public void setProduktTyp(Integer produktTyp) {
-        this.produktTyp = produktTyp;
-    }
-    
-    public String getAnhang() {
-        return anhang;
-    }
-    
-    public void setAnhang(String anhang) {
-        this.anhang = anhang;
-    }
-    
-    public String getAuslaender() {
-        return auslaender;
-    }
-    
-    public void setAuslaender(String auslaender) {
-        this.auslaender = auslaender;
-    }
-    
-    public String getKdNr() {
-        return kdNr;
-    }
-    
-    public void setKdNr(String kdNr) {
-        this.kdNr = kdNr;
-    }
-    
-    public String getKdName() {
-        return kdName;
-    }
-    
-    public void setKdName(String kdName) {
-        this.kdName = kdName;
-    }
-    
-    public String getClaimNrSde() {
-        return claimNrSde;
-    }
-    
-    public void setClaimNrSde(String claimNrSde) {
-        this.claimNrSde = claimNrSde;
-    }
-    
-    public Integer getStatusCodeSde() {
-        return statusCodeSde;
-    }
-    
-    public void setStatusCodeSde(Integer statusCodeSde) {
-        this.statusCodeSde = statusCodeSde;
-    }
-    
-    public Integer getAnzFehler() {
-        return anzFehler;
-    }
-    
-    public void setAnzFehler(Integer anzFehler) {
-        this.anzFehler = anzFehler;
-    }
-    
-    public String getAufNr() {
-        return aufNr;
-    }
-    
-    public void setAufNr(String aufNr) {
-        this.aufNr = aufNr;
-    }
+    @Column(name = "G71060", length = 7, nullable = false)
+    private String g71060; // @rpg-trace: schema
+
+    @Column(name = "G71070", length = 10, nullable = false)
+    private String g71070; // @rpg-trace: schema
+
+    @Column(name = "G71080", precision = 8, scale = 0, nullable = false)
+    private BigDecimal g71080; // @rpg-trace: schema
+
+    @Column(name = "G71090", precision = 8, scale = 0, nullable = false)
+    private BigDecimal g71090; // @rpg-trace: schema
+
+    @Column(name = "G71100", precision = 3, scale = 0, nullable = false)
+    private BigDecimal g71100; // @rpg-trace: schema
+
+    @Column(name = "G71110", precision = 1, scale = 0, nullable = false)
+    private BigDecimal g71110; // @rpg-trace: schema
+
+    @Column(name = "G71120", length = 1, nullable = false)
+    private String g71120; // @rpg-trace: schema
+
+    @Column(name = "G71130", length = 1, nullable = false)
+    private String g71130; // @rpg-trace: schema
+
+    @Column(name = "G71140", length = 6, nullable = false)
+    private String g71140; // @rpg-trace: schema
+
+    @Column(name = "G71150", length = 30, nullable = false)
+    private String g71150; // @rpg-trace: schema
+
+    @Column(name = "G71160", length = 8, nullable = false)
+    private String g71160; // @rpg-trace: schema
+
+    @Column(name = "G71170", precision = 2, scale = 0, nullable = false)
+    private int g71170; // @rpg-trace: schema
+
+    @Column(name = "G71180", precision = 2, scale = 0, nullable = false)
+    private int g71180; // @rpg-trace: schema
+
+    @Column(name = "G71190", length = 1, nullable = false)
+    private String g71190; // @rpg-trace: schema
+
+    @Column(name = "G71200", length = 10, nullable = false)
+    private String g71200; // @rpg-trace: schema
+
+    public Claim() {}
+
+    public String getG71000() { return g71000; }
+    public void setG71000(String g71000) { this.g71000 = g71000; }
+    public String getG71010() { return g71010; }
+    public void setG71010(String g71010) { this.g71010 = g71010; }
+    public String getG71020() { return g71020; }
+    public void setG71020(String g71020) { this.g71020 = g71020; }
+    public String getG71030() { return g71030; }
+    public void setG71030(String g71030) { this.g71030 = g71030; }
+    public String getG71040() { return g71040; }
+    public void setG71040(String g71040) { this.g71040 = g71040; }
+    public String getG71050() { return g71050; }
+    public void setG71050(String g71050) { this.g71050 = g71050; }
+    public String getG71060() { return g71060; }
+    public void setG71060(String g71060) { this.g71060 = g71060; }
+    public String getG71070() { return g71070; }
+    public void setG71070(String g71070) { this.g71070 = g71070; }
+    public BigDecimal getG71080() { return g71080; }
+    public void setG71080(BigDecimal g71080) { this.g71080 = g71080; }
+    public BigDecimal getG71090() { return g71090; }
+    public void setG71090(BigDecimal g71090) { this.g71090 = g71090; }
+    public BigDecimal getG71100() { return g71100; }
+    public void setG71100(BigDecimal g71100) { this.g71100 = g71100; }
+    public BigDecimal getG71110() { return g71110; }
+    public void setG71110(BigDecimal g71110) { this.g71110 = g71110; }
+    public String getG71120() { return g71120; }
+    public void setG71120(String g71120) { this.g71120 = g71120; }
+    public String getG71130() { return g71130; }
+    public void setG71130(String g71130) { this.g71130 = g71130; }
+    public String getG71140() { return g71140; }
+    public void setG71140(String g71140) { this.g71140 = g71140; }
+    public String getG71150() { return g71150; }
+    public void setG71150(String g71150) { this.g71150 = g71150; }
+    public String getG71160() { return g71160; }
+    public void setG71160(String g71160) { this.g71160 = g71160; }
+    public int getG71170() { return g71170; }
+    public void setG71170(int g71170) { this.g71170 = g71170; }
+    public int getG71180() { return g71180; }
+    public void setG71180(int g71180) { this.g71180 = g71180; }
+    public String getG71190() { return g71190; }
+    public void setG71190(String g71190) { this.g71190 = g71190; }
+    public String getG71200() { return g71200; }
+    public void setG71200(String g71200) { this.g71200 = g71200; }
 }

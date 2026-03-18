@@ -88,22 +88,16 @@
       "action": "historyBack"
     },
     {
-      "id": "CF05",
-      "type": "refresh",
-      "label": "CF05 Aktualisieren (Refresh)",
-      "reuseDataSource": true
-    },
-    {
-      "id": "CF06",
-      "type": "create",
-      "label": "CF06 Erstellen (Create)",
-      "navigate": "/claims/create"
-    },
-    {
       "id": "CF09",
       "type": "listStart",
       "label": "CF09 Listenanfang (List Start)",
       "action": "scrollToTop"
+    },
+    {
+      "id": "CF05",
+      "type": "refresh",
+      "label": "CF05 Aktualisieren (Refresh)",
+      "reuseDataSource": true
     },
     {
       "id": "CF11",
@@ -118,6 +112,18 @@
       "action": "historyBack"
     },
     {
+      "id": "CF06",
+      "type": "create",
+      "label": "CF06 Erstellen (Create)",
+      "navigate": "/claims/create"
+    },
+    {
+      "id": "CF19",
+      "type": "filter",
+      "label": "CF19 Filter setzen (Set Filter)",
+      "action": "openFilterDialog"
+    },
+    {
       "id": "CF16",
       "type": "sort",
       "label": "CF16 Sortierung (Sort)",
@@ -126,14 +132,36 @@
     {
       "id": "CF17",
       "type": "sortToggle",
-      "label": "CF17 Sortierung Auf/Ab (Sort Toggle)",
+      "label": "CF17 Sortierung Auf/Ab (Sort Asc/Desc)",
       "action": "toggleSortOrder"
     },
     {
-      "id": "CF19",
+      "id": "CF04",
+      "type": "help",
+      "label": "CF04 Bedienerführung (Operator Guidance)",
+      "action": "showOperatorGuidance"
+    },
+    {
+      "id": "CF20",
       "type": "filter",
-      "label": "CF19 Filter setzen (Set Filter)",
-      "action": "openFilterDialog"
+      "label": "CF20 Alle offenen Rechnungen auswählen (Select All Open Invoices)",
+      "action": "selectAllOpenInvoices"
+    },
+    {
+      "id": "CF15",
+      "type": "apiCall",
+      "label": "CF15 Freigabe beantragen (Request Release)",
+      "url": "/api/claims/{{companyCode}}/{{claimNumber}}/request-release",
+      "method": "POST",
+      "requiresSelection": true
+    },
+    {
+      "id": "delete",
+      "type": "delete",
+      "label": "Delete Claim",
+      "url": "/api/claims/{{companyCode}}/{{claimNumber}}",
+      "method": "DELETE",
+      "requiresSelection": true
     }
   ],
   "filters": [

@@ -9,605 +9,283 @@ package com.scania.warranty.domain;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
-/**
- * JPA entity for claim error/failure details (HSG73PF).
- */
 @Entity
 @Table(name = "HSG73PF")
 @IdClass(ClaimErrorId.class)
 public class ClaimError {
 
     @Id
-    @Column(name = "PAKZ", length = 3, nullable = false)
-    private String pakz; // @rpg-trace: schema
+    @Column(name = "G73000", length = 3, nullable = false)
+    private String g73000; // @rpg-trace: schema
 
     @Id
-    @Column(name = "RECH.-NR.", length = 5, nullable = false)
-    private String rechNr; // @rpg-trace: schema
+    @Column(name = "G73010", length = 5, nullable = false)
+    private String g73010; // @rpg-trace: schema
 
     @Id
-    @Column(name = "RECH.-DATUM", length = 8, nullable = false)
-    private String rechDatum; // @rpg-trace: schema
+    @Column(name = "G73020", length = 8, nullable = false)
+    private String g73020; // @rpg-trace: schema
 
     @Id
-    @Column(name = "AUFTRAGS-NR.", length = 5, nullable = false)
-    private String auftragsNr; // @rpg-trace: schema
+    @Column(name = "G73030", length = 5, nullable = false)
+    private String g73030; // @rpg-trace: schema
 
     @Id
-    @Column(name = "BEREICH", length = 1, nullable = false)
-    private String bereich; // @rpg-trace: schema
+    @Column(name = "G73040", length = 1, nullable = false)
+    private String g73040; // @rpg-trace: schema
 
     @Id
-    @Column(name = "CLAIM-NR.", length = 8, nullable = false)
-    private String claimNr; // @rpg-trace: schema
+    @Column(name = "G73050", length = 8, nullable = false)
+    private String g73050; // @rpg-trace: schema
 
     @Id
-    @Column(name = "FEHLER-NR.", length = 2, nullable = false)
-    private String fehlerNr; // @rpg-trace: schema
+    @Column(name = "G73060", length = 2, nullable = false)
+    private String g73060; // @rpg-trace: schema
 
-    @Id
-    @Column(name = "FOLGE-NR.", length = 2, nullable = false)
-    private String folgeNr; // @rpg-trace: schema
+    @Column(name = "G73065", length = 2, nullable = false)
+    private String g73065; // @rpg-trace: schema
 
-    @Column(name = "FEHLER-TEIL", length = 18, nullable = false)
-    private String fehlerTeil; // @rpg-trace: schema
+    @Column(name = "G73070", length = 18, nullable = false)
+    private String g73070; // @rpg-trace: schema
 
-    @Column(name = "HAUPTGRUPPE", length = 2, nullable = false)
-    private String hauptgruppe; // @rpg-trace: schema
+    @Column(name = "G73080", length = 2, nullable = false)
+    private String g73080; // @rpg-trace: schema
 
-    @Column(name = "NEBENGRUPPE", length = 2, nullable = false)
-    private String nebengruppe; // @rpg-trace: schema
+    @Column(name = "G73090", length = 2, nullable = false)
+    private String g73090; // @rpg-trace: schema
 
-    @Column(name = "SCHAD.-C1", length = 2, nullable = false)
-    private String schadC1; // @rpg-trace: schema
+    @Column(name = "G73100", length = 2, nullable = false)
+    private String g73100; // @rpg-trace: schema
 
-    @Column(name = "SCHAD.-C2", length = 2, nullable = false)
-    private String schadC2; // @rpg-trace: schema
+    @Column(name = "G73110", length = 2, nullable = false)
+    private String g73110; // @rpg-trace: schema
 
-    @Column(name = "TEXT1", length = 65, nullable = false)
-    private String text1; // @rpg-trace: schema
+    @Column(name = "G73120", length = 65, nullable = false)
+    private String g73120; // @rpg-trace: schema
 
-    @Column(name = "TEXT2", length = 65, nullable = false)
-    private String text2; // @rpg-trace: schema
+    @Column(name = "G73130", length = 65, nullable = false)
+    private String g73130; // @rpg-trace: schema
 
-    @Column(name = "STEUER CODE", length = 2, nullable = false)
-    private String steuerCode; // @rpg-trace: schema
+    @Column(name = "G73140", length = 2, nullable = false)
+    private String g73140; // @rpg-trace: schema
 
-    @Column(name = "BEW. CODE1", length = 2, nullable = false)
-    private String bewCode1; // @rpg-trace: schema
+    @Column(name = "G73150", length = 2, nullable = false)
+    private String g73150; // @rpg-trace: schema
 
-    @Column(name = "BEW. CODE2", precision = 4, scale = 0, nullable = false)
-    private Integer bewCode2; // @rpg-trace: schema
+    @Column(name = "G73160", precision = 4, scale = 0, nullable = false)
+    private BigDecimal g73160; // @rpg-trace: schema
 
-    @Column(name = "BEW. DATUM", precision = 8, scale = 0, nullable = false)
-    private Integer bewDatum; // @rpg-trace: schema
+    @Column(name = "G73170", precision = 8, scale = 0, nullable = false)
+    private BigDecimal g73170; // @rpg-trace: schema
 
-    @Column(name = "VERG. MAT.", precision = 3, scale = 0, nullable = false)
-    private Integer vergMat; // @rpg-trace: schema
+    @Column(name = "G73180", precision = 3, scale = 0, nullable = false)
+    private BigDecimal g73180; // @rpg-trace: schema
 
-    @Column(name = "VERG. ARB.", precision = 3, scale = 0, nullable = false)
-    private Integer vergArb; // @rpg-trace: schema
+    @Column(name = "G73190", precision = 3, scale = 0, nullable = false)
+    private BigDecimal g73190; // @rpg-trace: schema
 
-    @Column(name = "VERG. SPEZ.", precision = 3, scale = 0, nullable = false)
-    private Integer vergSpez; // @rpg-trace: schema
+    @Column(name = "G73200", precision = 3, scale = 0, nullable = false)
+    private BigDecimal g73200; // @rpg-trace: schema
 
-    @Column(name = "BEANTR. MAT.", precision = 11, scale = 2, nullable = false)
-    private BigDecimal beantrMat; // @rpg-trace: schema
+    @Column(name = "G73210", precision = 11, scale = 2, nullable = false)
+    private BigDecimal g73210; // @rpg-trace: schema
 
-    @Column(name = "BEANTRG. ARB.", precision = 11, scale = 2, nullable = false)
-    private BigDecimal beantrgArb; // @rpg-trace: schema
+    @Column(name = "G73220", precision = 11, scale = 2, nullable = false)
+    private BigDecimal g73220; // @rpg-trace: schema
 
-    @Column(name = "BEANTRG. SPEZ.", precision = 11, scale = 2, nullable = false)
-    private BigDecimal beantrgSpez; // @rpg-trace: schema
+    @Column(name = "G73230", precision = 11, scale = 2, nullable = false)
+    private BigDecimal g73230; // @rpg-trace: schema
 
-    @Column(name = "CLAIM-ART", precision = 1, scale = 0, nullable = false)
-    private Integer claimArt; // @rpg-trace: schema
+    @Column(name = "G73240", precision = 1, scale = 0, nullable = false)
+    private BigDecimal g73240; // @rpg-trace: schema
 
-    @Column(name = "V.-REP.-DATUM", precision = 8, scale = 0, nullable = false)
-    private Integer vRepDatum; // @rpg-trace: schema
+    @Column(name = "G73250", precision = 8, scale = 0, nullable = false)
+    private BigDecimal g73250; // @rpg-trace: schema
 
-    @Column(name = "V.-KM-STAND", precision = 3, scale = 0, nullable = false)
-    private Integer vKmStand; // @rpg-trace: schema
+    @Column(name = "G73260", precision = 3, scale = 0, nullable = false)
+    private BigDecimal g73260; // @rpg-trace: schema
 
-    @Column(name = "FELDTEST-NR.", precision = 6, scale = 0, nullable = false)
-    private Integer feldtestNr; // @rpg-trace: schema
+    @Column(name = "G73270", precision = 6, scale = 0, nullable = false)
+    private BigDecimal g73270; // @rpg-trace: schema
 
-    @Column(name = "KAMPAGNEN-NR.", length = 8, nullable = false)
-    private String kampagnenNr; // @rpg-trace: schema
+    @Column(name = "G73280", length = 8, nullable = false)
+    private String g73280; // @rpg-trace: schema
 
-    @Column(name = "EPS", length = 20, nullable = false)
-    private String eps; // @rpg-trace: schema
+    @Column(name = "G73285", length = 20, nullable = false)
+    private String g73285; // @rpg-trace: schema
 
-    @Column(name = "STATUS CODE", precision = 2, scale = 0, nullable = false)
-    private Integer statusCode; // @rpg-trace: schema
+    @Column(name = "G73290", precision = 2, scale = 0, nullable = false)
+    private int g73290; // @rpg-trace: schema
 
-    @Column(name = "VARIANT CODE", precision = 2, scale = 0, nullable = false)
-    private Integer variantCode; // @rpg-trace: schema
+    @Column(name = "G73300", precision = 2, scale = 0, nullable = false)
+    private BigDecimal g73300; // @rpg-trace: schema
 
-    @Column(name = "ACTION CODE", precision = 2, scale = 0, nullable = false)
-    private Integer actionCode; // @rpg-trace: schema
+    @Column(name = "G73310", precision = 2, scale = 0, nullable = false)
+    private BigDecimal g73310; // @rpg-trace: schema
 
-    @Column(name = "TEXT3", length = 65, nullable = false)
-    private String text3; // @rpg-trace: schema
+    @Column(name = "G73320", length = 65, nullable = false)
+    private String g73320; // @rpg-trace: schema
 
-    @Column(name = "TEXT4", length = 65, nullable = false)
-    private String text4; // @rpg-trace: schema
+    @Column(name = "G73330", length = 65, nullable = false)
+    private String g73330; // @rpg-trace: schema
 
-    @Column(name = "FEHLER-NR. SDE", length = 2, nullable = false)
-    private String fehlerNrSde; // @rpg-trace: schema
+    @Column(name = "G73340", length = 2, nullable = false)
+    private String g73340; // @rpg-trace: schema
 
-    @Column(name = "ANHANG", length = 1, nullable = false)
-    private String anhang; // @rpg-trace: schema
-
-    @Column(name = "SOURCE", length = 5, nullable = false)
-    private String source; // @rpg-trace: schema
-
-    @Column(name = "COMPLAIN", length = 5, nullable = false)
-    private String complain; // @rpg-trace: schema
-
-    @Column(name = "SYMPTOM", length = 5, nullable = false)
-    private String symptom; // @rpg-trace: schema
-
-    @Column(name = "FAILURE", length = 5, nullable = false)
-    private String failure; // @rpg-trace: schema
-
-    @Column(name = "LOCATION", length = 5, nullable = false)
-    private String location; // @rpg-trace: schema
-
-    @Column(name = "REPAIR", length = 5, nullable = false)
-    private String repair; // @rpg-trace: schema
-
-    @Column(name = "ERG.CODE", length = 2, nullable = false)
-    private String ergCode; // @rpg-trace: schema
-
-    @Column(name = "RESULT1", length = 2, nullable = false)
-    private String result1; // @rpg-trace: schema
-
-    @Column(name = "RESULT2", length = 5, nullable = false)
-    private String result2; // @rpg-trace: schema
-
-    @Column(name = "FAULT1", length = 2, nullable = false)
-    private String fault1; // @rpg-trace: schema
-
-    @Column(name = "FAULT2", length = 5, nullable = false)
-    private String fault2; // @rpg-trace: schema
-
-    @Column(name = "REPLY1", length = 2, nullable = false)
-    private String reply1; // @rpg-trace: schema
-
-    @Column(name = "REPLY2", length = 5, nullable = false)
-    private String reply2; // @rpg-trace: schema
-
-    @Column(name = "EXPLANATION1", length = 2, nullable = false)
-    private String explanation1; // @rpg-trace: schema
-
-    @Column(name = "EXPLANATION2", length = 5, nullable = false)
-    private String explanation2; // @rpg-trace: schema
-
-    public ClaimError() {
-    }
-
-    public String getPakz() {
-        return pakz;
-    }
-
-    public void setPakz(String pakz) {
-        this.pakz = pakz;
-    }
-
-    public String getRechNr() {
-        return rechNr;
-    }
-
-    public void setRechNr(String rechNr) {
-        this.rechNr = rechNr;
-    }
-
-    public String getRechDatum() {
-        return rechDatum;
-    }
-
-    public void setRechDatum(String rechDatum) {
-        this.rechDatum = rechDatum;
-    }
-
-    public String getAuftragsNr() {
-        return auftragsNr;
-    }
-
-    public void setAuftragsNr(String auftragsNr) {
-        this.auftragsNr = auftragsNr;
-    }
-
-    public String getBereich() {
-        return bereich;
-    }
-
-    public void setBereich(String bereich) {
-        this.bereich = bereich;
-    }
-
-    public String getClaimNr() {
-        return claimNr;
-    }
-
-    public void setClaimNr(String claimNr) {
-        this.claimNr = claimNr;
-    }
-
-    public String getFehlerNr() {
-        return fehlerNr;
-    }
-
-    public void setFehlerNr(String fehlerNr) {
-        this.fehlerNr = fehlerNr;
-    }
-
-    public String getFolgeNr() {
-        return folgeNr;
-    }
-
-    public void setFolgeNr(String folgeNr) {
-        this.folgeNr = folgeNr;
-    }
-
-    public String getFehlerTeil() {
-        return fehlerTeil;
-    }
-
-    public void setFehlerTeil(String fehlerTeil) {
-        this.fehlerTeil = fehlerTeil;
-    }
-
-    public String getHauptgruppe() {
-        return hauptgruppe;
-    }
-
-    public void setHauptgruppe(String hauptgruppe) {
-        this.hauptgruppe = hauptgruppe;
-    }
-
-    public String getNebengruppe() {
-        return nebengruppe;
-    }
-
-    public void setNebengruppe(String nebengruppe) {
-        this.nebengruppe = nebengruppe;
-    }
-
-    public String getSchadC1() {
-        return schadC1;
-    }
-
-    public void setSchadC1(String schadC1) {
-        this.schadC1 = schadC1;
-    }
-
-    public String getSchadC2() {
-        return schadC2;
-    }
-
-    public void setSchadC2(String schadC2) {
-        this.schadC2 = schadC2;
-    }
-
-    public String getText1() {
-        return text1;
-    }
-
-    public void setText1(String text1) {
-        this.text1 = text1;
-    }
-
-    public String getText2() {
-        return text2;
-    }
-
-    public void setText2(String text2) {
-        this.text2 = text2;
-    }
-
-    public String getSteuerCode() {
-        return steuerCode;
-    }
-
-    public void setSteuerCode(String steuerCode) {
-        this.steuerCode = steuerCode;
-    }
-
-    public String getBewCode1() {
-        return bewCode1;
-    }
-
-    public void setBewCode1(String bewCode1) {
-        this.bewCode1 = bewCode1;
-    }
-
-    public Integer getBewCode2() {
-        return bewCode2;
-    }
-
-    public void setBewCode2(Integer bewCode2) {
-        this.bewCode2 = bewCode2;
-    }
-
-    public Integer getBewDatum() {
-        return bewDatum;
-    }
-
-    public void setBewDatum(Integer bewDatum) {
-        this.bewDatum = bewDatum;
-    }
-
-    public Integer getVergMat() {
-        return vergMat;
-    }
-
-    public void setVergMat(Integer vergMat) {
-        this.vergMat = vergMat;
-    }
-
-    public Integer getVergArb() {
-        return vergArb;
-    }
-
-    public void setVergArb(Integer vergArb) {
-        this.vergArb = vergArb;
-    }
-
-    public Integer getVergSpez() {
-        return vergSpez;
-    }
-
-    public void setVergSpez(Integer vergSpez) {
-        this.vergSpez = vergSpez;
-    }
-
-    public BigDecimal getBeantrMat() {
-        return beantrMat;
-    }
-
-    public void setBeantrMat(BigDecimal beantrMat) {
-        this.beantrMat = beantrMat;
-    }
-
-    public BigDecimal getBeantrgArb() {
-        return beantrgArb;
-    }
-
-    public void setBeantrgArb(BigDecimal beantrgArb) {
-        this.beantrgArb = beantrgArb;
-    }
-
-    public BigDecimal getBeantrgSpez() {
-        return beantrgSpez;
-    }
-
-    public void setBeantrgSpez(BigDecimal beantrgSpez) {
-        this.beantrgSpez = beantrgSpez;
-    }
-
-    public Integer getClaimArt() {
-        return claimArt;
-    }
-
-    public void setClaimArt(Integer claimArt) {
-        this.claimArt = claimArt;
-    }
-
-    public Integer getvRepDatum() {
-        return vRepDatum;
-    }
-
-    public void setvRepDatum(Integer vRepDatum) {
-        this.vRepDatum = vRepDatum;
-    }
-
-    public Integer getvKmStand() {
-        return vKmStand;
-    }
-
-    public void setvKmStand(Integer vKmStand) {
-        this.vKmStand = vKmStand;
-    }
-
-    public Integer getFeldtestNr() {
-        return feldtestNr;
-    }
-
-    public void setFeldtestNr(Integer feldtestNr) {
-        this.feldtestNr = feldtestNr;
-    }
-
-    public String getKampagnenNr() {
-        return kampagnenNr;
-    }
-
-    public void setKampagnenNr(String kampagnenNr) {
-        this.kampagnenNr = kampagnenNr;
-    }
-
-    public String getEps() {
-        return eps;
-    }
-
-    public void setEps(String eps) {
-        this.eps = eps;
-    }
-
-    public Integer getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
-    }
-
-    public Integer getVariantCode() {
-        return variantCode;
-    }
-
-    public void setVariantCode(Integer variantCode) {
-        this.variantCode = variantCode;
-    }
-
-    public Integer getActionCode() {
-        return actionCode;
-    }
-
-    public void setActionCode(Integer actionCode) {
-        this.actionCode = actionCode;
-    }
-
-    public String getText3() {
-        return text3;
-    }
-
-    public void setText3(String text3) {
-        this.text3 = text3;
-    }
-
-    public String getText4() {
-        return text4;
-    }
-
-    public void setText4(String text4) {
-        this.text4 = text4;
-    }
-
-    public String getFehlerNrSde() {
-        return fehlerNrSde;
-    }
-
-    public void setFehlerNrSde(String fehlerNrSde) {
-        this.fehlerNrSde = fehlerNrSde;
-    }
-
-    public String getAnhang() {
-        return anhang;
-    }
-
-    public void setAnhang(String anhang) {
-        this.anhang = anhang;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public String getComplain() {
-        return complain;
-    }
-
-    public void setComplain(String complain) {
-        this.complain = complain;
-    }
-
-    public String getSymptom() {
-        return symptom;
-    }
-
-    public void setSymptom(String symptom) {
-        this.symptom = symptom;
-    }
-
-    public String getFailure() {
-        return failure;
-    }
-
-    public void setFailure(String failure) {
-        this.failure = failure;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getRepair() {
-        return repair;
-    }
-
-    public void setRepair(String repair) {
-        this.repair = repair;
-    }
-
-    public String getErgCode() {
-        return ergCode;
-    }
-
-    public void setErgCode(String ergCode) {
-        this.ergCode = ergCode;
-    }
-
-    public String getResult1() {
-        return result1;
-    }
-
-    public void setResult1(String result1) {
-        this.result1 = result1;
-    }
-
-    public String getResult2() {
-        return result2;
-    }
-
-    public void setResult2(String result2) {
-        this.result2 = result2;
-    }
-
-    public String getFault1() {
-        return fault1;
-    }
-
-    public void setFault1(String fault1) {
-        this.fault1 = fault1;
-    }
-
-    public String getFault2() {
-        return fault2;
-    }
-
-    public void setFault2(String fault2) {
-        this.fault2 = fault2;
-    }
-
-    public String getReply1() {
-        return reply1;
-    }
-
-    public void setReply1(String reply1) {
-        this.reply1 = reply1;
-    }
-
-    public String getReply2() {
-        return reply2;
-    }
-
-    public void setReply2(String reply2) {
-        this.reply2 = reply2;
-    }
-
-    public String getExplanation1() {
-        return explanation1;
-    }
-
-    public void setExplanation1(String explanation1) {
-        this.explanation1 = explanation1;
-    }
-
-    public String getExplanation2() {
-        return explanation2;
-    }
-
-    public void setExplanation2(String explanation2) {
-        this.explanation2 = explanation2;
-    }
+    @Column(name = "G73350", length = 1, nullable = false)
+    private String g73350; // @rpg-trace: schema
+
+    @Column(name = "G73360", length = 5, nullable = false)
+    private String g73360; // @rpg-trace: schema
+
+    @Column(name = "G73370", length = 5, nullable = false)
+    private String g73370; // @rpg-trace: schema
+
+    @Column(name = "G73380", length = 5, nullable = false)
+    private String g73380; // @rpg-trace: schema
+
+    @Column(name = "G73390", length = 5, nullable = false)
+    private String g73390; // @rpg-trace: schema
+
+    @Column(name = "G73400", length = 5, nullable = false)
+    private String g73400; // @rpg-trace: schema
+
+    @Column(name = "G73410", length = 5, nullable = false)
+    private String g73410; // @rpg-trace: schema
+
+    @Column(name = "G73420", length = 2, nullable = false)
+    private String g73420; // @rpg-trace: schema
+
+    @Column(name = "G73430", length = 2, nullable = false)
+    private String g73430; // @rpg-trace: schema
+
+    @Column(name = "G73440", length = 5, nullable = false)
+    private String g73440; // @rpg-trace: schema
+
+    @Column(name = "G73450", length = 2, nullable = false)
+    private String g73450; // @rpg-trace: schema
+
+    @Column(name = "G73460", length = 5, nullable = false)
+    private String g73460; // @rpg-trace: schema
+
+    @Column(name = "G73470", length = 2, nullable = false)
+    private String g73470; // @rpg-trace: schema
+
+    @Column(name = "G73480", length = 5, nullable = false)
+    private String g73480; // @rpg-trace: schema
+
+    @Column(name = "G73490", length = 2, nullable = false)
+    private String g73490; // @rpg-trace: schema
+
+    @Column(name = "G73500", length = 5, nullable = false)
+    private String g73500; // @rpg-trace: schema
+
+    public ClaimError() {}
+
+    public String getG73000() { return g73000; }
+    public void setG73000(String g73000) { this.g73000 = g73000; }
+    public String getG73010() { return g73010; }
+    public void setG73010(String g73010) { this.g73010 = g73010; }
+    public String getG73020() { return g73020; }
+    public void setG73020(String g73020) { this.g73020 = g73020; }
+    public String getG73030() { return g73030; }
+    public void setG73030(String g73030) { this.g73030 = g73030; }
+    public String getG73040() { return g73040; }
+    public void setG73040(String g73040) { this.g73040 = g73040; }
+    public String getG73050() { return g73050; }
+    public void setG73050(String g73050) { this.g73050 = g73050; }
+    public String getG73060() { return g73060; }
+    public void setG73060(String g73060) { this.g73060 = g73060; }
+    public String getG73065() { return g73065; }
+    public void setG73065(String g73065) { this.g73065 = g73065; }
+    public String getG73070() { return g73070; }
+    public void setG73070(String g73070) { this.g73070 = g73070; }
+    public String getG73080() { return g73080; }
+    public void setG73080(String g73080) { this.g73080 = g73080; }
+    public String getG73090() { return g73090; }
+    public void setG73090(String g73090) { this.g73090 = g73090; }
+    public String getG73100() { return g73100; }
+    public void setG73100(String g73100) { this.g73100 = g73100; }
+    public String getG73110() { return g73110; }
+    public void setG73110(String g73110) { this.g73110 = g73110; }
+    public String getG73120() { return g73120; }
+    public void setG73120(String g73120) { this.g73120 = g73120; }
+    public String getG73130() { return g73130; }
+    public void setG73130(String g73130) { this.g73130 = g73130; }
+    public String getG73140() { return g73140; }
+    public void setG73140(String g73140) { this.g73140 = g73140; }
+    public String getG73150() { return g73150; }
+    public void setG73150(String g73150) { this.g73150 = g73150; }
+    public BigDecimal getG73160() { return g73160; }
+    public void setG73160(BigDecimal g73160) { this.g73160 = g73160; }
+    public BigDecimal getG73170() { return g73170; }
+    public void setG73170(BigDecimal g73170) { this.g73170 = g73170; }
+    public BigDecimal getG73180() { return g73180; }
+    public void setG73180(BigDecimal g73180) { this.g73180 = g73180; }
+    public BigDecimal getG73190() { return g73190; }
+    public void setG73190(BigDecimal g73190) { this.g73190 = g73190; }
+    public BigDecimal getG73200() { return g73200; }
+    public void setG73200(BigDecimal g73200) { this.g73200 = g73200; }
+    public BigDecimal getG73210() { return g73210; }
+    public void setG73210(BigDecimal g73210) { this.g73210 = g73210; }
+    public BigDecimal getG73220() { return g73220; }
+    public void setG73220(BigDecimal g73220) { this.g73220 = g73220; }
+    public BigDecimal getG73230() { return g73230; }
+    public void setG73230(BigDecimal g73230) { this.g73230 = g73230; }
+    public BigDecimal getG73240() { return g73240; }
+    public void setG73240(BigDecimal g73240) { this.g73240 = g73240; }
+    public BigDecimal getG73250() { return g73250; }
+    public void setG73250(BigDecimal g73250) { this.g73250 = g73250; }
+    public BigDecimal getG73260() { return g73260; }
+    public void setG73260(BigDecimal g73260) { this.g73260 = g73260; }
+    public BigDecimal getG73270() { return g73270; }
+    public void setG73270(BigDecimal g73270) { this.g73270 = g73270; }
+    public String getG73280() { return g73280; }
+    public void setG73280(String g73280) { this.g73280 = g73280; }
+    public String getG73285() { return g73285; }
+    public void setG73285(String g73285) { this.g73285 = g73285; }
+    public int getG73290() { return g73290; }
+    public void setG73290(int g73290) { this.g73290 = g73290; }
+    public BigDecimal getG73300() { return g73300; }
+    public void setG73300(BigDecimal g73300) { this.g73300 = g73300; }
+    public BigDecimal getG73310() { return g73310; }
+    public void setG73310(BigDecimal g73310) { this.g73310 = g73310; }
+    public String getG73320() { return g73320; }
+    public void setG73320(String g73320) { this.g73320 = g73320; }
+    public String getG73330() { return g73330; }
+    public void setG73330(String g73330) { this.g73330 = g73330; }
+    public String getG73340() { return g73340; }
+    public void setG73340(String g73340) { this.g73340 = g73340; }
+    public String getG73350() { return g73350; }
+    public void setG73350(String g73350) { this.g73350 = g73350; }
+    public String getG73360() { return g73360; }
+    public void setG73360(String g73360) { this.g73360 = g73360; }
+    public String getG73370() { return g73370; }
+    public void setG73370(String g73370) { this.g73370 = g73370; }
+    public String getG73380() { return g73380; }
+    public void setG73380(String g73380) { this.g73380 = g73380; }
+    public String getG73390() { return g73390; }
+    public void setG73390(String g73390) { this.g73390 = g73390; }
+    public String getG73400() { return g73400; }
+    public void setG73400(String g73400) { this.g73400 = g73400; }
+    public String getG73410() { return g73410; }
+    public void setG73410(String g73410) { this.g73410 = g73410; }
+    public String getG73420() { return g73420; }
+    public void setG73420(String g73420) { this.g73420 = g73420; }
+    public String getG73430() { return g73430; }
+    public void setG73430(String g73430) { this.g73430 = g73430; }
+    public String getG73440() { return g73440; }
+    public void setG73440(String g73440) { this.g73440 = g73440; }
+    public String getG73450() { return g73450; }
+    public void setG73450(String g73450) { this.g73450 = g73450; }
+    public String getG73460() { return g73460; }
+    public void setG73460(String g73460) { this.g73460 = g73460; }
+    public String getG73470() { return g73470; }
+    public void setG73470(String g73470) { this.g73470 = g73470; }
+    public String getG73480() { return g73480; }
+    public void setG73480(String g73480) { this.g73480 = g73480; }
+    public String getG73490() { return g73490; }
+    public void setG73490(String g73490) { this.g73490 = g73490; }
+    public String getG73500() { return g73500; }
+    public void setG73500(String g73500) { this.g73500 = g73500; }
 }

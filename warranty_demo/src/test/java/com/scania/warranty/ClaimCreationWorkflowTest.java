@@ -2,7 +2,8 @@ package com.scania.warranty;
 
 import com.scania.warranty.domain.Claim;
 import com.scania.warranty.domain.ClaimStatus;
-import com.scania.warranty.service.ClaimManagementService;
+import com.scania.warranty.repository.ClaimRepository;
+import com.scania.warranty.service.ClaimCreationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,54 +26,60 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ClaimCreationWorkflowTest {
 
     @Autowired
-    ClaimManagementService claimManagementService;
+    ClaimCreationService claimCreationService;
+
+    @Autowired
+    ClaimRepository claimRepository;
 
     private static final String SEED_COMPANY = "001";
     private static final String SEED_INVOICE = "12345";
     private static final String SEED_DATE = "20240115";
     private static final String SEED_ORDER = "001";
-    private static final String SEED_WORKSHOP = "1"; // matches Invoice.wt (length 1)
+    private static final String SEED_WORKSHOP = "1"; // matches Invoice ahk050 (length 1)
 
     @Test
     void createClaim_withValidWorkorder_createsClaimWithOpenStatus() {
-        Claim claim = claimManagementService.createClaimFromInvoice(
+        String claimNumber = claimCreationService.createClaimFromInvoice(
                 SEED_COMPANY, SEED_INVOICE, SEED_DATE, SEED_ORDER, SEED_WORKSHOP);
 
-        assertThat(claim).isNotNull();
-        assertThat(claim.getClaimNr()).isNotBlank();
-        assertThat(claim.getStatusCodeSde()).isEqualTo(ClaimStatus.PENDING.getCode());
-        assertThat(claim.getPakz()).isEqualTo(SEED_COMPANY);
-        assertThat(claim.getRechNr()).isEqualTo(SEED_INVOICE);
+        assertThat(claimNumber).isNotBlank();
+        Claim claim = claimRepository.findByCompanyAndClaimNr(SEED_COMPANY, claimNumber).orElseThrow();
+        assertThat(claim.getG71050()).isNotBlank();
+        assertThat(claim.getG71170()).isEqualTo(ClaimStatus.PENDING.getCode());
+        assertThat(claim.getG71000()).isEqualTo(SEED_COMPANY);
+        assertThat(claim.getG71010()).isEqualTo(SEED_INVOICE);
     }
 
     @Test
     void createClaim_whenInvoiceNotFound_throwsException() {
+        // Invoice lookup uses (company, order, workshop, date) - use non-existent date
         assertThatThrownBy(() ->
-                claimManagementService.createClaimFromInvoice(
-                        SEED_COMPANY, "55555", SEED_DATE, SEED_ORDER, SEED_WORKSHOP))
+                claimCreationService.createClaimFromInvoice(
+                        SEED_COMPANY, SEED_INVOICE, "19990101", SEED_ORDER, SEED_WORKSHOP))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Invoice not found");
     }
 
     @Test
     void createClaim_whenClaimAlreadyExists_throwsDuplicateException() {
-        claimManagementService.createClaimFromInvoice(
+        claimCreationService.createClaimFromInvoice(
                 SEED_COMPANY, SEED_INVOICE, SEED_DATE, SEED_ORDER, SEED_WORKSHOP);
 
         assertThatThrownBy(() ->
-                claimManagementService.createClaimFromInvoice(
+                claimCreationService.createClaimFromInvoice(
                         SEED_COMPANY, SEED_INVOICE, SEED_DATE, SEED_ORDER, SEED_WORKSHOP))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Claim already exists");
     }
 
     @Test
     void createClaim_workorderStructure_matchesInvoiceOrderNumberAreaType() {
-        Claim claim = claimManagementService.createClaimFromInvoice(
+        String claimNumber = claimCreationService.createClaimFromInvoice(
                 SEED_COMPANY, SEED_INVOICE, SEED_DATE, SEED_ORDER, SEED_WORKSHOP);
+        Claim claim = claimRepository.findByCompanyAndClaimNr(SEED_COMPANY, claimNumber).orElseThrow();
 
-        assertThat(claim.getRechNr()).isEqualTo(SEED_INVOICE);
-        assertThat(claim.getRechDatum()).isEqualTo(SEED_DATE);
-        assertThat(claim.getAuftragsNr()).isEqualTo(SEED_ORDER);
+        assertThat(claim.getG71010()).isEqualTo(SEED_INVOICE);
+        assertThat(claim.getG71020()).isEqualTo(SEED_DATE);
+        assertThat(claim.getG71030()).isEqualTo(SEED_ORDER);
     }
 }

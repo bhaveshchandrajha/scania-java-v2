@@ -11,7 +11,7 @@ import { ClaimService } from '../services/claim.service';
   template: `
     <div class="claim-create">
       <h1>Create Claim (CF06 Erstellen)</h1>
-      <p class="hint">Create from seeded invoices (no claim yet): 88888/003, 77777/004, or 99999/002. Invoice 12345/001 already has a claim.</p>
+      <p class="hint">Create from seeded invoices (no claim yet): 88888/003, 77777/004, or 99999/002. Invoice 12345/001 already has a claim. If you get "Invoice not found", call <code>POST /api/seed</code> first to seed demo data.</p>
 
       <form (ngSubmit)="onSubmit()" class="create-form">
         <div class="form-group">
@@ -96,9 +96,13 @@ export class ClaimCreateComponent {
       error: (err) => {
         this.submitting = false;
         const body = err.error;
-        const msg = (typeof body === 'object' && body?.message) ? body.message
+        let msg = (typeof body === 'object' && body?.message) ? body.message
           : (Array.isArray(body?.details) && body.details.length) ? body.details.join(', ')
+          : typeof body === 'string' ? body
           : err.message || 'Failed to create claim';
+        if (msg && msg.includes('Invoice not found')) {
+          msg += ' — Try POST /api/seed first to seed demo invoices.';
+        }
         this.errorMessage = msg;
       }
     });

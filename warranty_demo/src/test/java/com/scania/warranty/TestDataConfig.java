@@ -29,8 +29,8 @@ public class TestDataConfig implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        invoiceRepository.deleteByPakzAndRnrAndRdat(
-                TestDataFactory.SEED_PAKZ, TestDataFactory.SEED_RNR, TestDataFactory.SEED_RDAT);
+        invoiceRepository.findByKey(TestDataFactory.SEED_PAKZ, TestDataFactory.SEED_RNR,
+                TestDataFactory.SEED_RDAT, TestDataFactory.SEED_ANR).ifPresent(invoiceRepository::delete);
         Invoice inv = testDataFactory.createSeedInvoice();
         invoiceRepository.save(inv);
     }

@@ -66,16 +66,35 @@ SCREEN_CONFIG: Dict[str, Dict[str, Any]] = {
             {"id": "companyCode", "label": "Company", "type": "string", "param": "companyCode", "default": "001"},
         ],
         # Declarative action bindings: type → url/method/navigate
+        # Labels: German (English) for bilingual UI
         "actionBindings": {
-            "CF03": {"type": "exit", "action": "historyBack"},
-            "CF05": {"type": "refresh", "reuseDataSource": True},
-            "CF06": {"type": "create", "navigate": "/claims/create"},
-            "CF09": {"type": "listStart", "action": "scrollToTop"},
-            "CF11": {"type": "view", "navigate": "/claims/{{companyCode}}/{{claimNumber}}"},
-            "CF12": {"type": "back", "action": "historyBack"},
-            "CF16": {"type": "sort", "action": "openSortDialog"},
-            "CF17": {"type": "sortToggle", "action": "toggleSortOrder"},
-            "CF19": {"type": "filter", "action": "openFilterDialog"},
+            "CF03": {"type": "exit", "action": "historyBack", "label": "Verlassen (Exit)"},
+            "CF04": {"type": "help", "action": "showOperatorGuidance", "label": "Bedienerführung (Operator Guidance)"},
+            "CF05": {"type": "refresh", "reuseDataSource": True, "label": "Aktualisieren (Refresh)"},
+            "CF06": {"type": "create", "navigate": "/claims/create", "label": "Erstellen (Create)"},
+            "CF09": {"type": "listStart", "action": "scrollToTop", "label": "Listenanfang (List Start)"},
+            "CF11": {"type": "view", "navigate": "/claims/{{companyCode}}/{{claimNumber}}", "label": "Ansicht (View)"},
+            "CF12": {"type": "back", "action": "historyBack", "label": "Zurück (Back)"},
+            "CF15": {
+                "type": "apiCall",
+                "label": "Freigabe beantragen (Request Release)",
+                "url": "/api/claims/{{companyCode}}/{{claimNumber}}/request-release",
+                "method": "POST",
+                "requiresSelection": True,
+            },
+            "CF16": {"type": "sort", "action": "openSortDialog", "label": "Sortierung (Sort)"},
+            "CF17": {"type": "sortToggle", "action": "toggleSortOrder", "label": "Sortierung Auf/Ab (Sort Asc/Desc)"},
+            "CF19": {"type": "filter", "action": "openFilterDialog", "label": "Filter setzen (Set Filter)"},
+            "CF20": {"type": "filter", "action": "selectAllOpenInvoices", "label": "Alle offenen Rechnungen auswählen (Select All Open Invoices)"},
+        },
+        "extraActionBindings": {
+            "delete": {
+                "type": "delete",
+                "label": "Delete Claim",
+                "url": "/api/claims/{{companyCode}}/{{claimNumber}}",
+                "method": "DELETE",
+                "requiresSelection": True,
+            },
         },
     },
 }
@@ -109,37 +128,57 @@ def extract_function_keys_from_narrative(narrative: str) -> List[Tuple[str, str]
     return result
 
 
+# Regex to match DDS function key patterns: CF03(03 'Verlassen'), CA12(12 'Zurück')
+_FK_PATTERN = re.compile(r"C[FA](\d{2})\((\d{2})\s+'([^']*)'\)")
+
+
+def _parse_function_key_string(s: str) -> Optional[Tuple[str, str]]:
+    """Parse a single function key string like CF03(03 'Verlassen') -> ('CF03', 'Verlassen')."""
+    if not isinstance(s, str):
+        return None
+    m = _FK_PATTERN.match(s.strip())
+    if not m:
+        return None
+    prefix = "CF" if s.strip().startswith("CF") else "CA"
+    key_id = f"{prefix}{m.group(1)}"
+    label = m.group(3).strip()
+    return (key_id, label)
+
+
 def extract_function_keys_from_ui_contracts(ui_contracts: dict) -> List[Tuple[str, str]]:
     """
-    Extract function keys from DDS AST uiContracts (e.g. record format CA definitions).
-    Falls back to narrative if not found in AST.
+    Extract function keys from DDS AST uiContracts.
+    DDS stores them in record format 'keywords' arrays (e.g. "CF03(03 'Verlassen')")
+    or in a 'functionKeys' array. Searches both.
     """
-    # DDS AST may have functionKeys in record formats - search recursively
+    found: List[Tuple[str, str]] = []
+
     def search_keys(obj: Any, acc: List[Tuple[str, str]]) -> None:
         if isinstance(obj, dict):
             for k, v in obj.items():
                 if k == "functionKeys" and isinstance(v, list):
                     for item in v:
-                        if isinstance(item, str):
-                            m = re.match(r"C[FA](\d{2})\((\d{2})\s+'([^']*)'\)", item)
-                            if m:
-                                prefix = "CF" if item.startswith("CF") else "CA"
-                                key_id = f"{prefix}{m.group(1)}"
-                                acc.append((key_id, m.group(3)))
+                        parsed = _parse_function_key_string(item) if isinstance(item, str) else None
+                        if parsed:
+                            acc.append(parsed)
+                elif k == "keywords" and isinstance(v, list):
+                    for item in v:
+                        parsed = _parse_function_key_string(item) if isinstance(item, str) else None
+                        if parsed:
+                            acc.append(parsed)
                 else:
                     search_keys(v, acc)
         elif isinstance(obj, list):
             for x in obj:
                 search_keys(x, acc)
 
-    found: List[Tuple[str, str]] = []
     search_keys(ui_contracts, found)
-    seen = set()
+    seen: set = set()
     deduped = []
-    for k, l in found:
+    for k, lbl in found:
         if k not in seen:
             seen.add(k)
-            deduped.append((k, l))
+            deduped.append((k, lbl))
     return deduped
 
 
@@ -229,6 +268,10 @@ def build_actions(
             action["action"] = binding["action"]
         if "reuseDataSource" in binding:
             action["reuseDataSource"] = binding["reuseDataSource"]
+        if "requiresSelection" in binding:
+            action["requiresSelection"] = binding["requiresSelection"]
+        if "label" in binding and binding["label"] != label:
+            action["label"] = f"{key_id} {binding['label']}"
         actions.append(action)
     return actions
 
@@ -321,6 +364,21 @@ def generate_ui_schema(
         function_keys = [(k, default_labels.get(k, k)) for k in bindings]
 
     schema["actions"] = build_actions(function_keys, sid)
+
+    # Append extra actions (e.g. delete) not present in DDS function keys
+    for extra_id, extra_binding in config.get("extraActionBindings", {}).items():
+        action: Dict[str, Any] = {
+            "id": extra_id,
+            "type": extra_binding.get("type", "custom"),
+            "label": extra_binding.get("label", extra_id),
+        }
+        if "url" in extra_binding:
+            action["url"] = extra_binding["url"]
+        if "method" in extra_binding:
+            action["method"] = extra_binding["method"]
+        if "requiresSelection" in extra_binding:
+            action["requiresSelection"] = extra_binding["requiresSelection"]
+        schema["actions"].append(action)
 
     if config.get("filters"):
         schema["filters"] = config["filters"]

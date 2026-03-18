@@ -33,7 +33,7 @@ services:
       - GIT_USER_NAME=${GIT_USER_NAME:-farcaz}
       - RUN_PROFILE=rds
       # SKIP_TESTS=1: skip test compile/run when tests are out of sync after migration
-      - SKIP_TESTS=${SKIP_TESTS:-1}
+      - SKIP_TESTS=${SKIP_TESTS:-0}
     working_dir: /workspace
     stdin_open: true
     tty: true

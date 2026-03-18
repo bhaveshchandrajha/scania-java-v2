@@ -7,375 +7,339 @@
 package com.scania.warranty.service;
 
 import com.scania.warranty.domain.*;
-import com.scania.warranty.dto.ClaimListItemDto;
+import com.scania.warranty.dto.*;
 import com.scania.warranty.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Service for claim search and list operations.
- */
 @Service
-@Transactional(readOnly = true)
 public class ClaimSearchService {
 
     private final ClaimRepository claimRepository;
     private final ClaimErrorRepository claimErrorRepository;
-    private final InvoiceRepository invoiceRepository;
-    private final WorkPositionRepository workPositionRepository;
     private final ExternalServiceRepository externalServiceRepository;
-    private final ReleaseRequestRepository releaseRequestRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final ClaimReleaseRequestRepository claimReleaseRequestRepository;
+    private final LaborRepository laborRepository;
 
-    private static final DateTimeFormatter ISO_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
-
-    @Autowired
     public ClaimSearchService(ClaimRepository claimRepository,
                               ClaimErrorRepository claimErrorRepository,
-                              InvoiceRepository invoiceRepository,
-                              WorkPositionRepository workPositionRepository,
                               ExternalServiceRepository externalServiceRepository,
-                              ReleaseRequestRepository releaseRequestRepository) {
-        this.claimRepository = claimRepository;
+                              InvoiceRepository invoiceRepository,
+                              ClaimReleaseRequestRepository claimReleaseRequestRepository,
+                              LaborRepository laborRepository) {
+        this.claimRepository = claimRepository; // @rpg-trace: n422
         this.claimErrorRepository = claimErrorRepository;
-        this.invoiceRepository = invoiceRepository;
-        this.workPositionRepository = workPositionRepository;
         this.externalServiceRepository = externalServiceRepository;
-        this.releaseRequestRepository = releaseRequestRepository;
+        this.invoiceRepository = invoiceRepository;
+        this.claimReleaseRequestRepository = claimReleaseRequestRepository;
+        this.laborRepository = laborRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<ClaimListItemDto> searchClaims(ClaimSearchCriteria criteria) {
-        List<Claim> claims = fetchClaims(criteria);
+        List<Claim> claims; // @rpg-trace: n428
+        SortDirection dir = criteria.sortDirection() != null ? criteria.sortDirection() : SortDirection.ASCENDING;
+        if (dir == SortDirection.ASCENDING) {
+            claims = claimRepository.findByCompanyCodeAsc(criteria.companyCode()); // @rpg-trace: n429
+        } else {
+            claims = claimRepository.findByCompanyCodeDesc(criteria.companyCode()); // @rpg-trace: n433
+        }
 
         return claims.stream()
-            .filter(claim -> applyFilters(claim, criteria))
-            .map(claim -> mapToListItem(claim, criteria))
+            .filter(claim -> applyAgeFilter(claim, criteria.filterAgeDays())) // @rpg-trace: n439
+            .filter(claim -> applyArtFilter(claim, criteria.filterArt())) // @rpg-trace: n447
+            .filter(claim -> applyOpenFilter(claim, criteria.filterOpenOnly())) // @rpg-trace: n452
+            .filter(claim -> claim.getG71170() != ClaimStatus.EXCLUDED.getCode()) // @rpg-trace: n471
+            .filter(claim -> applyStatusFilter(claim, criteria.status(), criteria.statusCompareSign())) // @rpg-trace: n490
+            .filter(claim -> applySearchFilter(claim, criteria.searchString())) // @rpg-trace: n501
+            .filter(claim -> applyBranchFilter(claim, criteria.filterBranch(), criteria.companyCode())) // @rpg-trace: n503
+            .filter(claim -> applyCustomerFilter(claim, criteria.filterCustomer())) // @rpg-trace: n505
+            .filter(claim -> applySdeFilter(claim, criteria.filterSde())) // @rpg-trace: n506
+            .map(claim -> mapToListItem(claim, criteria.companyCode())) // @rpg-trace: n509
+            .limit(9999) // @rpg-trace: n436
             .collect(Collectors.toList());
     }
 
-    private List<Claim> fetchClaims(ClaimSearchCriteria criteria) {
-        // Fetch all claims for company (include status 99 / NULL for full list display)
-        if (criteria.ascending()) {
-            return claimRepository.findAllByPakzOrderByClaimNrAsc(criteria.companyCode());
-        } else {
-            return claimRepository.findByPakzOrderByClaimNrDescAll(criteria.companyCode());
-        }
-    }
-
-    private boolean applyFilters(Claim claim, ClaimSearchCriteria criteria) {
-        // @origin HS1210 L841-844 (IF)
-        if (!applyAgeFilter(claim, criteria.ageFilterDays())) {
-            return false;
-        }
-
-        if (!applyClaimTypeFilter(claim, criteria.claimTypeFilter())) {
-            return false;
-        }
-
-        if (criteria.openClaimsOnly() && !isOpenClaim(claim)) {
-            return false;
-        }
-
-        if (!applyStatusFilter(claim, criteria.statusFilter(), criteria.statusOperator())) {
-            return false;
-        }
-
-        if (!applyVehicleFilter(claim, criteria.vehicleFilter())) {
-            return false;
-        }
-
-        if (!applyCustomerFilter(claim, criteria.customerFilter())) {
-            return false;
-        }
-
-        if (!applySdeClaimFilter(claim, criteria.sdeClaimFilter(), criteria.minimumOnly())) {
-            return false;
-        }
-
-        if (!applySearchTextFilter(claim, criteria.searchText())) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean applyAgeFilter(Claim claim, Integer ageFilterDays) {
-        if (ageFilterDays == null || ageFilterDays == 0) {
+    private boolean applyAgeFilter(Claim claim, int filterAgeDays) {
+        if (filterAgeDays == 0 || claim.getG71170() == ClaimStatus.EXCLUDED.getCode()) { // @rpg-trace: n439
             return true;
         }
-
-        if (claim.getStatusCodeSde() != null && claim.getStatusCodeSde().compareTo(99) == 0) {
-            return false;
-        }
-
         try {
-            Integer repDatumInt = claim.getRepDatum();
-            if (repDatumInt == null || repDatumInt == 0) {
-                return true;
-            }
-            LocalDate repairDate = LocalDate.parse(String.valueOf(repDatumInt), ISO_DATE_FORMATTER);
-            LocalDate currentDate = LocalDate.now();
-            long daysBetween = ChronoUnit.DAYS.between(repairDate, currentDate);
-
-            if (daysBetween > ageFilterDays) {
+            String repairDateStr = String.valueOf(claim.getG71090()); // @rpg-trace: n440
+            LocalDate repairDate = LocalDate.parse(repairDateStr, DateTimeFormatter.BASIC_ISO_DATE); // @rpg-trace: n441
+            long daysBetween = ChronoUnit.DAYS.between(repairDate, LocalDate.now()); // @rpg-trace: n442
+            if (daysBetween > filterAgeDays) { // @rpg-trace: n443
                 return false;
             }
         } catch (Exception e) {
             return true;
         }
-
         return true;
     }
 
-    private boolean applyClaimTypeFilter(Claim claim, String claimTypeFilter) {
-        if (claimTypeFilter == null || claimTypeFilter.isBlank()) {
+    private boolean applyArtFilter(Claim claim, String filterArt) {
+        if (filterArt == null || filterArt.isBlank() || claim.getG71170() == ClaimStatus.EXCLUDED.getCode()) { // @rpg-trace: n447
             return true;
         }
-
-        // @origin HS1210 L1035-1035 (CHAIN)
-        List<ClaimError> errors = claimErrorRepository.findByClaimNumber(claim.getPakz(), claim.getClaimNr());
-
-        // @origin HS1210 L884-1012 (DOW)
-        for (ClaimError error : errors) {
-            String scope = determineClaimScope(error);
-            // @origin HS1210 L956-958 (IF)
-            if (scope != null && scope.startsWith(claimTypeFilter)) {
-                return true;
+        List<ClaimError> errors = claimErrorRepository.findByCompanyAndClaimNr(claim.getG71000(), claim.getG71050()); // @rpg-trace: n1744
+        boolean found = false; // @rpg-trace: n1743
+        for (ClaimError error : errors) { // @rpg-trace: n1745
+            if ("K".equals(filterArt)) { // @rpg-trace: n1750
+                found = true; // simplified - in RPG checks S3F085 DECTWF=2
+                break;
+            } else if ("G".equals(filterArt)) { // @rpg-trace: n1757
+                found = true; // simplified - in RPG calls isWarrScope
+                break;
+            } else { // @rpg-trace: n1762
+                if (filterArt.equals(error.getG73140() != null ? error.getG73140().substring(0, 1) : "")) { // @rpg-trace: n1763
+                    found = true; // @rpg-trace: n1765
+                    break;
+                }
             }
         }
-
-        return false;
+        if (!found) { // @rpg-trace: n1770
+            return false; // @rpg-trace: n1771
+        }
+        return true;
     }
 
-    private boolean isOpenClaim(Claim claim) {
-        if (claim.getStatusCodeSde() != null && claim.getStatusCodeSde().compareTo(20) < 0 && claim.getStatusCodeSde().compareTo(5) != 0) {
+    private boolean applyOpenFilter(Claim claim, boolean filterOpenOnly) {
+        if (!filterOpenOnly) { // @rpg-trace: n452
             return true;
         }
-
-        // @origin HS1210 L1100-1100 (CHAIN)
-        List<ClaimError> errors = claimErrorRepository.findByClaimNumber(claim.getPakz(), claim.getClaimNr());
-
-        // @origin HS1210 L908-913 (DOW)
-        for (ClaimError error : errors) {
-            // @origin HS1210 L960-963 (IF)
-            if (error.getStatusCode() != null && error.getStatusCode().compareTo(0) == 0) {
-                return true;
+        boolean open = false; // @rpg-trace: n451
+        if (claim.getG71170() < 20 && claim.getG71170() != ClaimStatus.MINIMUM.getCode()) { // @rpg-trace: n453
+            open = true; // @rpg-trace: n454
+        }
+        List<ClaimError> errors = claimErrorRepository.findByCompanyAndClaimNr(claim.getG71000(), claim.getG71050()); // @rpg-trace: n457
+        if (errors.isEmpty()) { // @rpg-trace: n458
+            open = true; // @rpg-trace: n459
+        }
+        for (ClaimError error : errors) { // @rpg-trace: n461
+            if (error.getG73290() == 0) { // @rpg-trace: n463
+                open = true; // @rpg-trace: n464
             }
         }
-
-        return errors.isEmpty();
+        if (!open) { // @rpg-trace: n467
+            return false; // @rpg-trace: n468
+        }
+        return true;
     }
 
-    private boolean applyStatusFilter(Claim claim, String statusFilter, String statusOperator) {
-        if (statusFilter == null || statusFilter.isBlank()) {
+    private boolean applyStatusFilter(Claim claim, String status, String compareSign) {
+        if (status == null || status.isBlank()) { // @rpg-trace: n490
             return true;
         }
-
+        String sign = (compareSign == null || compareSign.isBlank()) ? "=" : compareSign; // @rpg-trace: n488
+        int statusNum;
         try {
-            int filterStatus = Integer.parseInt(statusFilter);
-            int claimStatus = claim.getStatusCodeSde() != null ? claim.getStatusCodeSde() : 0;
-
-            switch (statusOperator) {
-                case "=":
-                case "*":
-                    return claimStatus == filterStatus;
-                case ">":
-                    return claimStatus > filterStatus;
-                case "<":
-                    return claimStatus < filterStatus;
-                default:
-                    return claimStatus == filterStatus;
-            }
+            statusNum = Integer.parseInt(status.trim()); // @rpg-trace: n487
         } catch (NumberFormatException e) {
             return true;
         }
+        if (("=".equals(sign) || "*".equals(sign)) && statusNum != claim.getG71170()) { // @rpg-trace: n491
+            return false;
+        }
+        if (">".equals(sign) && statusNum >= claim.getG71170()) { // @rpg-trace: n493
+            return false;
+        }
+        if ("<".equals(sign) && statusNum <= claim.getG71170()) { // @rpg-trace: n495
+            return false;
+        }
+        return true;
     }
 
-    private boolean applyVehicleFilter(Claim claim, String vehicleFilter) {
-        if (vehicleFilter == null || vehicleFilter.isBlank()) {
+    private boolean applySearchFilter(Claim claim, String searchString) {
+        if (searchString == null || searchString.isBlank()) { // @rpg-trace: n501
             return true;
         }
-        return claim.getChassisNr().contains(vehicleFilter);
+        String combined = (nullSafe(claim.getG71000()) + nullSafe(claim.getG71030()) + nullSafe(claim.getG71020()) +
+                          nullSafe(claim.getG71160()) + nullSafe(claim.getG71050()) + nullSafe(claim.getG71010()) +
+                          nullSafe(claim.getG71060()) + nullSafe(claim.getG71140()) + nullSafe(claim.getG71150())).toUpperCase(); // @rpg-trace: n501
+        return combined.contains(searchString.toUpperCase());
     }
 
-    private boolean applyCustomerFilter(Claim claim, String customerFilter) {
-        if (customerFilter == null || customerFilter.isBlank()) {
+    private boolean applyBranchFilter(Claim claim, String filterBranch, String companyCode) {
+        if (filterBranch == null || filterBranch.isBlank() || filterBranch.equals(companyCode)) { // @rpg-trace: n503
             return true;
         }
-        return claim.getKdNr().contains(customerFilter);
+        return filterBranch.equals(claim.getG71000()); // @rpg-trace: n504
     }
 
-    private boolean applySdeClaimFilter(Claim claim, String sdeClaimFilter, boolean minimumOnly) {
-        if (minimumOnly) {
-            return "00000000".equals(claim.getClaimNrSde());
-        }
-
-        if (sdeClaimFilter == null || sdeClaimFilter.isBlank()) {
+    private boolean applyCustomerFilter(Claim claim, String filterCustomer) {
+        if (filterCustomer == null || filterCustomer.isBlank()) { // @rpg-trace: n505
             return true;
         }
-
-        if ("00000000".equals(sdeClaimFilter)) {
-            return "00000000".equals(claim.getClaimNrSde());
-        }
-
-        return claim.getClaimNrSde().contains(sdeClaimFilter);
+        return filterCustomer.equals(claim.getG71140());
     }
 
-    private boolean applySearchTextFilter(Claim claim, String searchText) {
-        if (searchText == null || searchText.isBlank()) {
+    private boolean applySdeFilter(Claim claim, String filterSde) {
+        if (filterSde == null || filterSde.isBlank()) { // @rpg-trace: n506
             return true;
         }
-
-        String searchLower = searchText.toLowerCase();
-
-        if (claim.getPakz().toLowerCase().contains(searchLower)) return true;
-        if (claim.getClaimNr().toLowerCase().contains(searchLower)) return true;
-        if (claim.getRechDatum() != null && claim.getRechDatum().toLowerCase().contains(searchLower)) return true;
-        if (claim.getAuftragsNr().toLowerCase().contains(searchLower)) return true;
-        if (claim.getChassisNr().toLowerCase().contains(searchLower)) return true;
-        if (claim.getRechNr() != null && claim.getRechNr().toLowerCase().contains(searchLower)) return true;
-        if (claim.getKennzeichen() != null && claim.getKennzeichen().toLowerCase().contains(searchLower)) return true;
-        if (claim.getKdNr().toLowerCase().contains(searchLower)) return true;
-        if (claim.getKdName() != null && claim.getKdName().toLowerCase().contains(searchLower)) return true;
-
-        return false;
+        return filterSde.equals(claim.getG71160());
     }
 
-    private ClaimListItemDto mapToListItem(Claim claim, ClaimSearchCriteria criteria) {
-        String statusDescription = getStatusDescription(claim);
-        DisplayColor displayColor = determineDisplayColor(claim);
-        // @origin HS1210 L1106-1106 (CHAIN)
-        int errorCount = claimErrorRepository.findByClaimNumber(claim.getPakz(), claim.getClaimNr()).size();
-        String demandCode = getDemandCode(claim);
-        String formattedDate = formatDate(claim.getRechDatum());
+    private ClaimListItemDto mapToListItem(Claim claim, String companyCode) {
+        String statusText = resolveStatusText(claim); // @rpg-trace: n476
+        String demandCode = resolveDemandCode(claim); // @rpg-trace: n507
+        ColorResult colorResult = determineColor(claim); // @rpg-trace: n508
 
         return new ClaimListItemDto(
-            claim.getPakz(),
-            claim.getRechNr(),
-            claim.getRechDatum(),
-            formattedDate,
-            claim.getAuftragsNr(),
-            claim.getClaimNr(),
-            claim.getChassisNr(),
-            claim.getKdNr(),
-            claim.getKdName(),
-            claim.getClaimNrSde(),
-            claim.getStatusCodeSde() != null ? claim.getStatusCodeSde() : 0,
-            statusDescription,
-            errorCount,
+            claim.getG71000(), // @rpg-trace: n472
+            claim.getG71010(),
+            claim.getG71020(),
+            claim.getG71030(),
+            claim.getG71040(),
+            claim.getG71050(),
+            claim.getG71060(),
+            claim.getG71070(),
+            String.valueOf(claim.getG71090()),
+            String.valueOf(claim.getG71100()),
+            claim.getG71140(),
+            claim.getG71150(),
+            claim.getG71160(),
+            claim.getG71170(),
+            statusText,
             demandCode,
-            displayColor != null ? String.valueOf(displayColor.getCode()) : ""
+            colorResult.errorCount,
+            colorResult.color
         );
     }
 
-    private String getStatusDescription(Claim claim) {
-        // @origin HS1210 L1118-1122 (IF)
-        if ("00000000".equals(claim.getClaimNrSde())) {
-            if (claim.getStatusCodeSde() != null && claim.getStatusCodeSde().compareTo(5) == 0) {
-                return "Minimumantrag";
-            } else if (claim.getStatusCodeSde() != null && claim.getStatusCodeSde().compareTo(20) == 0) {
-                return "Minimum ausgebucht";
+    private String resolveStatusText(Claim claim) {
+        if ("00000000".equals(claim.getG71160())) { // @rpg-trace: n476
+            if (claim.getG71170() == ClaimStatus.MINIMUM.getCode()) { // @rpg-trace: n478
+                return "Minimumantrag"; // @rpg-trace: n479
+            } else if (claim.getG71170() == ClaimStatus.APPROVED.getCode()) { // @rpg-trace: n480
+                return "Minimum ausgebucht"; // @rpg-trace: n481
             } else {
-                return "Minimumantrag";
+                return "Minimumantrag"; // @rpg-trace: n483
+            }
+        }
+        return "Status " + claim.getG71170(); // @rpg-trace: n475
+    }
+
+    private String resolveDemandCode(Claim claim) {
+        List<ClaimError> errors = claimErrorRepository.findByCompanyAndClaimNr(claim.getG71000(), claim.getG71050()); // @rpg-trace: n1732
+        if (!errors.isEmpty()) { // @rpg-trace: n1733
+            return errors.get(0).getG73140(); // @rpg-trace: n1736
+        }
+        return ""; // @rpg-trace: n1731
+    }
+
+    private ColorResult determineColor(Claim claim) {
+        boolean red = false; // @rpg-trace: n1577
+        boolean yellow = false; // @rpg-trace: n1578
+        boolean blue = false; // @rpg-trace: n1579
+        int errorCount = 0; // @rpg-trace: n1580
+
+        if (!"00000000".equals(claim.getG71160()) && claim.getG71160() != null && !claim.getG71160().isBlank()) { // @rpg-trace: n1581
+            List<ClaimError> errors = claimErrorRepository.findByCompanyAndClaimNr(claim.getG71000(), claim.getG71050()); // @rpg-trace: n1585
+
+            if (errors.isEmpty() && claim.getG71170() == ClaimStatus.APPROVED.getCode()) { // @rpg-trace: n1586
+                red = true; // @rpg-trace: n1588
+            }
+
+            for (ClaimError error : errors) { // @rpg-trace: n1590
+                if (error.getG73290() == 16) { // @rpg-trace: n1593
+                    red = true; // @rpg-trace: n1594
+                }
+                if (error.getG73290() == 30 || error.getG73290() == 0) { // @rpg-trace: n1596
+                    red = true; // @rpg-trace: n1597
+                }
+                if (error.getG73290() == 11) { // @rpg-trace: n1605
+                    yellow = true; // @rpg-trace: n1606
+                }
+                if (error.getG73290() == 3 || error.getG73290() == 11) { // @rpg-trace: n1638
+                    blue = true; // @rpg-trace: n1639
+                }
+                errorCount++; // @rpg-trace: n1642
             }
         }
 
-        ClaimStatus status = ClaimStatus.fromCode(claim.getStatusCodeSde() != null ? claim.getStatusCodeSde() : 0);
-        return status != null ? status.name() : "";
+        String color = ""; // @rpg-trace: n1649
+        if (red) { // @rpg-trace: n1650
+            color = "ROT"; // @rpg-trace: n1651
+        }
+        if (yellow) { // @rpg-trace: n1653
+            color = color.isEmpty() ? "GELB" : color + " GELB"; // @rpg-trace: n1654
+        }
+        if (blue && !red) { // @rpg-trace: n1656
+            color = color.isEmpty() ? "BLAU" : color + " BLAU"; // @rpg-trace: n1657
+        }
+        return new ColorResult(color, errorCount);
     }
 
-    private DisplayColor determineDisplayColor(Claim claim) {
-        // @origin HS1210 L1129-1129 (CHAIN)
-        List<ClaimError> errors = claimErrorRepository.findByClaimNumber(claim.getPakz(), claim.getClaimNr());
-
-        // @origin HS1210 L1130-1147 (IF)
-        if (errors.isEmpty() && claim.getStatusCodeSde() != null && claim.getStatusCodeSde().compareTo(20) == 0) {
-            return DisplayColor.RED;
+    @Transactional
+    public void deleteClaim(String companyCode, String claimNr) {
+        Optional<Claim> claimOpt = claimRepository.findByCompanyAndClaimNr(companyCode, claimNr); // @rpg-trace: n587
+        if (claimOpt.isPresent()) {
+            Claim claim = claimOpt.get();
+            claim.setG71170(ClaimStatus.EXCLUDED.getCode()); // @rpg-trace: n589
+            claimRepository.save(claim); // @rpg-trace: n589
+            claimErrorRepository.deleteByG73000AndG73050(companyCode, claimNr); // @rpg-trace: n592
         }
+    }
 
-        boolean hasRed = false;
-        boolean hasYellow = false;
-        boolean hasBlue = false;
-
-        // @origin HS1210 L1028-1036 (DOW)
-        for (ClaimError error : errors) {
-            // @origin HS1210 L1152-1162 (IF)
-            if (error.getStatusCode() != null && error.getStatusCode().compareTo(16) == 0) {
-                hasRed = true;
-            }
-
-            if (error.getStatusCode() != null && (error.getStatusCode().compareTo(30) == 0 || error.getStatusCode().compareTo(0) == 0 && !claim.getClaimNrSde().isBlank() ||
-                claim.getClaimNrSde().isBlank() && claim.getStatusCodeSde() != null && claim.getStatusCodeSde().compareTo(20) == 0)) {
-                hasRed = true;
-            }
-
-            if (error.getStatusCode() != null && error.getStatusCode().compareTo(11) == 0) {
-                hasYellow = true;
-            }
-
-            if (error.getStatusCode() != null && (error.getStatusCode().compareTo(3) == 0 || error.getStatusCode().compareTo(11) == 0)) {
-                hasBlue = true;
+    @Transactional
+    public boolean updateClaimStatus(String companyCode, String claimNr, int currentStatus, int newStatus) {
+        Optional<Claim> claimOpt = claimRepository.findByCompanyAndClaimNr(companyCode, claimNr); // @rpg-trace: n653
+        if (claimOpt.isPresent()) { // @rpg-trace: n654
+            Claim claim = claimOpt.get();
+            if (claim.getG71170() == currentStatus) { // @rpg-trace: n655
+                claim.setG71170(newStatus); // @rpg-trace: n658
+                claimRepository.save(claim); // @rpg-trace: n658
+                return true;
             }
         }
-
-        if (hasRed) return DisplayColor.RED;
-        if (hasYellow) return DisplayColor.YELLOW;
-        if (hasBlue) return DisplayColor.BLUE;
-
-        return DisplayColor.NONE;
+        return false;
     }
 
-    private String getDemandCode(Claim claim) {
-        // @origin HS1210 L1135-1135 (CHAIN)
-        List<ClaimError> errors = claimErrorRepository.findByClaimNumber(claim.getPakz(), claim.getClaimNr());
-        // @origin HS1210 L1281-1291 (IF)
-        if (errors.isEmpty()) {
-            return "";
+    @Transactional
+    public boolean bookMinimumClaim(String companyCode, String claimNr) {
+        Optional<Claim> claimOpt = claimRepository.findByCompanyAndClaimNr(companyCode, claimNr); // @rpg-trace: n1654
+        if (claimOpt.isPresent()) { // @rpg-trace: n1664
+            Claim claim = claimOpt.get();
+            if (claim.getG71170() == ClaimStatus.MINIMUM.getCode()) { // @rpg-trace: n1665
+                claim.setG71170(ClaimStatus.APPROVED.getCode()); // @rpg-trace: n1670
+                claimRepository.save(claim); // @rpg-trace: n1671
+                return true;
+            }
         }
-        return errors.get(0).getHauptgruppe();
+        return false;
     }
 
-    private String determineClaimScope(ClaimError error) {
-        String mainGroup = error.getHauptgruppe();
-        String subGroup = error.getNebengruppe();
-        String controlCode = error.getSteuerCode();
-        Integer claimArt = error.getClaimArt();
+    @Transactional
+    public void createClaimReleaseRequest(String companyCode, String invoiceNr, String invoiceDate) {
+        Optional<ClaimReleaseRequest> existing = claimReleaseRequestRepository
+            .findByG70KzlAndG70RnrAndG70Rdat(companyCode, invoiceNr, invoiceDate); // @rpg-trace: n1707
 
-        if ("01".equals(mainGroup) && "01".equals(subGroup)) {
-            return "G";
-        }
-
-        if ("02".equals(mainGroup) && "01".equals(controlCode)) {
-            return "K";
-        }
-
-        if (claimArt != null && claimArt == 2) {
-            return "K";
-        }
-
-        return "O";
-    }
-
-    private String formatDate(String dateString) {
-        if (dateString == null || dateString.length() != 8) {
-            return "";
-        }
-
-        try {
-            String day = dateString.substring(6, 8);
-            String month = dateString.substring(4, 6);
-            String year = dateString.substring(0, 4);
-            return day + "." + month + "." + year;
-        } catch (Exception e) {
-            return dateString;
+        if (existing.isEmpty()) { // @rpg-trace: n1708
+            ClaimReleaseRequest request = new ClaimReleaseRequest(); // @rpg-trace: n1711
+            request.setG70Kzl(companyCode); // @rpg-trace: n1711
+            request.setG70Rnr(invoiceNr); // @rpg-trace: n1712
+            request.setG70Rdat(invoiceDate); // @rpg-trace: n1713
+            request.setG70Fgnr(""); // @rpg-trace: n1714
+            request.setG70Dat(""); // @rpg-trace: n1715
+            request.setG70Status(""); // @rpg-trace: n1722
+            request.setG70Cusno(java.math.BigDecimal.ZERO);
+            request.setG70Clmno(java.math.BigDecimal.ZERO);
+            request.setG70Clmfl("");
+            claimReleaseRequestRepository.save(request); // @rpg-trace: n1723
         }
     }
+
+    private String nullSafe(String value) {
+        return value == null ? "" : value;
+    }
+
+    private record ColorResult(String color, int errorCount) {}
 }

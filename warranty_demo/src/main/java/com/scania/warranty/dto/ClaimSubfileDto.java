@@ -7,24 +7,17 @@
 package com.scania.warranty.dto;
 
 public record ClaimSubfileDto(
-    String pakz,
-    String rechNr,
-    String rechDatum,
-    String auftragsNr,
-    String claimNr,
-    String chassisNr,
-    String kennzeichen,
-    String repDatum,
-    Integer kmStand,
-    String kdNr,
-    String kdName,
-    String claimNrSde,
-    Integer statusCodeSde,
-    String statusText,
-    boolean colorRed,
-    boolean colorYellow,
-    boolean colorBlue,
-    String colorCode,
-    int failureCount
+    String companyCode,
+    String claimNumber,
+    String invoiceNumber,
+    String invoiceDate,
+    String chassisNumber,
+    String customerNumber,
+    String customerName,
+    String demandCode,
+    Integer statusCode,
+    String statusDescription,
+    Integer errorCount,
+    String colorIndicator
 ) {
 }

@@ -14,19 +14,20 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-/**
- * Repository for claim error/failure details (HSG73PF).
- */
 @Repository
 public interface ClaimErrorRepository extends JpaRepository<ClaimError, ClaimErrorId> {
 
-    // @origin HS1210 L941-941 (CHAIN)
-    @Query("SELECT e FROM ClaimError e WHERE e.pakz = :pakz AND e.claimNr = :claimNr ORDER BY e.fehlerNr")
-    // @origin HS1210 L905-907 (IF)
-    List<ClaimError> findByClaimNumber(@Param("pakz") String pakz, @Param("claimNr") String claimNr);
+    @Query("SELECT ce FROM ClaimError ce WHERE ce.g73000 = :pkz AND ce.g73050 = :claimNr ORDER BY ce.g73060")
+    List<ClaimError> findByCompanyAndClaimNr(@Param("pkz") String pkz, @Param("claimNr") String claimNr); // @rpg-trace: n457
 
-    @Query("SELECT e FROM ClaimError e WHERE e.pakz = :pakz AND e.rechNr = :rechNr AND e.rechDatum = :rechDatum AND e.auftragsNr = :auftragsNr AND e.bereich = :bereich AND e.claimNr = :claimNr ORDER BY e.fehlerNr")
-    // @origin HS1210 L2560-2562 (IF)
-    List<ClaimError> findByInvoiceAndClaimKey(@Param("pakz") String pakz, @Param("rechNr") String rechNr, @Param("rechDatum") String rechDatum, @Param("auftragsNr") String auftragsNr, @Param("bereich") String bereich, @Param("claimNr") String claimNr);
+    @Query("SELECT ce FROM ClaimError ce WHERE ce.g73000 = :pkz AND ce.g73050 = :claimNr AND ce.g73290 = 0")
+    List<ClaimError> findOpenErrorsByCompanyAndClaimNr(@Param("pkz") String pkz, @Param("claimNr") String claimNr); // @rpg-trace: n461
+
+    void deleteByG73000AndG73050(@Param("pkz") String pkz, @Param("claimNr") String claimNr); // @rpg-trace: n592
+
+    @Query("SELECT ce FROM ClaimError ce WHERE ce.g73000 = :pkz AND ce.g73050 = :claimNr AND ce.g73140 = :demandCode")
+    Optional<ClaimError> findFirstByCompanyClaimAndDemandCode(@Param("pkz") String pkz, @Param("claimNr") String claimNr,
+                                                              @Param("demandCode") String demandCode); // @rpg-trace: n1732
 }

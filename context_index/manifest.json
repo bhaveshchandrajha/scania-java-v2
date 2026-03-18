@@ -10,7 +10,9 @@
         "FISTAM",
         "S3F002"
       ],
-      "calls": [],
+      "calls": [
+        "n1779"
+      ],
       "calledBy": []
     },
     {
@@ -27,7 +29,10 @@
         "HSG71LF2",
         "HSG73PF"
       ],
-      "calls": [],
+      "calls": [
+        "n1919",
+        "n1983"
+      ],
       "calledBy": []
     },
     {
@@ -42,7 +47,9 @@
         "HSGPSLF3"
       ],
       "calls": [],
-      "calledBy": []
+      "calledBy": [
+        "n1"
+      ]
     },
     {
       "unitId": "HS1210",
@@ -64,7 +71,9 @@
         "HSGPSPF"
       ],
       "calls": [],
-      "calledBy": []
+      "calledBy": [
+        "n404"
+      ]
     },
     {
       "unitId": "HS1210",
@@ -74,7 +83,9 @@
       "sourceFileId": "qsys:HSSRC/QRPGLESRC/HS1210",
       "dbFilesUsed": [],
       "calls": [],
-      "calledBy": []
+      "calledBy": [
+        "n404"
+      ]
     },
     {
       "unitId": "HS1210",
@@ -128,7 +139,15 @@
         "S3F105",
         "S3F106"
       ],
-      "calls": [],
+      "calls": [
+        "n2698",
+        "n2757",
+        "n2793",
+        "n3215",
+        "n3357",
+        "n3445",
+        "n3455"
+      ],
       "calledBy": []
     },
     {
@@ -138,7 +157,9 @@
       "name": "loadText",
       "sourceFileId": "qsys:HSSRC/QRPGLESRC/HS1212",
       "dbFilesUsed": [],
-      "calls": [],
+      "calls": [
+        "n2698"
+      ],
       "calledBy": []
     },
     {
@@ -178,8 +199,14 @@
       "name": "loadTextFromSfl",
       "sourceFileId": "qsys:HSSRC/QRPGLESRC/HS1212",
       "dbFilesUsed": [],
-      "calls": [],
-      "calledBy": []
+      "calls": [
+        "n2698"
+      ],
+      "calledBy": [
+        "n2575",
+        "n2698",
+        "n498"
+      ]
     },
     {
       "unitId": "HS1212",
@@ -189,7 +216,9 @@
       "sourceFileId": "qsys:HSSRC/QRPGLESRC/HS1212",
       "dbFilesUsed": [],
       "calls": [],
-      "calledBy": []
+      "calledBy": [
+        "n498"
+      ]
     },
     {
       "unitId": "HS1212",
@@ -198,8 +227,13 @@
       "name": "CheckClaim",
       "sourceFileId": "qsys:HSSRC/QRPGLESRC/HS1212",
       "dbFilesUsed": [],
-      "calls": [],
-      "calledBy": []
+      "calls": [
+        "n3187",
+        "n3445"
+      ],
+      "calledBy": [
+        "n498"
+      ]
     },
     {
       "unitId": "HS1212",
@@ -209,7 +243,9 @@
       "sourceFileId": "qsys:HSSRC/QRPGLESRC/HS1212",
       "dbFilesUsed": [],
       "calls": [],
-      "calledBy": []
+      "calledBy": [
+        "n2793"
+      ]
     },
     {
       "unitId": "HS1212",
@@ -219,7 +255,9 @@
       "sourceFileId": "qsys:HSSRC/QRPGLESRC/HS1212",
       "dbFilesUsed": [],
       "calls": [],
-      "calledBy": []
+      "calledBy": [
+        "n498"
+      ]
     },
     {
       "unitId": "HS1212",
@@ -229,7 +267,9 @@
       "sourceFileId": "qsys:HSSRC/QRPGLESRC/HS1212",
       "dbFilesUsed": [],
       "calls": [],
-      "calledBy": []
+      "calledBy": [
+        "n498"
+      ]
     },
     {
       "unitId": "HS1212",
@@ -239,7 +279,11 @@
       "sourceFileId": "qsys:HSSRC/QRPGLESRC/HS1212",
       "dbFilesUsed": [],
       "calls": [],
-      "calledBy": []
+      "calledBy": [
+        "n2793",
+        "n3455",
+        "n498"
+      ]
     },
     {
       "unitId": "HS1212",
@@ -248,8 +292,12 @@
       "name": "getModules",
       "sourceFileId": "qsys:HSSRC/QRPGLESRC/HS1212",
       "dbFilesUsed": [],
-      "calls": [],
-      "calledBy": []
+      "calls": [
+        "n3445"
+      ],
+      "calledBy": [
+        "n498"
+      ]
     },
     {
       "unitId": "HS1212",

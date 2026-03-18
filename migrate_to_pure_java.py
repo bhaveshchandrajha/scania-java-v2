@@ -36,6 +36,7 @@ import json
 import os
 import re
 import sys
+import threading
 import time
 from collections import Counter
 from pathlib import Path
@@ -44,6 +45,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 
 import anthropic
 
+ROOT_DIR = Path(__file__).resolve().parent
 
 # Domain glossary: Map RPG file names to domain entity names
 # This will be expanded based on your domain knowledge
@@ -54,7 +56,19 @@ DOMAIN_GLOSSARY = {
     "HSG73PF": "ClaimFailure",
     "HSG70F": "ClaimHeader",
     "HSG73LF": "ClaimFailure",
+    # Invoice / HSAHKLF3: ONE canonical entity per physical table
+    "HSAHKLF3": "Invoice",
     # Add more mappings as you discover patterns
+}
+
+# Canonical entity per physical table (enforces one entity per table)
+# When multiple logical files map to same physical table, use this entity name.
+TABLE_TO_CANONICAL_ENTITY = {
+    "HSAHKLF3": "Invoice",  # Not InvoiceHeader, not Hsahklf3
+    "HSG71LF2": "Claim",
+    "HSG71PF": "Claim",
+    "HSG73PF": "ClaimError",  # ClaimFailure vs ClaimError - use ClaimError for HSG73PF
+    "HSG70F": "ClaimHeader",
 }
 
 # Value object mappings: RPG concepts → Domain value objects
@@ -371,6 +385,41 @@ def resolve_duplicate_column_names(db_contracts: List[Dict]) -> List[Dict]:
     return contracts
 
 
+def consolidate_db_contracts_by_table(db_contracts: List[Dict]) -> List[Dict]:
+    """
+    Enforce one contract per physical table. Merge multiple contracts that map
+    to the same physical table (e.g. HSAHKLF3 via different logical files) into
+    a single contract with the union of all columns. Deduplicates columns by name.
+    """
+    by_table: Dict[str, Dict] = {}
+    for contract in db_contracts:
+        table_name = (contract.get("fileName") or contract.get("name") or "Unknown").strip().upper()
+        if not table_name or table_name == "UNKNOWN":
+            continue
+        if table_name not in by_table:
+            by_table[table_name] = {
+                "fileName": table_name,
+                "name": table_name,
+                "columns": [],
+                "symbolId": contract.get("symbolId"),
+                "typeId": contract.get("typeId"),
+            }
+        existing = by_table[table_name]
+        cols = contract.get("columns") or []
+        seen_col_names: Set[str] = set()
+        for c in existing.get("columns", []):
+            n = str(c.get("name", "")).strip()
+            if n:
+                seen_col_names.add(n.upper())
+        for c in cols:
+            col_copy = copy.deepcopy(c)
+            n = str(col_copy.get("name", "")).strip()
+            if n and n.upper() not in seen_col_names:
+                seen_col_names.add(n.upper())
+                existing["columns"].append(col_copy)
+    return list(by_table.values())
+
+
 def extract_domain_entities(db_contracts: List[Dict]) -> List[Dict]:
     """
     Extract domain entities from dbContracts.
@@ -385,8 +434,8 @@ def extract_domain_entities(db_contracts: List[Dict]) -> List[Dict]:
     entities = []
     for contract in db_contracts:
         table_name = (contract.get("fileName") or contract.get("name") or "Unknown").strip()
-        # Map to domain name using glossary
-        domain_name = DOMAIN_GLOSSARY.get(table_name)
+        # Prefer canonical entity mapping (one entity per physical table)
+        domain_name = TABLE_TO_CANONICAL_ENTITY.get(table_name.upper()) or DOMAIN_GLOSSARY.get(table_name)
         if not domain_name:
             # Infer domain name: remove prefixes, use meaningful part
             # HSG71LF2 -> Claim (if HSG71 is claim-related)
@@ -677,6 +726,70 @@ def _build_static_system_prompt() -> str:
         """)
 
 
+def _format_call_graph_for_prompt(call_graph: Dict[str, Any]) -> str:
+    """Format call graph (tables, subroutines, entity consolidation) for LLM context."""
+    if not call_graph:
+        return ""
+    lines = []
+    table_access = call_graph.get("tableAccess") or {}
+    subroutines = call_graph.get("subroutinesInvoked") or []
+    calls_with_details = call_graph.get("callsWithDetails") or []
+    called_by = call_graph.get("calledBy") or []
+
+    if table_access:
+        lines.append("### Tables used (file operations in this unit)")
+        for table_name, ops in sorted(table_access.items()):
+            opcodes = sorted(set(o.get("opcode", "?") for o in ops))
+            lines.append(f"- **{table_name}**: {', '.join(opcodes)}")
+        lines.append("")
+
+    if subroutines:
+        lines.append("### Subroutines/programs invoked")
+        lines.append(", ".join(subroutines))
+        lines.append("")
+
+    if calls_with_details:
+        lines.append("### Call details (EXSR/CALLP)")
+        for c in calls_with_details[:20]:  # Limit to avoid token bloat
+            callee = c.get("calleeName") or c.get("calleeNodeId") or "?"
+            op = c.get("opcode") or "?"
+            lines.append(f"- {op} → {callee}")
+        if len(calls_with_details) > 20:
+            lines.append(f"- ... and {len(calls_with_details) - 20} more")
+        lines.append("")
+
+    if called_by:
+        lines.append("### Called by (callers of this unit)")
+        lines.append(f"Node IDs: {', '.join(called_by[:10])}")
+        if len(called_by) > 10:
+            lines.append(f"... and {len(called_by) - 10} more")
+        lines.append("")
+
+    if not lines:
+        return ""
+
+    canonical_rules = []
+    for tbl, ent in sorted(TABLE_TO_CANONICAL_ENTITY.items()):
+        canonical_rules.append(f"  - {tbl} → {ent} (ONLY this entity; no duplicates)")
+    canonical_section = ""
+    if canonical_rules:
+        canonical_section = (
+            "\n**Canonical entity per table (MANDATORY - generate exactly one entity per table):**\n"
+            + "\n".join(canonical_rules)
+            + "\n"
+        )
+    return (
+        "## Application call graph\n"
+        "Use this to understand table access patterns and call relationships. "
+        "**Entity consolidation (MANDATORY)**: Generate exactly ONE JPA entity per physical table. "
+        "Do NOT create Invoice, InvoiceHeader, and Hsahklf3 for HSAHKLF3—use only Invoice. "
+        "Map RPG file names to domain entities consistently."
+        + canonical_section
+        + "\n"
+        + "\n".join(lines)
+    )
+
+
 def _build_trace_source_map(statement_nodes: List[Dict]) -> str:
     """Build a compact RPG source line → AST node ID map for LLM traceability annotations."""
     if not statement_nodes:
@@ -714,6 +827,8 @@ def build_pure_java_prompt(
     context: dict,
     rpg_source_override: Optional[str] = None,
     rpg_range: Optional[tuple] = None,
+    include_call_graph: bool = True,
+    existing_entities: Optional[Dict[str, str]] = None,
 ) -> str:
     """
     Build enhanced prompt for Pure Java migration (Track B).
@@ -732,6 +847,8 @@ def build_pure_java_prompt(
     narrative = context.get("narrative", "")
     rpg_snippet = context.get("rpgSnippet", "")
     db_contracts = context.get("dbContracts", [])
+    # Enforce one contract per physical table (merge duplicates)
+    db_contracts = consolidate_db_contracts_by_table(db_contracts)
     dupes = check_duplicate_column_names(db_contracts)
     if dupes:
         for tbl, col, cnt in dupes:
@@ -794,6 +911,24 @@ def build_pure_java_prompt(
     statement_nodes = context.get("statementNodes", [])
     line_to_node_map = context.get("lineToNodeMap", {})
     trace_source_map = _build_trace_source_map(statement_nodes)
+
+    # Call graph (tables, subroutines, entity consolidation guidance)
+    call_graph = context.get("callGraph", {}) if include_call_graph else {}
+    call_graph_section = _format_call_graph_for_prompt(call_graph)
+
+    # Existing entities (integration mode): tables that already have entities in the project
+    existing_entities_section = ""
+    if existing_entities:
+        lines_ex = [
+            "## Existing entities in project (REUSE - do NOT regenerate)",
+            "The following tables already have JPA entities in the target project. "
+            "Use these entity classes in your repositories, services, and DTOs. "
+            "Do NOT generate new entity classes for these tables.",
+            "",
+        ]
+        for tbl, ent in sorted(existing_entities.items()):
+            lines_ex.append(f"- **{tbl}** → use existing `{ent}` (do not create {ent}.java again)")
+        existing_entities_section = "\n".join(lines_ex) + "\n\n"
 
     db_json = json.dumps(db_contracts, indent=2, ensure_ascii=False)
     symbols_json = json.dumps(symbol_metadata, indent=2, ensure_ascii=False)
@@ -907,6 +1042,8 @@ def build_pure_java_prompt(
         --- SYMBOL METADATA START (JSON) ---
         {symbols_json}
         --- SYMBOL METADATA END ---
+        
+        {existing_entities_section}{call_graph_section}
         
         ## RPG SOURCE MAP (use these nodeIds for // @rpg-trace: <nodeId> annotations)
         --- RPG SOURCE MAP START ---
@@ -1107,6 +1244,79 @@ def parse_multi_file_output(java_code: str, output_dir: Path) -> Dict[str, str]:
     return cleaned_files
 
 
+def _get_existing_entities_from_project(target_root: Path) -> Dict[str, str]:
+    """
+    Scan target project for existing @Entity classes and their @Table mappings.
+    Returns table_name (upper) -> entity_class_name. Used in integration mode to
+    tell the LLM which entities already exist so it reuses them instead of creating duplicates.
+    """
+    java_root = target_root / "src" / "main" / "java"
+    if not java_root.is_dir():
+        return {}
+    table_to_entity: Dict[str, str] = {}
+    for jf in java_root.rglob("*.java"):
+        try:
+            content = jf.read_text(encoding="utf-8", errors="ignore")
+        except Exception:
+            continue
+        if "domain" not in str(jf).lower() or "@Entity" not in content:
+            continue
+        table_match = re.search(
+            r'@Table\s*\(\s*name\s*=\s*["\']([^"\']+)["\']',
+            content,
+            re.IGNORECASE,
+        )
+        if not table_match:
+            continue
+        table_name = table_match.group(1).strip().upper()
+        class_match = re.search(r'public\s+(?:class|record)\s+(\w+)', content)
+        entity_name = class_match.group(1) if class_match else jf.stem
+        if table_name not in table_to_entity:
+            table_to_entity[table_name] = entity_name
+    return table_to_entity
+
+
+def _deduplicate_entities_by_table(files: Dict[str, str]) -> Dict[str, str]:
+    """
+    Enforce one entity per physical table. If multiple files map to the same
+    @Table(name="X"), keep only the one whose class name matches the canonical entity.
+    """
+    table_to_files: Dict[str, List[Tuple[str, str, str]]] = {}  # table -> [(file_path, content, entity_name)]
+    for file_path, content in files.items():
+        if "domain" not in file_path.lower() or not content:
+            continue
+        table_match = re.search(
+            r'@Table\s*\(\s*name\s*=\s*["\']([^"\']+)["\']',
+            content,
+            re.IGNORECASE,
+        )
+        if not table_match:
+            continue
+        table_name = table_match.group(1).strip().upper()
+        class_match = re.search(r'public\s+(?:class|record)\s+(\w+)', content)
+        entity_name = class_match.group(1) if class_match else Path(file_path).stem
+        table_to_files.setdefault(table_name, []).append((file_path, content, entity_name))
+    to_remove: Set[str] = set()
+    for table_name, candidates in table_to_files.items():
+        if len(candidates) <= 1:
+            continue
+        canonical = TABLE_TO_CANONICAL_ENTITY.get(table_name)
+        candidates.sort(key=lambda x: x[0])  # Stable order
+        if canonical:
+            matching = [c for c in candidates if c[2] == canonical]
+            keep = matching[0] if matching else candidates[0]
+        else:
+            keep = candidates[0]
+        for fp, _, _ in candidates:
+            if fp != keep[0]:
+                to_remove.add(fp)
+    if to_remove:
+        print(f"// Entity consolidation: dropping {len(to_remove)} duplicate entity file(s) for same table", file=sys.stderr)
+        for fp in to_remove:
+            print(f"//   - {fp}", file=sys.stderr)
+    return {k: v for k, v in files.items() if k not in to_remove}
+
+
 # Layer descriptions for file-level Javadoc (helps maintainers understand generated code)
 _FILE_DESCRIPTION_BY_LAYER = {
     "domain": "Domain entity or value object for the warranty claims model.",
@@ -1301,6 +1511,74 @@ def _run_idclass_fixer(target_root: Path) -> None:
         print(f"// ⚠️  IdClass fixer failed: {e}", file=sys.stderr)
 
 
+def _run_build_with_fix(project_root: Path) -> None:
+    """Run mvn compile; on failure, run fix_compile_errors.py and retry."""
+    import subprocess
+    proc = subprocess.run(
+        ["mvn", "-q", "compile"],
+        cwd=str(project_root),
+        capture_output=True,
+        text=True,
+        timeout=180,
+    )
+    if proc.returncode == 0:
+        print(f"// ✅ Build succeeded (mvn compile)", file=sys.stderr)
+        return
+    log_path = project_root / "target" / "last_compile_errors.txt"
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    combined = (proc.stdout or "") + "\n" + (proc.stderr or "")
+    log_path.write_text(combined, encoding="utf-8", errors="ignore")
+    print(f"// ⚠️  Build failed. Running fix_compile_errors.py...", file=sys.stderr)
+    try:
+        fix_proc = subprocess.run(
+            [sys.executable, str(ROOT_DIR / "fix_compile_errors.py"), str(project_root), str(log_path)],
+            cwd=str(ROOT_DIR),
+            capture_output=True,
+            text=True,
+            timeout=600,
+        )
+        if fix_proc.returncode == 0:
+            rebuild = subprocess.run(
+                ["mvn", "-q", "compile"],
+                cwd=str(project_root),
+                capture_output=True,
+                text=True,
+                timeout=180,
+            )
+            if rebuild.returncode == 0:
+                print(f"// ✅ Build succeeded after LLM fix", file=sys.stderr)
+                return
+    except Exception as e:
+        print(f"// ⚠️  fix_compile_errors failed: {e}", file=sys.stderr)
+    print(f"// ❌ Build still failing after fix attempt. Check {log_path}", file=sys.stderr)
+
+
+def _run_validation(
+    context: dict,
+    java_scan_root: Path,
+    context_path: Path,
+    args: Any,
+) -> None:
+    """Run call-graph validation on migration output."""
+    try:
+        from validate_migration_output import validate_migration_output
+        passed, issues, report = validate_migration_output(context, {}, java_scan_root)
+        print(f"\n// === Call-graph validation ===", file=sys.stderr)
+        print(f"// Entity consolidation: {'PASS' if report['entityConsolidation']['passed'] else 'FAIL'}", file=sys.stderr)
+        print(f"// Subroutine coverage:  {'PASS' if report['subroutineCoverage']['passed'] else 'WARN'}", file=sys.stderr)
+        if issues:
+            for i in issues:
+                print(f"//   - {i}", file=sys.stderr)
+        if not passed:
+            print(f"// ⚠️  Validation FAILED (entity consolidation)", file=sys.stderr)
+        else:
+            print(f"// ✅ Validation passed", file=sys.stderr)
+    except ImportError as e:
+        print(f"// ⚠️  Validation skipped (validate_migration_output not found): {e}", file=sys.stderr)
+    except Exception as e:
+        print(f"// ⚠️  Validation failed: {e}", file=sys.stderr)
+
+
 def _run_ambiguous_mapping_fixer(target_root: Path) -> None:
     """
     Run post-migration ambiguous mapping fixer for duplicate controller endpoints.
@@ -1360,8 +1638,8 @@ def main():
     )
     parser.add_argument(
         "--model",
-        default="claude-sonnet-4-5",
-        help="Anthropic model name (default: claude-sonnet-4-5)",
+        default=None,
+        help="Anthropic model name. Default: Claude Opus if API key has access, else claude-sonnet-4-5.",
     )
     parser.add_argument(
         "--max-tokens",
@@ -1402,6 +1680,21 @@ def main():
         action="store_true",
         help="Do not inject // @origin RPG line annotations into generated Java (traceability in IDE).",
     )
+    parser.add_argument(
+        "--no-call-graph",
+        action="store_true",
+        help="Omit call graph section from prompt (for A/B testing).",
+    )
+    parser.add_argument(
+        "--validate",
+        action="store_true",
+        help="Run call-graph validation after migration (entity consolidation, subroutine coverage).",
+    )
+    parser.add_argument(
+        "--run-build-after",
+        action="store_true",
+        help="Run mvn compile after migration (integration mode only). Uses fix_compile_errors on failure.",
+    )
     args = parser.parse_args()
 
     api_key = os.environ.get("ANTHROPIC_API_KEY")
@@ -1415,6 +1708,23 @@ def main():
     
     if not api_key.startswith("sk-ant-"):
         print("⚠️  Warning: API key doesn't start with 'sk-ant-'. This might be invalid.", file=sys.stderr)
+
+    # Resolve model: explicit --model, else ANTHROPIC_MODEL env, else Opus if available, else Sonnet
+    model = args.model or os.environ.get("ANTHROPIC_MODEL")
+    if not model:
+        try:
+            from check_anthropic_models import check_models
+            model_info = check_models()
+            if model_info.get("opus_available") and model_info.get("opus_model"):
+                model = model_info["opus_model"]
+                print(f"// Using Claude Opus ({model}) for highest accuracy", file=sys.stderr)
+            else:
+                model = "claude-sonnet-4-5"
+                print(f"// Opus not available; using {model}", file=sys.stderr)
+        except Exception as e:
+            model = "claude-sonnet-4-5"
+            print(f"// Model check failed ({e}); using {model}", file=sys.stderr)
+    args.model = model
 
     with open(args.context_file, "r", encoding="utf-8") as f:
         context = json.load(f)
@@ -1475,25 +1785,45 @@ def main():
     
     print(f"// This may take 60-120 seconds for large packages...", file=sys.stderr)
 
+    # Determine output strategy (needed for existing_entities in integration mode)
+    integration_mode = args.target_project is not None
+    target_root = Path(args.target_project) if integration_mode else None
+    existing_entities: Dict[str, str] = {}
+    if integration_mode and target_root and target_root.is_dir():
+        existing_entities = _get_existing_entities_from_project(target_root)
+        if existing_entities:
+            print(f"// Found {len(existing_entities)} existing entity(ies) in project; will instruct LLM to reuse", file=sys.stderr)
+
     system_prompt = _build_static_system_prompt()
-    user_prompt = build_pure_java_prompt(context, rpg_source_override=rpg_source_override, rpg_range=rpg_range)
+    user_prompt = build_pure_java_prompt(
+        context,
+        rpg_source_override=rpg_source_override,
+        rpg_range=rpg_range,
+        include_call_graph=not args.no_call_graph,
+        existing_entities=existing_entities if existing_entities else None,
+    )
     prompt_size_kb = (len(system_prompt) + len(user_prompt)) / 1024
     print(f"// Prompt size: {prompt_size_kb:.1f} KB", file=sys.stderr)
+
+    # Prompt caching: cache system prompt for faster 2nd+ responses (5 min TTL)
+    cache_control = {"type": "ephemeral"}
+    api_timeout = int(os.environ.get("ANTHROPIC_TIMEOUT", "3600"))  # default 60 min for large nodes
+    if prompt_size_kb > 400:
+        print(f"// Large prompt ({prompt_size_kb:.0f} KB); using extended API timeout ({api_timeout}s)", file=sys.stderr)
 
     client = anthropic.Anthropic(api_key=api_key)
 
     import time
     start_time = time.time()
     
-    # Determine output strategy
-    integration_mode = args.target_project is not None
+    # Determine output strategy (integration_mode/target_root set above)
     if integration_mode:
-        target_root = Path(args.target_project)
-        if not target_root.is_dir():
+        if not target_root or not target_root.is_dir():
             raise SystemExit(f"Target project root not found: {target_root}")
         base_output_dir = target_root / "src/main/java"
         print(f"// Integration mode: writing into existing project {target_root}", file=sys.stderr)
     else:
+        target_root = None
         base_output_dir = Path(args.output_dir)
         print(f"// Standalone mode: writing into {base_output_dir} / {unit_id}_{node_id}_pure_java", file=sys.stderr)
 
@@ -1513,7 +1843,8 @@ def main():
                         "content": user_prompt,
                     }
                 ],
-                timeout=1200.0,  # 20 minutes
+                timeout=float(api_timeout),
+                extra_body={"cache_control": cache_control},
             ) as stream:
                 token_count = 0
                 java_code_stream = ""
@@ -1537,6 +1868,8 @@ def main():
                 # Parse and write multi-file output
                 print(f"\n// Parsing multi-file output...", file=sys.stderr)
                 files = parse_multi_file_output(java_code_stream, base_output_dir)
+                if integration_mode:
+                    files = _deduplicate_entities_by_table(files)
                 print(f"// Found {len(files)} Java files to write", file=sys.stderr)
                 if files:
                     output_dir, written_files = write_multi_file_output(
@@ -1561,37 +1894,57 @@ def main():
                         _generate_ui_schema_if_applicable(context, target_root, unit_id)
                     else:
                         print(f"// ✅ Migration complete! Files written to: {output_dir}", file=sys.stderr)
+                    if args.validate and written_files:
+                        scan_root = (target_root / "src/main/java") if integration_mode else output_dir
+                        _run_validation(context, scan_root, context_path, args)
+                    if args.run_build_after and integration_mode:
+                        _run_build_with_fix(target_root)
                 else:
                     print("// ⚠️  WARNING: No files extracted from output. Check parser logic.", file=sys.stderr)
         else:
-            print("// Sending request to LLM (this may take 60-120 seconds for large prompts)...", file=sys.stderr)
+            print("// Sending request to LLM (this may take 5–30+ min for large context)...", file=sys.stderr, flush=True)
             response = None
             max_retries = 3
             retry_delay_sec = 15
-            for attempt in range(max_retries):
-                try:
-                    response = client.messages.create(
-                        model=args.model,
-                        max_tokens=args.max_tokens,
-                        temperature=0.2,
-                        system=system_prompt,
-                        messages=[
-                            {
-                                "role": "user",
-                                "content": user_prompt,
-                            }
-                        ],
-                        timeout=1200.0,  # 20 minutes
-                    )
-                    break
-                except Exception as e:
-                    err_str = str(e)
-                    is_500 = "500" in err_str or "Internal server error" in err_str or (getattr(e, "status_code", None) == 500)
-                    if is_500 and attempt < max_retries - 1:
-                        print(f"// API server error (attempt {attempt + 1}/{max_retries}). Retrying in {retry_delay_sec}s...", file=sys.stderr)
-                        time.sleep(retry_delay_sec)
-                    else:
-                        raise
+            heartbeat_stop = threading.Event()
+
+            def llm_heartbeat() -> None:
+                """Print progress every 60s during LLM call so UI shows activity."""
+                t0 = time.time()
+                while not heartbeat_stop.wait(60):
+                    elapsed = time.time() - t0
+                    print(f"// LLM still processing... (elapsed {elapsed:.0f}s)", file=sys.stderr, flush=True)
+
+            hb_thread = threading.Thread(target=llm_heartbeat, daemon=True)
+            hb_thread.start()
+            try:
+                for attempt in range(max_retries):
+                    try:
+                        response = client.messages.create(
+                            model=args.model,
+                            max_tokens=args.max_tokens,
+                            temperature=0.2,
+                            system=system_prompt,
+                            messages=[
+                                {
+                                    "role": "user",
+                                    "content": user_prompt,
+                                }
+                            ],
+                            timeout=float(api_timeout),
+                            extra_body={"cache_control": cache_control},
+                        )
+                        break
+                    except Exception as e:
+                        err_str = str(e)
+                        is_500 = "500" in err_str or "Internal server error" in err_str or (getattr(e, "status_code", None) == 500)
+                        if is_500 and attempt < max_retries - 1:
+                            print(f"// API server error (attempt {attempt + 1}/{max_retries}). Retrying in {retry_delay_sec}s...", file=sys.stderr)
+                            time.sleep(retry_delay_sec)
+                        else:
+                            raise
+            finally:
+                heartbeat_stop.set()
             elapsed = time.time() - start_time
             print(f"// LLM response received in {elapsed:.1f} seconds", file=sys.stderr)
             
@@ -1614,6 +1967,8 @@ def main():
             # Parse and write multi-file output
             print(f"// Parsing multi-file output...", file=sys.stderr)
             files = parse_multi_file_output(java_code, base_output_dir)
+            if integration_mode:
+                files = _deduplicate_entities_by_table(files)
             print(f"// Found {len(files)} Java files to write", file=sys.stderr)
             if files:
                 output_dir, written_files = write_multi_file_output(
@@ -1638,6 +1993,11 @@ def main():
                     _generate_ui_schema_if_applicable(context, target_root, unit_id)
                 else:
                     print(f"// ✅ Migration complete! Files written to: {output_dir}", file=sys.stderr)
+                if args.validate and written_files:
+                    scan_root = (target_root / "src/main/java") if integration_mode else output_dir
+                    _run_validation(context, scan_root, context_path, args)
+                if args.run_build_after and integration_mode:
+                    _run_build_with_fix(target_root)
             else:
                 print("// ⚠️  WARNING: No files extracted from output. Check parser logic.", file=sys.stderr)
                 print("// Output preview (first 500 chars):", file=sys.stderr)

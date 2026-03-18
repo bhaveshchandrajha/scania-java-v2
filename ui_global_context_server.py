@@ -28,10 +28,13 @@ import json
 import os
 import subprocess
 import sys
+import threading
 import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
 
 ROOT_DIR = Path(__file__).resolve().parent
 
@@ -178,7 +181,7 @@ def _run_maven_build_with_autofix(proj_path: Path, progress_callback=None, hitl_
     suggested_fixes = None
     while exit_code is not None and exit_code != 0 and llm_pass < MAX_LLM_PASSES:
         llm_pass += 1
-        use_propose_only = hitl_mode and llm_pass == 1
+        use_propose_only = hitl_mode  # always show HITL on every failure when in HITL mode
         _progress(f"Running LLM compile fixer (pass {llm_pass}/{MAX_LLM_PASSES}){' [propose-only for HITL]' if use_propose_only else ''}...")
         try:
             log_path = proj_path / "target" / f"last_compile_errors_pass{llm_pass}.txt"
@@ -255,9 +258,12 @@ def _run_maven_build_with_autofix(proj_path: Path, progress_callback=None, hitl_
         for test_fix_pass in range(max_test_fix_passes):
             try:
                 # -Dmaven.test.skip=true skips test-compile AND test execution (avoids test/domain mismatch)
-                mvn_skip = "-Dmaven.test.skip=true" if skip_tests else "-DskipTests"
+                # When skip_tests=False, pass no flag so mvn package runs tests
+                mvn_args = ["mvn", "-f", "pom.xml", "-T", "1C", "-q", "package"]
+                if skip_tests:
+                    mvn_args.append("-Dmaven.test.skip=true")
                 proc = subprocess.run(
-                    ["mvn", "-f", "pom.xml", "-T", "1C", "-q", "package", mvn_skip],
+                    mvn_args,
                     cwd=str(proj_path),
                     capture_output=True,
                     text=True,
@@ -266,27 +272,30 @@ def _run_maven_build_with_autofix(proj_path: Path, progress_callback=None, hitl_
                 pack_out = (proc.stdout or "") + (proc.stderr or "")
                 if proc.returncode != 0:
                     test_output = pack_out
+                    # If package/tests failed with Ambiguous mapping, try fix and retry
+                    if "Ambiguous mapping" in (pack_out or "") and test_fix_pass < max_test_fix_passes - 1:
+                        try:
+                            from fix_ambiguous_mapping import run_fix as run_ambiguous_mapping_fix
+                            count, _ = run_ambiguous_mapping_fix(proj_path, pack_out)
+                            if count > 0:
+                                _progress(f"Ambiguous mapping fixer: {count} endpoint(s) fixed. Retrying...")
+                                continue
+                        except Exception:
+                            pass
                     break
                 package_ok = True
                 if skip_tests:
                     test_ok = True
                     test_summary = "Tests skipped (SKIP_TESTS=1)"
                     break
-                proc = subprocess.run(
-                    ["mvn", "-f", "pom.xml", "-q", "test"],
-                    cwd=str(proj_path),
-                    capture_output=True,
-                    text=True,
-                    timeout=300,
-                )
-                test_output = (proc.stdout or "") + (proc.stderr or "")
-                test_ok = proc.returncode == 0
+                # When skip_tests=False, mvn package already ran tests; use its output
+                test_output = pack_out
+                test_ok = True  # package succeeded so tests passed
                 for line in (test_output or "").splitlines():
                     if "Tests run:" in line and "Failures:" in line:
                         test_summary = line.strip()
                         break
-                if test_ok:
-                    break
+                break
                 # If tests failed with Ambiguous mapping, try fix and retry
                 if "Ambiguous mapping" in (test_output or "") and test_fix_pass < max_test_fix_passes - 1:
                     try:
@@ -448,9 +457,10 @@ class GlobalContextHandler(BaseHTTPRequestHandler):
                     ast_files = list(sub.glob("**/*-ast.json"))
                     if ast_files:
                         rel = f"JSON_ast/{sub.name}"
+                        label = " (PKS revised, column redundancy fix)" if "20260311" in sub.name else None
                         ast_dirs.append({
                             "path": rel,
-                            "label": None,
+                            "label": label,
                             "fileCount": len(ast_files),
                         })
 
@@ -462,15 +472,23 @@ class GlobalContextHandler(BaseHTTPRequestHandler):
                 if (candidate / "HSSRC" / "QRPGLESRC").is_dir():
                     rpg_dirs.append(str(candidate))
 
-            # Look for PoC zip files
+            # Look for PoC and dated AST zip files (20260311, 20260227)
             for zip_path in ROOT_DIR.glob("PoC_*.zip"):
                 zip_files.append({"path": str(zip_path)})
+            for zip_path in ROOT_DIR.glob("202*.zip"):
+                zip_files.append({"path": str(zip_path)})
+
+            # Prefer JSON_20260311 (PKS revised AST) as default when present
+            default_ast = "JSON_ast/JSON_20260227"
+            if ast_dirs:
+                json_20260311 = next((d["path"] for d in ast_dirs if "20260311" in d["path"]), None)
+                default_ast = json_20260311 or ast_dirs[-1]["path"]
 
             result = {
                 "astDirs": ast_dirs,
                 "ddsAstDirs": dds_ast_dirs,
                 "rpgDirs": rpg_dirs,
-                "defaultAstDir": ast_dirs[-1]["path"] if ast_dirs else "JSON_ast/JSON_20260227",
+                "defaultAstDir": default_ast,
                 "defaultRpgDir": rpg_dirs[0] if rpg_dirs else None,
             }
             if zip_files:
@@ -512,6 +530,15 @@ class GlobalContextHandler(BaseHTTPRequestHandler):
                         "nodes": nodes,
                     })
             self._send_json(result)
+            return
+
+        if parsed.path == "/api/check-models":
+            try:
+                from check_anthropic_models import check_models
+                result = check_models()
+                self._send_json(result)
+            except Exception as e:
+                self._send_json({"opus_available": False, "opus_model": None, "error": str(e)})
             return
 
         if parsed.path == "/api/build-context":
@@ -613,6 +640,18 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                 self._send_json({"logTail": tail[-8000:] if len(tail) > 8000 else tail})
             except Exception as e:
                 self._send_json({"logTail": "", "error": str(e)})
+            return
+
+        # Proxy to warranty app (avoids CORS when UI is on 8003 and app on 8081)
+        app_port = os.environ.get("APP_PORT", "8081")
+        app_base = f"http://127.0.0.1:{app_port}"
+        if parsed.path == "/api/proxy/app-status":
+            try:
+                req = Request(app_base + "/demo.html", method="GET")
+                with urlopen(req, timeout=5) as resp:
+                    self._send_json({"ok": True, "status": resp.status})
+            except (URLError, HTTPError, OSError) as e:
+                self._send_json({"ok": False, "error": str(e)}, status=502)
             return
 
         if parsed.path == "/api/knowledge-graph-data":
@@ -1487,15 +1526,42 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
     def do_POST(self):
         parsed = urlparse(self.path)
 
+        # Proxy to warranty app (avoids CORS when UI is on 8003 and app on 8081)
+        app_port = os.environ.get("APP_PORT", "8081")
+        app_base = f"http://127.0.0.1:{app_port}"
+        if parsed.path == "/api/proxy/seed":
+            content_length = int(self.headers.get("Content-Length", 0))
+            if content_length > 0:
+                self.rfile.read(content_length)
+            try:
+                req = Request(app_base + "/api/seed", method="POST", data=b"")
+                with urlopen(req, timeout=10) as resp:
+                    body = resp.read().decode("utf-8", errors="replace")
+                    try:
+                        data = json.loads(body)
+                    except json.JSONDecodeError:
+                        data = {"status": "ok" if resp.status == 200 else "error", "message": body}
+                    self._send_json(data)
+            except HTTPError as e:
+                err_body = e.read().decode("utf-8", errors="replace") if e.fp else str(e)
+                try:
+                    err_data = json.loads(err_body)
+                except json.JSONDecodeError:
+                    err_data = {"status": "error", "message": err_body}
+                self._send_json(err_data, status=e.code)
+            except (URLError, OSError) as e:
+                self._send_json({"status": "error", "message": str(e)}, status=502)
+            return
+
         if parsed.path == "/api/build-global-context":
             content_length = int(self.headers.get("Content-Length", 0))
             if content_length > 0:
                 body = json.loads(self.rfile.read(content_length).decode("utf-8"))
-                ast_dir = body.get("astDir", "JSON_ast/JSON_20260227")
+                ast_dir = body.get("astDir", "JSON_ast/JSON_20260311")
                 rpg_dir = body.get("rpgDir", "")
             else:
                 params = parse_qs(parsed.query)
-                ast_dir = params.get("astDir", ["JSON_ast/JSON_20260227"])[0]
+                ast_dir = params.get("astDir", ["JSON_ast/JSON_20260311"])[0]
                 rpg_dir = params.get("rpgDir", [""])[0]
 
             # Resolve RPG directory (best-effort)
@@ -1685,8 +1751,9 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                     except Exception:
                         continue
 
-            # Build adjacency: caller -> [callee]
+            # Build adjacency: caller -> [callee] and reverse: callee -> [caller]
             adjacency = {}
+            reverse_adjacency = {}  # callee -> [caller]; for dependency order
             if call_data:
                 for prog in call_data.get("programs", []):
                     if prog.get("programId") != program_id:
@@ -1696,8 +1763,9 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                         callee = call.get("calleeNodeId")
                         if caller and callee:
                             adjacency.setdefault(caller, set()).add(callee)
+                            reverse_adjacency.setdefault(callee, set()).add(caller)
 
-            # BFS from entry_node_id over CALLS edges
+            # BFS from entry_node_id over CALLS edges to get the full slice
             visited = set()
             queue = [entry_node_id]
             while queue:
@@ -1709,7 +1777,33 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                     if succ not in visited:
                         queue.append(succ)
 
-            nodes_in_slice = sorted(visited)
+            nodes_set = visited
+
+            # Topological sort: migrate callees before callers (dependency order)
+            # Graph: callee -> caller (reverse_adjacency). Topological order = callees first.
+            # Kahn's algorithm: in_degree[caller] = number of callees that call it.
+            in_degree = {n: 0 for n in nodes_set}
+            for callee, callers in reverse_adjacency.items():
+                for caller in callers:
+                    if caller in nodes_set:
+                        in_degree[caller] = in_degree.get(caller, 0) + 1
+            topo_queue = sorted(n for n in nodes_set if in_degree.get(n, 0) == 0)
+            topo_order = []
+            while topo_queue:
+                n = topo_queue.pop(0)
+                topo_order.append(n)
+                # In reverse graph, n points to its callers; reduce their in-degree
+                for succ in reverse_adjacency.get(n, []):
+                    if succ not in nodes_set:
+                        continue
+                    in_degree[succ] = in_degree.get(succ, 0) - 1
+                    if in_degree[succ] == 0:
+                        topo_queue.append(succ)
+            # Any remaining (cycle) fall back to sorted
+            remaining = [n for n in nodes_set if n not in topo_order]
+            if remaining:
+                topo_order.extend(sorted(remaining))
+            nodes_in_slice = topo_order
 
             # Determine context files
             context_files = []
@@ -1768,15 +1862,47 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
             n_files = len(context_files)
             self._start_chunked_response()
 
+            # Check for large context (CLI mode: extended timeout, Opus, prompt caching)
+            LARGE_CONTEXT_KB = 400
+            any_large = False
+            for cf in context_files:
+                try:
+                    sz = Path(cf).stat().st_size
+                    if sz > LARGE_CONTEXT_KB * 1024:
+                        any_large = True
+                        break
+                except Exception:
+                    pass
+
             def send_progress(msg: str) -> None:
                 try:
                     self._write_chunked_line(json.dumps({"progress": msg}))
                 except (BrokenPipeError, ConnectionResetError):
                     pass
 
+            def send_log(line: str) -> None:
+                """Stream a log line to the UI (append to live log area)."""
+                if not line:
+                    return
+                try:
+                    self._write_chunked_line(json.dumps({"log": line}))
+                except (BrokenPipeError, ConnectionResetError):
+                    pass
+
+            if any_large:
+                send_progress("Context size is large - running in CLI mode (extended timeout, Opus if available, prompt caching)")
+
             for i, cf in enumerate(context_files):
                 cf_name = Path(cf).name
-                send_progress(f"Migrating {i + 1}/{n_files}: {cf_name}...")
+                cf_size_kb = 0
+                try:
+                    cf_size_kb = Path(cf).stat().st_size / 1024
+                except Exception:
+                    pass
+                if cf_size_kb > LARGE_CONTEXT_KB:
+                    send_progress(f"Migrating {i + 1}/{n_files}: {cf_name}... (large context {cf_size_kb:.0f} KB - CLI mode)")
+                else:
+                    send_progress(f"Migrating {i + 1}/{n_files}: {cf_name}...")
                 cmd = [
                     sys.executable,
                     str(ROOT_DIR / "migrate_to_pure_java.py"),
@@ -1784,6 +1910,7 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                     "--target-project",
                     target_project,
                     "--no-inline-origin",  # Skip inject_origin (saves 1-3+ min as project grows)
+                    "--validate",  # Call-graph validation (entity consolidation, subroutine coverage)
                 ]
                 if rpg_file_path:
                     cmd.extend(["--rpg-file", str(rpg_file_path)])
@@ -1793,25 +1920,60 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
                         text=True,
+                        bufsize=1,  # Line-buffered for real-time streaming
                         cwd=str(ROOT_DIR),
                     )
                     start = time.monotonic()
-                    migrate_timeout = 1500  # 25 min for large nodes like n404 (~23k lines)
+                    migrate_timeout = int(os.environ.get("MIGRATE_TIMEOUT", "3600"))  # default 60 min for large nodes like n404
+                    stdout_lines: list[str] = []
+                    stderr_lines: list[str] = []
+
+                    def read_stream(pipe, lines: list[str], label: str) -> None:
+                        try:
+                            for line in iter(pipe.readline, ""):
+                                if line:
+                                    lines.append(line)
+                                    send_log(line.rstrip())
+                        except (BrokenPipeError, ConnectionResetError, ValueError):
+                            pass
+                        finally:
+                            try:
+                                pipe.close()
+                            except Exception:
+                                pass
+
+                    t_out = threading.Thread(target=read_stream, args=(proc.stdout, stdout_lines, "out"))
+                    t_err = threading.Thread(target=read_stream, args=(proc.stderr, stderr_lines, "err"))
+                    t_out.daemon = True
+                    t_err.daemon = True
+                    t_out.start()
+                    t_err.start()
+
+                    last_heartbeat = start
                     while proc.poll() is None and (time.monotonic() - start) < migrate_timeout:
-                        time.sleep(15)  # Check every 15s (was 45s) for better progress feedback
-                        if proc.poll() is None:
-                            send_progress(f"Still migrating {cf_name}... (LLM may take several minutes)")
+                        time.sleep(5)  # Poll every 5s
+                        now = time.monotonic()
+                        if now - last_heartbeat >= 30:  # Heartbeat every 30s so user knows it's alive
+                            send_progress(f"Still migrating {cf_name}... (elapsed {now - start:.0f}s — LLM may take 5–30+ min for large context)")
+                            last_heartbeat = now
+
+                    t_out.join(timeout=2)
+                    t_err.join(timeout=2)
+                    t_out.join(timeout=1)
+                    t_err.join(timeout=1)
+
                     if proc.poll() is None:
                         proc.kill()
                         proc.wait()
                         runs.append({"contextFile": cf, "error": f"Migration timeout ({migrate_timeout}s)"})
                     else:
-                        stdout, stderr = proc.communicate()
+                        stdout_text = "\n".join(stdout_lines)
+                        stderr_text = "\n".join(stderr_lines)
                         runs.append({
                             "contextFile": cf,
                             "returnCode": proc.returncode,
-                            "stdoutPreview": (stdout or "")[:4000],
-                            "stderrPreview": (stderr or "")[:4000],
+                            "stdoutPreview": (stdout_text or "")[:4000],
+                            "stderrPreview": (stderr_text or "")[:4000],
                         })
                 except Exception as e:
                     runs.append({"contextFile": cf, "error": str(e)})
@@ -1995,6 +2157,7 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                     "rpgSnippet": rpg_snippet,
                     "primaryServiceFile": primary_service_file,
                     "error": error_text,
+                    "cliMode": any_large,
                 }}))
                 self._end_chunked_response()
                 return
@@ -2016,6 +2179,7 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                 "buildSuccess": None,
                 "buildExitCode": None,
                 "buildOutput": None,
+                "cliMode": any_large,
             }}))
             self._end_chunked_response()
             return
@@ -2128,6 +2292,37 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                                 nodes = mf.get("nodesInSlice") or []
                                 if nodes and nodes[0].get("range"):
                                     rpg_start_line = nodes[0]["range"].get("startLine", 1)
+                                # Fallback to context file when manifest has no rpgSnippet
+                                if not rpg_snippet and context_path and context_path.is_file():
+                                    try:
+                                        cf_data = json.loads(context_path.read_text(encoding="utf-8", errors="ignore"))
+                                        rpg_snippet = cf_data.get("rpgSnippet") or (cf_data.get("astNode") or {}).get("rpgSnippet")
+                                        if not rpg_snippet and nodes and nodes[0].get("range"):
+                                            rpg_start_line = nodes[0]["range"].get("startLine", 1)
+                                    except Exception:
+                                        pass
+                                # Fallback: synthesize from AST when both manifest and context have no rpgSnippet
+                                if not rpg_snippet:
+                                    try:
+                                        node_index_path = ROOT_DIR / "context_index" / f"{program_id}_nodes.json"
+                                        if node_index_path.is_file():
+                                            ni_data = json.loads(node_index_path.read_text(encoding="utf-8", errors="ignore"))
+                                            node_index = ni_data.get("nodes", {})
+                                            line_to_nodes = ni_data.get("lineToNodes", {})
+                                            if node_index:
+                                                rpg_snippet, rpg_start_line = self._synthesize_rpg_from_ast(
+                                                    entry_node_id, node_index, line_to_nodes or {})
+                                    except Exception:
+                                        pass
+                                # Final fallback: use full traceability builder (loads RPG from AST/context)
+                                if not rpg_snippet:
+                                    try:
+                                        tb_result = self._build_traceability_response(program_id, entry_node_id)
+                                        if tb_result and "error" not in tb_result:
+                                            rpg_snippet = tb_result.get("rpgSource") or ""
+                                            rpg_start_line = tb_result.get("rpgStartLine") or 1
+                                    except Exception:
+                                        pass
                                 java_root = proj_path / "src" / "main" / "java"
                                 for rel in mf.get("generatedFiles") or []:
                                     fp = java_root / rel
@@ -2140,13 +2335,22 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                     except Exception:
                         pass
 
-                self._send_json({
+                resp_data = {
                     "success": True,
                     "validation": results,
                     "generatedFiles": generated_files_data,
                     "rpgSnippet": rpg_snippet,
                     "rpgStartLine": rpg_start_line,
-                })
+                }
+                # Include nodeIndex for @rpg-trace hover
+                if program_id and entry_node_id and generated_files_data:
+                    try:
+                        tb_result = self._build_traceability_response(program_id, entry_node_id)
+                        if tb_result and "error" not in tb_result and tb_result.get("nodeIndex"):
+                            resp_data["nodeIndex"] = tb_result["nodeIndex"]
+                    except Exception:
+                        pass
+                self._send_json(resp_data)
             except Exception as e:
                 self._send_json({
                     "success": False,
@@ -2217,6 +2421,16 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
             try:
                 # Default: H2 (so H2 Console works). Set RUN_PROFILE=rds for PostgreSQL
                 run_profile = os.environ.get("RUN_PROFILE", "").strip()
+                # For H2: remove stale DB so schema + DataInitializer seed run fresh (fixes "No claims found")
+                if not run_profile:
+                    data_dir = proj_path / "data"
+                    for f in ["warranty_db.mv.db", "warranty_db.trace.db"]:
+                        p = data_dir / f
+                        if p.exists():
+                            try:
+                                p.unlink()
+                            except OSError:
+                                pass
                 cmd = ["mvn", "spring-boot:run", "-DskipTests"]
                 if run_profile:
                     cmd.extend(["-Dspring-boot.run.profiles=" + run_profile])
@@ -2336,6 +2550,21 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                 resp["needsReview"] = True
                 resp["suggestedFixes"] = build_result.get("suggestedFixes")
                 resp["errorSummary"] = build_result.get("errorSummary", "Build failed. Review suggested fixes.")
+                # Include old content for each file so UI can show diff
+                suggested_fixes = build_result.get("suggestedFixes") or {}
+                detail = {}
+                for rel_path in suggested_fixes:
+                    try:
+                        fp = proj_path / rel_path.replace("\\", "/")
+                        if fp.is_file():
+                            detail[rel_path] = {
+                                "old": fp.read_text(encoding="utf-8", errors="ignore"),
+                                "new": suggested_fixes[rel_path],
+                            }
+                    except Exception:
+                        pass
+                if detail:
+                    resp["suggestedFixesDetail"] = detail
             self._send_json(resp, status=200 if build_result["buildSuccess"] else 500)
             return
 
@@ -2372,7 +2601,7 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                     self._send_json({"success": False, "error": f"Failed to write {rel_path}: {e}"}, status=500)
                     return
 
-            build_result = _run_maven_build_with_autofix(proj_path, hitl_mode=False)
+            build_result = _run_maven_build_with_autofix(proj_path, hitl_mode=True)
             resp = {
                 "success": build_result["buildSuccess"],
                 "output": _truncate_build_output(build_result["buildOutput"] or ""),
@@ -2387,6 +2616,21 @@ a{{color:#60a5fa;}}</style></head><body><pre style="white-space:pre-wrap;">{esca
                 resp["testSummary"] = build_result["testSummary"]
             if build_result.get("testOutput"):
                 resp["testOutput"] = _truncate_build_output(build_result["testOutput"])
+            if build_result.get("needsReview") and build_result.get("suggestedFixes"):
+                resp["needsReview"] = True
+                resp["suggestedFixes"] = build_result["suggestedFixes"]
+                resp["errorSummary"] = build_result.get("errorSummary", "Build still failed. Review new suggested fixes.")
+                suggested_fixes = build_result.get("suggestedFixes") or {}
+                detail = {}
+                for rel_path in suggested_fixes:
+                    try:
+                        fp = proj_path / rel_path.replace("\\", "/")
+                        if fp.is_file():
+                            detail[rel_path] = {"old": fp.read_text(encoding="utf-8", errors="ignore"), "new": suggested_fixes[rel_path]}
+                    except Exception:
+                        pass
+                if detail:
+                    resp["suggestedFixesDetail"] = detail
             self._send_json(resp, status=200 if build_result["buildSuccess"] else 500)
             return
 

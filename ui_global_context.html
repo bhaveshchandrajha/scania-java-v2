@@ -211,6 +211,7 @@
           <label>Feature:</label>
           <select id="mf-node" style="width: 320px;"></select>
         </div>
+        <div id="mf-opus-status" style="margin-bottom: 8px; font-size: 11px; color: #9ca3af;"></div>
         <div style="margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
           <button class="primary" id="mf-refresh-btn">Refresh Feature List</button>
           <button class="primary" id="mf-run-btn">Migrate Feature</button>
@@ -243,7 +244,7 @@
           <h4 style="margin: 12px 0 8px 0; font-size: 12px; color: #9ca3af;">Validation Details</h4>
           <div id="val-details" style="margin-bottom: 16px;"></div>
           <h4 style="margin: 12px 0 8px 0; font-size: 13px;">Java → RPG Traceability</h4>
-          <p style="font-size: 11px; color: #9ca3af; margin: 0 0 8px 0;">Select a Java file, then hover over a line with <code>@origin</code> to preview the source RPG block.</p>
+          <p style="font-size: 11px; color: #9ca3af; margin: 0 0 8px 0;">Select a Java file, then hover over a line with <code>@origin</code> or <code>@rpg-trace</code> to preview the source RPG block.</p>
           <div style="display: flex; gap: 12px; align-items: stretch; margin-bottom: 12px;">
             <div style="flex: 1; min-width: 0;">
               <div style="font-size: 11px; color: #9ca3af; margin-bottom: 4px;">Java (hover line to view RPG)</div>
@@ -282,7 +283,7 @@
         </div>
         <div id="hitl-section" style="margin-top: 16px; padding: 16px; background: #0f172a; border: 1px solid #334155; border-radius: 8px;">
           <h4 style="margin: 0 0 8px 0; font-size: 14px; color: #e2e8f0;">Human-in-the-Loop (HITL)</h4>
-          <p id="hitl-info" style="margin: 0 0 12px 0; font-size: 11px; color: #94a3b8;">When a build fails, the LLM proposes fixes. This panel shows the suggested changes so you can review before applying. Click <strong>Apply All</strong> to accept, or <strong>Reject</strong> to discard.</p>
+          <p id="hitl-info" style="margin: 0 0 12px 0; font-size: 11px; color: #94a3b8;">When a build fails, the LLM proposes fixes. This panel shows the exact changes (before/after diff) for each file. Review the proposed fixes, then click <strong>Apply All</strong> to accept. You can apply again if the build still fails after the first or second attempt. Click <strong>Reject</strong> to discard.</p>
           <div id="hitl-panel" style="display: none;">
             <p id="hitl-summary" style="margin: 0 0 12px 0; font-size: 12px; color: #94a3b8;"></p>
             <div id="hitl-files" style="margin-bottom: 12px; font-size: 11px; color: #94a3b8;"></div>
@@ -301,7 +302,7 @@
         <p>Start the migrated application and open the <strong>migrated UI</strong> (warranty claim demo). Customize the code in <code>warranty_demo/</code> as needed.</p>
         <div id="run-context" style="margin-bottom: 12px; padding: 10px 12px; background: #111827; border: 1px solid #1f2937; border-radius: 6px; font-size: 11px;">
           <div style="color: #9ca3af;">App URL: <code>http://localhost:__APP_PORT__</code></div>
-          <div style="margin-top: 6px; color: #e5e7eb;">Migrated UIs: <a href="http://localhost:__APP_PORT__/demo.html" target="_blank" rel="noopener" style="color: #34d399;">demo.html</a> · <a href="http://localhost:__APP_PORT__/hs1210d.html" target="_blank" rel="noopener" style="color: #34d399;">hs1210d.html</a> · <a href="http://localhost:__APP_PORT__/" target="_blank" rel="noopener" style="color: #34d399;">index</a></div>
+          <div style="margin-top: 6px; color: #e5e7eb;">Migrated UIs: <a href="http://localhost:__APP_PORT__/demo.html" target="_blank" rel="noopener" style="color: #34d399;">demo.html</a> · <a href="http://localhost:__APP_PORT__/angular/" target="_blank" rel="noopener" style="color: #34d399;">angular</a> · <a href="http://localhost:__APP_PORT__/hs1210d.html" target="_blank" rel="noopener" style="color: #34d399;">hs1210d.html</a> · <a href="http://localhost:__APP_PORT__/" target="_blank" rel="noopener" style="color: #34d399;">index</a></div>
         </div>
         <div style="margin-bottom: 8px; display: flex; gap: 8px; align-items: center;">
           <span style="font-size: 12px; color: #9ca3af;">Database: PostgreSQL (RDS). Set <code>RUN_PROFILE=""</code> for H2 local.</span>
@@ -309,6 +310,7 @@
         <div style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
           <button class="primary" id="run-app-btn">Run Application</button>
           <button class="primary" id="open-demo-btn" style="background: #059669; border-color: #047857;">Open Demo</button>
+          <button id="seed-demo-btn" style="background: #059669; border: 1px solid #047857; color: white; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer;" title="Seed demo invoices/claims so POST /api/claims/create works">Seed Demo Data</button>
           <button id="check-status-btn" style="background: #374151; border: 1px solid #4b5563; color: #e5e7eb; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer;">Check Status</button>
         </div>
         <div id="run-status" style="margin-bottom: 12px;"></div>
@@ -317,6 +319,7 @@
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             <button id="test-migrated-btn" style="background: #374151; border: 1px solid #4b5563; color: #e5e7eb; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer;">Test /api/demo/migrated-queries</button>
             <button id="test-search-btn" style="background: #374151; border: 1px solid #4b5563; color: #e5e7eb; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer;">Test /api/claims/search</button>
+            <button id="test-seed-btn" style="background: #374151; border: 1px solid #4b5563; color: #e5e7eb; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer;">Test /api/seed</button>
           </div>
           <pre id="api-test-output" style="margin-top: 8px; font-size: 10px; max-height: 160px; overflow: auto;"></pre>
         </div>
@@ -546,6 +549,25 @@
       }
     }
 
+    async function checkMigrateModels() {
+      const el = document.getElementById('mf-opus-status');
+      if (!el) return;
+      try {
+        const res = await fetch(API_BASE + '/api/check-models');
+        const data = await res.json();
+        if (data.opus_available) {
+          el.innerHTML = '✓ Claude Opus available (' + (data.opus_model || '') + ') — large context will use Opus, prompt caching, extended timeout.';
+          el.style.color = '#34d399';
+        } else {
+          el.innerHTML = 'Claude Opus not available — using Sonnet. ' + (data.error ? data.error : '');
+          el.style.color = '#9ca3af';
+        }
+      } catch (e) {
+        el.innerHTML = 'Could not check models: ' + e.message;
+        el.style.color = '#f87171';
+      }
+    }
+
     async function migrateFeature() {
       const programSelect = document.getElementById('mf-program');
       const nodeSelect = document.getElementById('mf-node');
@@ -572,10 +594,10 @@
           body: JSON.stringify({ programId, entryNodeId, rpgDir })
         };
         if (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) {
-          fetchOpts.signal = AbortSignal.timeout(35 * 60 * 1000);  // 35 min - migration can take 18+ min
+          fetchOpts.signal = AbortSignal.timeout(90 * 60 * 1000);  // 90 min - large nodes (e.g. n404) can take 30-60 min in CLI mode
         }
         const res = await fetch(API_BASE + '/api/migrate-feature', fetchOpts);
-        // Server streams NDJSON: {"progress":"..."} then {"result":{...}}
+        // Server streams NDJSON: {"progress":"..."}, {"log":"..."} (live), then {"result":{...}}
         let result = null;
         const reader = res.body?.getReader();
         const decoder = new TextDecoder();
@@ -594,6 +616,10 @@
                 if (obj.progress) {
                   statusDiv.innerHTML = '<div class="status info">' + (obj.progress || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
                 }
+                if (obj.log) {
+                  outputPre.textContent = (outputPre.textContent || '') + obj.log + '\n';
+                  outputPre.scrollTop = outputPre.scrollHeight;
+                }
                 if (obj.result) result = obj.result;
                 else if (obj.success !== undefined || obj.error) result = obj;  // non-streaming error
               } catch (_) {}
@@ -602,6 +628,10 @@
           if (buf.trim()) {
             try {
               const obj = JSON.parse(buf);
+              if (obj.log) {
+                outputPre.textContent = (outputPre.textContent || '') + obj.log + '\n';
+                outputPre.scrollTop = outputPre.scrollHeight;
+              }
               if (obj.result) result = obj.result;
               else if (obj.success !== undefined || obj.error) result = obj;
             } catch (_) {}
@@ -612,7 +642,8 @@
           const buildLink = '<a href="#" id="go-to-build" style="color:#86efac;margin-left:8px;">→ Build Application (tab 4)</a>';
           const valLink = '<a href="#" id="go-to-validation" style="color:#86efac;margin-left:8px;">→ Validation</a>';
           const uiSchemaNote = (result.uiSchemaGenerated || []).length > 0 ? ' UI schema generated.' : '';
-          statusDiv.innerHTML = '<div class="status success">✓ Feature migrated. Code generated.' + uiSchemaNote + ' Run Build Application (tab 4) to compile and fix errors.' + buildLink + ' ' + valLink + '</div>';
+          const cliNote = result.cliMode ? ' <span style="color:#60a5fa;">(CLI mode: large context)</span>' : '';
+          statusDiv.innerHTML = '<div class="status success">✓ Feature migrated. Code generated.' + uiSchemaNote + cliNote + ' Run Build Application (tab 4) to compile and fix errors.' + buildLink + ' ' + valLink + '</div>';
           document.getElementById('go-to-build')?.addEventListener('click', (e) => {
             e.preventDefault();
             document.querySelector('.tab[data-tab="step4"]')?.click();
@@ -631,6 +662,9 @@
           });
 
           let text = '';
+          if (result.cliMode) {
+            text += 'Context size was large — ran in CLI mode (extended timeout, Opus if available, prompt caching).\n\n';
+          }
           if (result.summary) {
             text += result.summary + '\n\n';
           }
@@ -656,10 +690,14 @@
             text += '\n\nNext: Go to tab 4 (Build Application) to compile and fix any errors.';
           }
 
-          outputPre.textContent = text || (result.output || 'Success');
+          const existingLog = outputPre.textContent || '';
+          outputPre.textContent = existingLog + (existingLog ? '\n\n--- Migration complete ---\n\n' : '') + (text || (result.output || 'Success'));
+          outputPre.scrollTop = outputPre.scrollHeight;
         } else {
           statusDiv.innerHTML = '<div class="status error">✗ Feature migration failed</div>';
-          outputPre.textContent = result.error || 'Unknown error';
+          const existingLog = outputPre.textContent || '';
+          outputPre.textContent = existingLog + (existingLog ? '\n\n--- Error ---\n\n' : '') + (result.error || 'Unknown error');
+          outputPre.scrollTop = outputPre.scrollHeight;
         }
       } catch (e) {
         statusDiv.innerHTML = '<div class="status error">✗ Error: ' + e.message + '</div>';
@@ -710,8 +748,7 @@
 
         const v = data.validation || {};
         const files = data.generatedFiles || [];
-        const rpgSnippet = data.rpgSnippet || '(No RPG snippet)';
-        const rpgStartLine = data.rpgStartLine || 1;
+        const traceData = { rpgSnippet: data.rpgSnippet || null, rpgStartLine: data.rpgStartLine || 1, nodeIndex: data.nodeIndex || {} };
 
         statusDiv.innerHTML = '<div class="status success">✓ Validation complete — Overall: ' + (v.overall_score ?? 0) + '%</div>';
         resultsDiv.style.display = 'block';
@@ -798,7 +835,7 @@
         const fileSelect = document.getElementById('val-file-select');
         const javaPreview = document.getElementById('val-java-preview');
         const rpgPreview = document.getElementById('val-rpg-preview');
-        const rpgPlaceholder = '<div style="color:#64748b;font-size:12px;padding:24px;text-align:center;">Hover over a Java line with <code style="background:#1e293b;padding:2px 6px;border-radius:4px;">@origin</code> to preview the source RPG block here.</div>';
+        const rpgPlaceholder = '<div style="color:#64748b;font-size:12px;padding:24px;text-align:center;">Hover over a Java line with <code style="background:#1e293b;padding:2px 6px;border-radius:4px;">@origin</code> or <code style="background:#1e293b;padding:2px 6px;border-radius:4px;">@rpg-trace</code> to preview the source RPG block here.</div>';
         fileSelect.innerHTML = '';
         files.forEach((f, i) => {
           const opt = document.createElement('option');
@@ -807,10 +844,12 @@
           fileSelect.appendChild(opt);
         });
         function extractRpgLines(startLine, endLine) {
-          if (!rpgSnippet || typeof rpgSnippet !== 'string') return null;
-          const lines = rpgSnippet.split('\n');
-          const fromIdx = Math.max(0, startLine - rpgStartLine);
-          const toIdx = Math.min(lines.length, endLine - rpgStartLine + 1);
+          const snip = traceData.rpgSnippet;
+          if (!snip || typeof snip !== 'string' || snip.includes('(No RPG')) return null;
+          const lines = snip.split('\n');
+          const start = traceData.rpgStartLine || 1;
+          const fromIdx = Math.max(0, startLine - start);
+          const toIdx = Math.min(lines.length, endLine - start + 1);
           if (fromIdx >= lines.length || toIdx <= fromIdx) return null;
           return lines.slice(fromIdx, toIdx).map((l, i) => (startLine + i) + ' | ' + l).join('\n');
         }
@@ -821,18 +860,39 @@
           const end = m[2] ? parseInt(m[2], 10) : start;
           return { start, end };
         }
+        function parseRpgTrace(comment) {
+          const m = comment.match(/@rpg-trace:\s*([\w,]+)/);
+          if (!m) return null;
+          return m[1].split(',').map(s => s.trim()).filter(Boolean);
+        }
         function renderJavaWithClickableLines(content) {
           const lines = (content || '').split('\n');
           let html = '';
           lines.forEach((line, i) => {
             const lineNum = i + 1;
             const originMatch = line.match(/\/\/\s*(@origin\s+\S+\s+L\d+(?:-\d+)?\s*\([^)]+\))/);
+            const rpgTraceMatch = line.match(/\/\/\s*@rpg-trace:\s*([\w,]+)/);
             const origin = originMatch ? parseOrigin(line) : null;
-            const cls = origin ? 'val-java-line val-java-origin' : 'val-java-line';
-            const title = origin ? 'Hover to view RPG L' + origin.start + '-' + origin.end : '';
-            html += '<div class="' + cls + '" data-line="' + lineNum + '" data-origin="' + (origin ? origin.start + '-' + origin.end : '') + '" title="' + (title || '') + '">' + (lineNum).toString().padStart(4) + ' | ' + (line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')) + '</div>';
+            const nodeIds = rpgTraceMatch ? parseRpgTrace(line) : null;
+            const cls = (origin || nodeIds) ? 'val-java-line val-java-origin' : 'val-java-line';
+            const title = origin ? 'Hover to view RPG L' + origin.start + '-' + origin.end : (nodeIds ? 'Hover to view RPG for ' + nodeIds.join(', ') : '');
+            const dataOrigin = origin ? origin.start + '-' + origin.end : '';
+            const dataNodeIds = nodeIds ? nodeIds.join(',') : '';
+            html += '<div class="' + cls + '" data-line="' + lineNum + '" data-origin="' + dataOrigin + '" data-node-ids="' + dataNodeIds + '" title="' + (title || '') + '">' + (lineNum).toString().padStart(4) + ' | ' + (line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')) + '</div>';
           });
           return html;
+        }
+        function showRpgForNodeIds(nodeIds) {
+          const nodeIndex = traceData.nodeIndex || {};
+          let text = '';
+          for (const nid of nodeIds) {
+            const node = nodeIndex[nid.trim()];
+            const rpg = node?.rpgSource || '';
+            const kind = node?.kind || '';
+            text += (text ? '\n\n--- ' : '') + (kind ? `[${nid}] ${kind}\n` : `[${nid}]\n`) + (rpg || '(no RPG source for this node)');
+          }
+          text = text || '(no node data for ' + nodeIds.join(', ') + ')';
+          rpgPreview.innerHTML = '<div style="font-size:11px;color:#94a3b8;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #334155;">RPG source: ' + nodeIds.join(', ') + '</div><pre style="margin:0;white-space:pre-wrap;word-break:break-all;font-size:11px;">' + (text.replace(/</g,'&lt;').replace(/>/g,'&gt;')) + '</pre>';
         }
         function showRpgInPanel(startLine, endLine) {
           const block = extractRpgLines(startLine, endLine);
@@ -842,24 +902,60 @@
         function showRpgPlaceholder() {
           rpgPreview.innerHTML = rpgPlaceholder;
         }
+        // Event delegation for hover (mouseover bubbles; works when content is re-rendered)
+        if (!javaPreview.dataset.traceabilitySetup) {
+          javaPreview.dataset.traceabilitySetup = '1';
+          javaPreview.addEventListener('mouseover', (e) => {
+            const el = e.target.closest('.val-java-origin');
+            if (!el) return;
+            const nodeIds = el.dataset.nodeIds;
+            if (nodeIds) {
+              showRpgForNodeIds(nodeIds.split(','));
+            } else if (el.dataset.origin) {
+              const [s, e2] = el.dataset.origin.split('-').map(Number);
+              showRpgInPanel(s, e2 || s);
+            }
+          });
+          javaPreview.addEventListener('mouseout', (e) => {
+            // Only clear when leaving the whole traceability area; keep RPG visible when moving to rpg panel
+            const to = e.relatedTarget;
+            if (!to || (!javaPreview.contains(to) && !rpgPreview.contains(to))) {
+              showRpgPlaceholder();
+            }
+          });
+          rpgPreview.addEventListener('mouseout', (e) => {
+            const to = e.relatedTarget;
+            if (!to || (!javaPreview.contains(to) && !rpgPreview.contains(to))) {
+              showRpgPlaceholder();
+            }
+          });
+        }
         fileSelect.onchange = () => {
           const idx = parseInt(fileSelect.value, 10);
           const content = (files[idx]?.content || '').slice(0, 12000) || '(No content)';
           javaPreview.innerHTML = content === '(No content)' ? content : renderJavaWithClickableLines(content);
           javaPreview.classList.toggle('val-java-code', content !== '(No content)');
           showRpgPlaceholder();
-          javaPreview.querySelectorAll('.val-java-origin').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-              const o = el.dataset.origin;
-              if (o) {
-                const [s, e] = o.split('-').map(Number);
-                showRpgInPanel(s, e || s);
-              }
-            });
-          });
         };
         if (files.length > 0) {
           fileSelect.dispatchEvent(new Event('change'));
+          // If validation did not return RPG snippet, try traceability API
+          if ((!traceData.rpgSnippet || !Object.keys(traceData.nodeIndex || {}).length) && programId && nodeId) {
+            fetch(API_BASE + '/api/traceability-data/' + encodeURIComponent(programId) + '/' + encodeURIComponent(nodeId))
+              .then(r => r.json())
+              .then(tb => {
+                if (tb && !tb.error) {
+                  if (tb.rpgSource) {
+                    traceData.rpgSnippet = tb.rpgSource;
+                    traceData.rpgStartLine = tb.rpgStartLine || 1;
+                  }
+                  if (tb.nodeIndex && Object.keys(tb.nodeIndex).length) {
+                    traceData.nodeIndex = tb.nodeIndex;
+                  }
+                }
+              })
+              .catch(() => {});
+          }
         } else {
           javaPreview.textContent = 'No migration found for this feature. Migrate it first from the Migrate tab.';
           rpgPreview.innerHTML = rpgPlaceholder;
@@ -922,7 +1018,36 @@
     }
 
     let _pendingSuggestedFixes = null;
+    let _pendingSuggestedFixesDetail = null;
     let _pendingProjectDir = null;
+    let _buildLogHistory = '';
+
+    function renderDiffOrFileList(suggestedFixes, detail) {
+      if (!suggestedFixes || !Object.keys(suggestedFixes).length) return '';
+      const paths = Object.keys(suggestedFixes);
+      if (!detail || !Object.keys(detail).length) {
+        return '<div style="font-size:11px;color:#94a3b8;margin-bottom:8px;">Files to be changed: ' + paths.join(', ') + '</div>';
+      }
+      let html = '<div style="margin-bottom:12px;">';
+      paths.forEach(path => {
+        const d = detail[path];
+        if (!d || (!d.old && !d.new)) {
+          html += '<div style="font-size:11px;color:#94a3b8;margin-bottom:4px;">' + path + '</div>';
+          return;
+        }
+        const oldLines = (d.old || '').split('\n');
+        const newLines = (d.new || '').split('\n');
+        const maxLines = Math.min(30, Math.max(oldLines.length, newLines.length));
+        html += '<details style="margin-bottom:8px;border:1px solid #334155;border-radius:4px;background:#0f172a;">';
+        html += '<summary style="padding:6px 10px;cursor:pointer;font-size:11px;color:#e2e8f0;">' + path + ' (' + oldLines.length + ' → ' + newLines.length + ' lines)</summary>';
+        html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px;max-height:240px;overflow:auto;font-size:10px;">';
+        html += '<div><div style="color:#f87171;margin-bottom:4px;">Before</div><pre style="margin:0;white-space:pre-wrap;word-break:break-all;">' + oldLines.slice(0, maxLines).map((l,i)=>(i+1)+'| '+l).join('\n').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</pre></div>';
+        html += '<div><div style="color:#34d399;margin-bottom:4px;">After (proposed fix)</div><pre style="margin:0;white-space:pre-wrap;word-break:break-all;">' + newLines.slice(0, maxLines).map((l,i)=>(i+1)+'| '+l).join('\n').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</pre></div>';
+        html += '</div></details>';
+      });
+      html += '</div>';
+      return html;
+    }
 
     async function buildApplication() {
       const statusDiv = document.getElementById('build-status');
@@ -937,9 +1062,12 @@
       document.getElementById('build-success-link').style.display = 'none';
       document.getElementById('build-push-code-btn')?.style.setProperty('display', 'none');
       _pendingSuggestedFixes = null;
+      _pendingSuggestedFixesDetail = null;
+      _buildLogHistory = '';
       statusDiv.innerHTML = '<div class="status info">Building application (this may take a few minutes)...</div>';
       outputPre.style.display = 'block';
       outputPre.textContent = `Running build in ${projectDir}...`;
+      _buildLogHistory = outputPre.textContent;
 
       try {
         const res = await fetch(API_BASE + '/api/build-application', {
@@ -948,6 +1076,11 @@
           body: JSON.stringify({ projectDir, hitlMode: true })
         });
         const result = await res.json();
+        const newLog = (result.output || '') + (result.error ? '\n\nError:\n' + result.error : '');
+        _buildLogHistory = (_buildLogHistory || '') + (newLog ? '\n\n' + newLog : '');
+        outputPre.textContent = _buildLogHistory;
+        outputPre.style.display = 'block';
+
         if (result.success) {
           const bc = result.buildContext;
           let msg = '✓ Application build succeeded.';
@@ -956,6 +1089,9 @@
           }
           if (result.testSummary) {
             msg += ' ' + result.testSummary;
+          }
+          if (!result.filesApplied || result.filesApplied.length === 0) {
+            msg += ' Build succeeded on first attempt.';
           }
           statusDiv.innerHTML = '<div class="status success">' + msg + '</div>';
           document.getElementById('build-success-link').style.display = 'block';
@@ -969,11 +1105,13 @@
           loadBuildContext();
         } else if (result.needsReview && result.suggestedFixes) {
           _pendingSuggestedFixes = result.suggestedFixes;
+          _pendingSuggestedFixesDetail = result.suggestedFixesDetail || null;
           _pendingProjectDir = projectDir;
           statusDiv.innerHTML = '<div class="status error">✗ Compilation failed. Review suggested fixes below.</div>';
-          document.getElementById('hitl-summary').textContent = result.errorSummary || 'LLM proposed fixes. Review and apply to continue.';
+          const summary = result.errorSummary || 'LLM proposed fixes. Review the Before/After diff below to see exactly what will change and how it addresses the compilation errors.';
+          document.getElementById('hitl-summary').textContent = summary;
           const filesDiv = document.getElementById('hitl-files');
-          filesDiv.innerHTML = 'Files to be changed: ' + Object.keys(result.suggestedFixes).join(', ');
+          filesDiv.innerHTML = renderDiffOrFileList(result.suggestedFixes, result.suggestedFixesDetail);
           hitlPanel.style.display = 'block';
         } else {
           const errHint = (result.output || result.error) ? ' Check the build output below for details.' : '';
@@ -981,8 +1119,6 @@
           document.getElementById('build-success-link').style.display = 'none';
           document.getElementById('build-push-code-btn')?.style.setProperty('display', 'none');
         }
-        outputPre.textContent = (result.output || '') + (result.error ? '\n\nError:\n' + result.error : '');
-        outputPre.style.display = 'block';
       } catch (e) {
         statusDiv.innerHTML = '<div class="status error">✗ Error: ' + e.message + '</div>';
         outputPre.textContent = 'Error: ' + e.message;
@@ -1007,19 +1143,45 @@
           body: JSON.stringify({ projectDir: _pendingProjectDir, suggestedFixes: _pendingSuggestedFixes })
         });
         const result = await res.json();
-        hitlPanel.style.display = 'none';
-        _pendingSuggestedFixes = null;
-        _pendingProjectDir = null;
+        const newLog = (result.output || '') + (result.error ? '\n\nError:\n' + result.error : '');
+        _buildLogHistory = (_buildLogHistory || '') + '\n\n=== Rebuild after applying fixes ===\n\n' + newLog;
+        outputPre.textContent = _buildLogHistory;
+        outputPre.style.display = 'block';
+
         if (result.success) {
-          statusDiv.innerHTML = '<div class="status success">✓ Fixes applied. Build succeeded.</div>';
+          hitlPanel.style.display = 'none';
+          _pendingSuggestedFixes = null;
+          _pendingSuggestedFixesDetail = null;
+          _pendingProjectDir = null;
+          statusDiv.innerHTML = '<div class="status success">✓ Fixes applied. Build succeeded. The applied changes resolved the compilation errors.</div>';
+          document.getElementById('build-success-link').style.display = 'block';
+          const pushCodeBtn = document.getElementById('build-push-code-btn');
+          const pushCodeStatus = document.getElementById('build-push-code-status');
+          if (pushCodeBtn && pushCodeStatus) {
+            pushCodeBtn.style.display = 'inline-block';
+            pushCodeBtn.disabled = false;
+            pushCodeStatus.style.display = 'none';
+          }
           loadBuildContext();
+        } else if (result.needsReview && result.suggestedFixes) {
+          _pendingSuggestedFixes = result.suggestedFixes;
+          _pendingSuggestedFixesDetail = result.suggestedFixesDetail || null;
+          statusDiv.innerHTML = '<div class="status error">✗ Build still failed. Review new suggested fixes below. You can apply again.</div>';
+          document.getElementById('hitl-summary').textContent = result.errorSummary || 'LLM proposed new fixes. Review the Before/After diff and apply again.';
+          const filesDiv = document.getElementById('hitl-files');
+          filesDiv.innerHTML = renderDiffOrFileList(result.suggestedFixes, result.suggestedFixesDetail);
+          hitlPanel.style.display = 'block';
         } else {
-          statusDiv.innerHTML = '<div class="status error">✗ Build still failed after applying fixes.</div>';
+          hitlPanel.style.display = 'none';
+          _pendingSuggestedFixes = null;
+          _pendingSuggestedFixesDetail = null;
+          _pendingProjectDir = null;
+          statusDiv.innerHTML = '<div class="status error">✗ Build still failed after applying fixes. Check the build output below.</div>';
         }
-        outputPre.textContent = (result.output || '') + (result.error ? '\n\nError:\n' + result.error : '');
       } catch (e) {
         statusDiv.innerHTML = '<div class="status error">✗ Error: ' + e.message + '</div>';
-        outputPre.textContent = 'Error: ' + e.message;
+        _buildLogHistory = (_buildLogHistory || '') + '\n\nError: ' + e.message;
+        outputPre.textContent = _buildLogHistory;
       } finally {
         applyBtn.disabled = false;
       }
@@ -1070,12 +1232,26 @@
       if (!statusDiv) return false;
       if (!silent) statusDiv.innerHTML = '<div class="status info">Checking…</div>';
       try {
-        const res = await fetch(APP_BASE + '/demo.html', { method: 'GET' });
-        if (res.ok) {
+        // Use proxy (same-origin) to avoid CORS when UI on 8003, app on 8081
+        const res = await fetch(API_BASE + '/api/proxy/app-status', { method: 'GET' });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.ok) {
           statusDiv.innerHTML = '<div class="status success">✓ Application is running. Migration demo ready.</div>';
           return true;
         }
-        if (!silent) statusDiv.innerHTML = '<div class="status error">✗ Application returned ' + res.status + '. Run it first.</div>';
+        if (!silent) statusDiv.innerHTML = '<div class="status error">✗ Application not running. ' + (data.error || res.status) + '. Click "Run Application" to start. <a href="#" id="show-log-link" style="color:#60a5fa;">Show last error trace</a></div>';
+        if (!silent) setTimeout(() => {
+          document.getElementById('show-log-link')?.addEventListener('click', async (ev) => {
+            ev.preventDefault();
+            const statusDiv = document.getElementById('run-status');
+            if (statusDiv) statusDiv.innerHTML = '<div class="status info">Fetching log…</div>';
+            const logTail = await fetchAndShowLogTail();
+            const escaped = logTail.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            if (statusDiv) statusDiv.innerHTML = '<div class="status error">✗ Application not running.</div>' +
+              '<details open style="margin-top:8px;"><summary style="cursor:pointer;color:#60a5fa;">Error trace</summary>' +
+              '<pre style="margin-top:8px;padding:8px;background:#111827;border:1px solid #1f2937;border-radius:6px;font-size:10px;max-height:300px;overflow:auto;white-space:pre-wrap;">' + escaped + '</pre></details>';
+          });
+        }, 0);
         return false;
       } catch (e) {
         if (!silent) statusDiv.innerHTML = '<div class="status error">✗ Application not running. Click "Run Application" to start. <a href="#" id="show-log-link" style="color:#60a5fa;">Show last error trace</a></div>';
@@ -1224,6 +1400,41 @@
       }
     }
 
+    async function testSeedApi() {
+      apiTestOutput('Testing POST ' + API_BASE + '/api/proxy/seed (→ warranty app)…');
+      try {
+        const res = await fetch(API_BASE + '/api/proxy/seed', { method: 'POST' });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.status === 'ok') {
+          apiTestOutput('✓ Success\n\n' + JSON.stringify(data, null, 2));
+        } else {
+          apiTestOutput('✗ ' + (data.message || data.error || res.status) + '\n\n' + JSON.stringify(data, null, 2));
+        }
+      } catch (e) {
+        apiTestOutput('✗ Error: ' + e.message + ' (Is the warranty app running on port ' + (window.APP_PORT || '8081') + '?)');
+      }
+    }
+
+    async function seedDemoData() {
+      const btn = document.getElementById('seed-demo-btn');
+      const statusDiv = document.getElementById('run-status');
+      if (!btn || !statusDiv) return;
+      btn.disabled = true;
+      statusDiv.innerHTML = '<div class="status info">Seeding demo invoices and claims…</div>';
+      try {
+        const res = await fetch(API_BASE + '/api/proxy/seed', { method: 'POST' });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.status === 'ok') {
+          statusDiv.innerHTML = '<div class="status success">✓ ' + (data.message || 'Demo data seeded. Claim creation should work now.') + '</div>';
+        } else {
+          statusDiv.innerHTML = '<div class="status error">✗ ' + (data.message || data.error || res.status) + '</div>';
+        }
+      } catch (e) {
+        statusDiv.innerHTML = '<div class="status error">✗ ' + e.message + ' — Is the warranty app running? Click "Run Application" first.</div>';
+      }
+      btn.disabled = false;
+    }
+
     function showFetchErrorBanner(err) {
       const banner = document.getElementById('fetch-error-banner');
       if (!banner) return;
@@ -1283,6 +1494,7 @@
           Object.keys(contents).forEach(key => {
             contents[key].style.display = key === target ? 'block' : 'none';
           });
+          if (target === 'step2') checkMigrateModels();
           if (target === 'step4') loadBuildContext();
           if (target === 'step5') checkAppStatus();
         });
@@ -1299,6 +1511,8 @@
       document.getElementById('run-app-btn').addEventListener('click', runApplication);
       document.getElementById('open-demo-btn').addEventListener('click', openDemo);
       document.getElementById('check-status-btn').addEventListener('click', checkAppStatus);
+      document.getElementById('seed-demo-btn').addEventListener('click', seedDemoData);
+      document.getElementById('test-seed-btn').addEventListener('click', testSeedApi);
       document.getElementById('go-to-demo-from-build')?.addEventListener('click', (e) => {
         e.preventDefault();
         const tab5 = document.querySelector('.tab[data-tab="step5"]');

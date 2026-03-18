@@ -1,119 +1,158 @@
 /**
  * Application service implementing warranty claim business logic.
  * <p>
- * Generated from RPG: unit {@code HS1210}, node {@code n1779}.
+ * Generated from RPG: unit {@code HS1210}, node {@code n404}.
  */
 
 package com.scania.warranty.service;
 
-import com.scania.warranty.domain.Claim;
-import com.scania.warranty.domain.ClaimPosition;
-import com.scania.warranty.repository.ClaimPositionRepository;
-import com.scania.warranty.repository.ClaimRepository;
+import com.scania.warranty.domain.*;
+import com.scania.warranty.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class ClaimCreationService {
-    
-    private final ClaimPositionRepository claimPositionRepository;
-    private final ClaimRepository claimRepository;
-    
-    public ClaimCreationService(ClaimPositionRepository claimPositionRepository, 
-                                ClaimRepository claimRepository) {
-        this.claimPositionRepository = claimPositionRepository;
+
+    private final InvoiceRepository invoiceRepository; // @rpg-trace: n958
+    private final ClaimRepository claimRepository; // @rpg-trace: n958
+    private final LaborRepository laborRepository; // @rpg-trace: n958
+    private final ExternalServiceRepository externalServiceRepository; // @rpg-trace: n958
+    private final ClaimErrorRepository claimErrorRepository; // @rpg-trace: n958
+
+    public ClaimCreationService(InvoiceRepository invoiceRepository, ClaimRepository claimRepository, LaborRepository laborRepository, ExternalServiceRepository externalServiceRepository, ClaimErrorRepository claimErrorRepository) {
+        this.invoiceRepository = invoiceRepository;
         this.claimRepository = claimRepository;
+        this.laborRepository = laborRepository;
+        this.externalServiceRepository = externalServiceRepository;
+        this.claimErrorRepository = claimErrorRepository;
     }
-    
-    public String generateClaimNumber(String companyCode, String invoiceNumber, String invoiceDate, String orderNumber, String area) {
-        List<Claim> existingClaims = claimRepository.findByPakzOrderByClaimNrAsc(companyCode);
-        int maxNumber = 0;
-        for (Claim claim : existingClaims) {
-            try {
-                int claimNum = Integer.parseInt(claim.getClaimNr());
-                if (claimNum > maxNumber) {
-                    maxNumber = claimNum;
-                }
-            } catch (NumberFormatException e) {
-                // Skip invalid claim numbers
+
+    public String createClaimFromInvoice(String companyCode, String invoiceNumber, String invoiceDate, String workshopCode, String serviceType) {
+        Optional<Invoice> invoiceOpt = invoiceRepository.findByKey(companyCode, invoiceNumber, invoiceDate, workshopCode); // @rpg-trace: n984
+
+        // Fallback: findByKey uses ahk020=invoiceDate; seed may use ahk080 for order date. Try findByCompany + filter.
+        if (invoiceOpt.isEmpty()) {
+            invoiceOpt = invoiceRepository.findByCompany(companyCode).stream()
+                    .filter(i -> invoiceNumber.equals(i.getAhk010())
+                            && workshopCode.equals(i.getAhk040())
+                            && (invoiceDate.equals(i.getAhk020()) || invoiceDate.equals(i.getAhk080())))
+                    .findFirst();
+        }
+
+        if (invoiceOpt.isEmpty()) { // @rpg-trace: n984
+            throw new IllegalArgumentException("Invoice not found: " + companyCode + "/" + invoiceNumber + "/" + invoiceDate + "/" + workshopCode); // @rpg-trace: n985
+        }
+
+        Invoice invoice = invoiceOpt.get(); // @rpg-trace: n984
+
+        List<Invoice> cancellations = invoiceRepository.findStornoByKey(companyCode, invoiceDate, invoiceNumber); // @rpg-trace: n975
+        if (!cancellations.isEmpty()) { // @rpg-trace: n977
+            throw new IllegalArgumentException("Invoice has been cancelled"); // @rpg-trace: n978
+        }
+
+        List<Claim> existingClaims = claimRepository.findByInvoiceKey(companyCode, invoiceNumber, invoiceDate, workshopCode); // @rpg-trace: n964
+        for (Claim existing : existingClaims) { // @rpg-trace: n965
+            if (existing.getG71170() != 99) { // @rpg-trace: n967
+                throw new IllegalArgumentException("Claim already exists for this invoice"); // @rpg-trace: n968
             }
         }
-        return String.format("%08d", maxNumber + 1);
+
+        String nextClaimNumber = generateNextClaimNumber(companyCode); // @rpg-trace: n1091
+
+        Claim claim = new Claim(); // @rpg-trace: n990
+        claim.setG71000(invoice.getAhk000()); // @rpg-trace: n990
+        claim.setG71010(invoice.getAhk010()); // @rpg-trace: n990
+        claim.setG71020(invoice.getAhk080()); // @rpg-trace: n990
+        claim.setG71030(invoice.getAhk040()); // @rpg-trace: n990
+        claim.setG71040(invoice.getAhk060()); // @rpg-trace: n990
+        claim.setG71060(invoice.getAhk510().trim()); // @rpg-trace: n995
+        claim.setG71070(invoice.getAhk520()); // @rpg-trace: n998
+        claim.setG71080(new BigDecimal(invoice.getAhk550())); // @rpg-trace: n1008
+        claim.setG71090(parseRepairDateAsBigDecimal(invoice)); // @rpg-trace: n998
+        claim.setG71100(parseMileageAsBigDecimal(invoice.getAhk815())); // @rpg-trace: n1009
+        claim.setG71110(determineVehicleTypeAsBigDecimal(invoice)); // @rpg-trace: n1021
+        claim.setG71140(invoice.getAhk230()); // @rpg-trace: n1070
+        claim.setG71150(invoice.getAhk250()); // @rpg-trace: n1071
+        claim.setG71120(" "); // @rpg-trace: required
+        claim.setG71130(" "); // @rpg-trace: required
+        claim.setG71160(""); // @rpg-trace: n1071
+        claim.setG71170(0); // @rpg-trace: n1073
+        claim.setG71180(0); // @rpg-trace: n1081
+        claim.setG71190(""); // @rpg-trace: n1082
+        claim.setG71200(invoice.getAhk040() + invoice.getAhk050() + invoice.getAhk060() + invoice.getAhk070()); // @rpg-trace: n1088
+        claim.setG71050(nextClaimNumber); // @rpg-trace: n1110
+
+        claimRepository.save(claim); // @rpg-trace: n1109
+
+        return nextClaimNumber; // @rpg-trace: n1114
     }
-    
-    @Transactional
-    public void createClaim(String kuerzel, String claimNr, String pakz, String rechNr, 
-                            String rechDatum, String auftragsNr, String bereich) {
-        
-        Integer failureNo = 0; // @rpg-trace: n1783
-        
-        List<ClaimPosition> positions = claimPositionRepository.findByKuerzelAndClaimNrOrderByKeys(kuerzel, claimNr); // @rpg-trace: n1784
-        
-        boolean create = false; // @rpg-trace: n1779
-        boolean maintenance = false; // @rpg-trace: n1779
-        String groups = ""; // @rpg-trace: n1779
-        String partNo = ""; // @rpg-trace: n1779
-        BigDecimal partValue = BigDecimal.ZERO; // @rpg-trace: n1779
-        Integer lineNo = 0; // @rpg-trace: n1779
-        BigDecimal valueMat = BigDecimal.ZERO; // @rpg-trace: n1779
-        BigDecimal valueLab = BigDecimal.ZERO; // @rpg-trace: n1779
-        BigDecimal valueSpe = BigDecimal.ZERO; // @rpg-trace: n1779
-        
-        for (ClaimPosition position : positions) { // @rpg-trace: n1785
-            
-            if (position.getZeile() != null && !position.getZeile().equals(failureNo)) { // @rpg-trace: n1789
-                
-                if (maintenance && groups != null && !groups.isEmpty() && partNo != null && !partNo.isEmpty()) { // @rpg-trace: n1788
-                    // Process accumulated maintenance data
-                    // This would be the logic to save/update maintenance records
-                }
-                
-                failureNo = position.getZeile(); // @rpg-trace: n1790
-                maintenance = false; // @rpg-trace: n1791
-                lineNo = 0; // @rpg-trace: n1792
-                valueMat = BigDecimal.ZERO; // @rpg-trace: n1793
-                valueLab = BigDecimal.ZERO; // @rpg-trace: n1794
-                valueSpe = BigDecimal.ZERO; // @rpg-trace: n1795
-                groups = ""; // @rpg-trace: n1796
-                partNo = ""; // @rpg-trace: n1797
-                partValue = BigDecimal.ZERO; // @rpg-trace: n1798
-            }
-            
-            if (position.getZeile() != null && position.getZeile().equals(failureNo)) { // @rpg-trace: n1801
-                create = true; // @rpg-trace: n1802
-                String fehlerNr = position.getFehlerNr() != null ? position.getFehlerNr().trim() : ""; // @rpg-trace: n1803
-                String folgeNr = position.getFolgeNr() != null ? position.getFolgeNr().trim() : ""; // @rpg-trace: n1806
-                
-                if (position.getSatzart() != null && !position.getSatzart().isEmpty()) { // @rpg-trace: n1809
-                    // Chain to ITLSMF3 - would need additional repository/logic
-                    // For now, we'll handle the basic logic
-                    
-                    if (position.getWert() != null && position.getWert().compareTo(BigDecimal.ZERO) > 0) { // @rpg-trace: n1815
-                        partNo = position.getNr() != null ? position.getNr() : ""; // @rpg-trace: n1816
-                        partValue = position.getWert(); // @rpg-trace: n1817
-                    }
-                }
-            }
+
+    private String generateNextClaimNumber(String companyCode) {
+        Optional<String> maxClaimNumber = claimRepository.findMaxClaimNrByCompany(companyCode); // @rpg-trace: n1093
+        if (maxClaimNumber.isPresent()) { // @rpg-trace: n1094
+            String lastNumber = maxClaimNumber.get(); // @rpg-trace: n1094
+            long nextNumber = Long.parseLong(lastNumber) + 1; // @rpg-trace: n1092
+            return String.format("%08d", nextNumber); // @rpg-trace: n1092
+        } else { // @rpg-trace: n1096
+            return "00000001"; // @rpg-trace: n1104
         }
-        
-        if (create) { // @rpg-trace: n1823
-            Claim claim = claimRepository.findByKey(pakz, rechNr, rechDatum, auftragsNr, bereich).orElse(null); // @rpg-trace: n1824
-            
-            if (claim != null) { // @rpg-trace: n1826
-                claim.setAnzFehler(failureNo); // @rpg-trace: n1828
-                claimRepository.save(claim); // @rpg-trace: n1829
-            } else { // @rpg-trace: n1832
-                // Handle case where claim doesn't exist - could throw exception or create new
-                throw new IllegalArgumentException("Claim not found for key: " + pakz + "/" + rechNr + "/" + rechDatum + "/" + auftragsNr + "/" + bereich); // @rpg-trace: n1832
+    }
+
+    private Integer parseRegistrationDate(String registrationDate) {
+        if (registrationDate == null || registrationDate.isBlank()) { // @rpg-trace: n1008
+            return 0; // @rpg-trace: n1008
+        }
+        try {
+            return Integer.parseInt(registrationDate); // @rpg-trace: n1008
+        } catch (NumberFormatException e) {
+            return 0; // @rpg-trace: n1008
+        }
+    }
+
+    private BigDecimal parseRepairDateAsBigDecimal(Invoice invoice) {
+        String repairDate; // @rpg-trace: n999
+        if ("1".equals(invoice.getAhk060())) { // @rpg-trace: n999
+            if ("04".substring(1, 2).equals("4")) { // @rpg-trace: n1000
+                repairDate = invoice.getAhk600(); // @rpg-trace: n1001
+            } else { // @rpg-trace: n1003
+                repairDate = invoice.getAhk595(); // @rpg-trace: n1003
             }
+        } else { // @rpg-trace: n1006
+            repairDate = invoice.getAhk080(); // @rpg-trace: n1006
         }
-        
-        if (maintenance && groups != null && !groups.isEmpty() && partNo != null && !partNo.isEmpty()) { // @rpg-trace: n1822
-            // Final processing of accumulated maintenance data
-            // This would be the logic to save/update the last maintenance record
+
+        if (repairDate == null || repairDate.equals("0")) { // @rpg-trace: n1008
+            repairDate = invoice.getAhk080(); // @rpg-trace: n1008
         }
-    } // @rpg-trace: n1836
+
+        try {
+            return new BigDecimal(repairDate); // @rpg-trace: n1008
+        } catch (NumberFormatException e) {
+            return BigDecimal.ZERO; // @rpg-trace: n1008
+        }
+    }
+
+    private BigDecimal parseMileageAsBigDecimal(BigDecimal mileage) {
+        try {
+            return mileage.divide(new BigDecimal("1000")); // @rpg-trace: n1012
+        } catch (Exception e) {
+            return BigDecimal.ZERO; // @rpg-trace: n1015
+        }
+    }
+
+    private BigDecimal determineVehicleTypeAsBigDecimal(Invoice invoice) {
+        String vehicleTypeCode = invoice.getAhk540(); // @rpg-trace: n1021
+        if (vehicleTypeCode != null && vehicleTypeCode.startsWith("M")) { // @rpg-trace: n1021
+            return new BigDecimal(3); // @rpg-trace: n1024
+        }
+        return BigDecimal.ONE; // @rpg-trace: n1026
+    }
 }

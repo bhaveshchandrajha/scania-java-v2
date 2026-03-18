@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { UiSchemaService } from '../services/ui-schema.service';
 import { ClaimService } from '../services/claim.service';
@@ -29,6 +30,7 @@ export class ClaimsListComponent implements OnInit {
   constructor(
     private uiSchemaService: UiSchemaService,
     private claimService: ClaimService,
+    private http: HttpClient,
     private router: Router
   ) {}
 
@@ -82,6 +84,10 @@ export class ClaimsListComponent implements OnInit {
    * so no hardcoded switch is needed. Schema-driven behavior from migration pipeline.
    */
   onAction(action: UiSchemaAction): void {
+    if (action.requiresSelection && !this.selectedClaim) {
+      alert('Please select a claim row first.');
+      return;
+    }
     if (action.action === 'historyBack') {
       window.history.back();
       return;
@@ -102,8 +108,12 @@ export class ClaimsListComponent implements OnInit {
       }
       return;
     }
-    if (action.url && action.method) {
-      console.warn('Declarative API action not yet implemented:', action.id, action.url);
+    if (action.type === 'delete' || (action.url && action.method === 'DELETE')) {
+      this.executeDeleteAction(action);
+      return;
+    }
+    if (action.type === 'apiCall' || (action.url && action.method && action.method !== 'DELETE')) {
+      this.executeApiCall(action);
       return;
     }
     switch (action.action) {
@@ -121,9 +131,51 @@ export class ClaimsListComponent implements OnInit {
       case 'openFilterDialog':
         this.showFilterDialog = !this.showFilterDialog;
         break;
+      case 'showOperatorGuidance':
+        alert('Bedienerführung (Operator Guidance): Help for this screen is available.'); // TODO: load from schema or config
+        break;
+      case 'selectAllOpenInvoices':
+        this.openClaimsOnly = true;
+        this.loadClaims();
+        break;
       default:
         break;
     }
+  }
+
+  private executeApiCall(action: UiSchemaAction): void {
+    const url = this.resolveNavigatePath(action.url || '');
+    if (!url) {
+      alert('Cannot execute: missing URL or selected row.');
+      return;
+    }
+    const method = (action.method || 'POST').toUpperCase();
+    const req = this.http.request<unknown>(method, url, { body: null });
+    req.subscribe({
+      next: () => {
+        this.loadClaims();
+      },
+      error: (err) => (this.error = err.error?.message || err.message || 'Request failed')
+    });
+  }
+
+  private executeDeleteAction(action: UiSchemaAction): void {
+    const row = this.selectedClaim as Record<string, unknown> | null;
+    if (!row) return;
+    const companyCode = row['companyCode'] != null ? String(row['companyCode']) : '';
+    const claimNumber = row['claimNumber'] != null ? String(row['claimNumber']) : '';
+    if (!companyCode || !claimNumber) {
+      alert('Cannot delete: missing company code or claim number.');
+      return;
+    }
+    if (!confirm(`Delete claim ${claimNumber}?`)) return;
+    this.claimService.delete(companyCode, claimNumber).subscribe({
+      next: () => {
+        this.selectedClaim = null;
+        this.loadClaims();
+      },
+      error: (err) => (this.error = err.error?.message || err.message || 'Delete failed')
+    });
   }
 
   private resolveNavigatePath(template: string): string {

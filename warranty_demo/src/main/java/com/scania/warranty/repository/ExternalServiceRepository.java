@@ -7,6 +7,7 @@
 package com.scania.warranty.repository;
 
 import com.scania.warranty.domain.ExternalService;
+import com.scania.warranty.domain.ExternalServiceId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,14 +15,17 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Repository for external service line items (HSFLALF1).
- */
 @Repository
-public interface ExternalServiceRepository extends JpaRepository<ExternalService, Long> {
+public interface ExternalServiceRepository extends JpaRepository<ExternalService, ExternalServiceId> {
 
-    // @origin HS1210 L941-941 (CHAIN)
-    @Query("SELECT e FROM ExternalService e WHERE e.pkz = :pkz AND e.besDat = :besDat AND e.besNr = :besNr AND e.aufnr = :aufnr AND e.berei = :berei AND e.wt = :wt AND e.spl = :spl AND e.aufdat = :aufdat ORDER BY e.lnrFl")
-    // @origin HS1210 L2148-2175 (DOW)
-    List<ExternalService> findByInvoiceKey(@Param("pkz") String pkz, @Param("besDat") String besDat, @Param("besNr") String besNr, @Param("aufnr") String aufnr, @Param("berei") String berei, @Param("wt") String wt, @Param("spl") String spl, @Param("aufdat") String aufdat);
+    @Query("SELECT es FROM ExternalService es WHERE es.fla000 = :pkz AND es.fla010 = :invoiceDate " +
+           "AND es.fla020 = :orderNr AND es.fla230 > '3' ORDER BY es.fla030")
+    List<ExternalService> findExternalServicesForClaim(@Param("pkz") String pkz,
+                                                       @Param("invoiceDate") String invoiceDate,
+                                                       @Param("orderNr") String orderNr); // @rpg-trace: n1319
+
+    @Query("SELECT es FROM ExternalService es WHERE es.fla000 = :pkz AND es.fla010 = :invoiceDate " +
+           "AND es.fla020 = :orderNr ORDER BY es.fla030")
+    List<ExternalService> findByInvoiceKey(@Param("pkz") String pkz, @Param("invoiceDate") String invoiceDate,
+                                            @Param("orderNr") String orderNr);
 }

@@ -6,14 +6,11 @@
 
 package com.scania.warranty.dto;
 
-/**
- * DTO for claim creation request.
- */
 public record ClaimCreationRequestDto(
         String companyCode,
         String invoiceNumber,
         String invoiceDate,
-        String orderNumber,
-        String area
+        String workshopCode,
+        String serviceType
 ) {
 }
