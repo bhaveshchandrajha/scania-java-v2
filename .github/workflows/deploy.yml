@@ -45,11 +45,10 @@ jobs:
             # Pull the latest image
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/warranty-app:latest
             
-            # Run the new container with RDS PostgreSQL
-            # (Mapping EC2 Port 80 to Spring Boot Port 8081)
+            # Run the new container 
+            # (Mapping EC2 Port 80 to Spring Boot Port 8080)
             sudo docker run -d \
               --name warranty-container \
               -p 80:8081 \
-              -e SPRING_PROFILES_ACTIVE=rds \
               --restart always \
               ${{ secrets.DOCKERHUB_USERNAME }}/warranty-app:latest
