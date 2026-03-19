@@ -50,6 +50,5 @@ jobs:
             sudo docker run -d \
               --name warranty-container \
               -p 80:8081 \
-              -e SPRING_PROFILES_ACTIVE=rds \
               --restart always \
               ${{ secrets.DOCKERHUB_USERNAME }}/warranty-app:latest
